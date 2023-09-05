@@ -13,8 +13,7 @@
   <div class="workflow">
 
     <form action="">
-      <h1 style="font-family: 'Times New Roman', Times, serif;color:#396bb5"> Work Flow &nbsp;   <span id="close" class="glyphicon glyphicon-remove" (click)="closeDialog()" style="float:right"  ></span> 
-      </h1>
+      <h1 style="font-family: 'Times New Roman', Times, serif;color:#396bb5"> Work Flow</h1>
 
 
       <div class="jobhistory">
@@ -69,7 +68,7 @@
           </div>
           <div class="row">
             <div class="col">
-              <a (click)="closeDialog()" style="color:#3988b5; float:left">Back</a>
+              <a  style="color:#3988b5; float:left" (click)="Back()">Back</a>
               <p style="color:#3988b5;float: right;" (click)="viewDetails(data)">View Details</p>
             </div>
           </div>
@@ -240,32 +239,33 @@
         <div class="row">
           <div class="col">
             <div class="status">
+              <label>ProcessStatus</label>
               <select id="ddlprocessstatus" class="form-control" name="selectedStatus" [(ngModel)]="Status" (selectionchange)="selectIsError()">
                 <option value="">-- Select Status --</option>
                 <option value="Buddy Proof"
-                  *ngIf="ProcessTransaction.processName=='Production' && IsSelfQC==true && ProcessTransaction.jobStatusDescription!='Quotation'">
+                  *ngIf="data.processName=='Production' && IsSelfQC==true && data.jobStatusDescription!='Quotation'">
                   Buddy
                   Proof</option>
                 <option value="Sew Out"
-                  *ngIf="ProcessTransaction.processName=='Production' && IsSelfQC==true && ProcessTransaction.jobStatusDescription!='Quotation' && ProcessTransaction.department=='Digitizing'">
+                  *ngIf="data.processName=='Production' && IsSelfQC==true && data.jobStatusDescription!='Quotation' && data.department=='Digitizing'">
                   Sew Out</option>
                 <option value="Sew Out"
-                  *ngIf="ProcessTransaction.processName=='Quality' && ProcessTransaction.JobStatusDescription!='Quotation' && ProcessTransaction.Department=='Digitizing'">
+                  *ngIf="data.processName=='Quality' && data.jobStatusDescription!='Quotation' && data.department=='Digitizing'">
                   Sew Out</option>
                 <option value="SelfQC"
-                  *ngIf="ProcessTransaction.processName=='Production' && IsSelfQC==true && ProcessTransaction.jobStatusDescription!='Quotation'">
+                  *ngIf="data.processName=='Production' && IsSelfQC==true && data.jobStatusDescription!='Quotation'">
                   Self QC
                 </option>
                 <option value="Completed">Completed</option>
-                <option value="Query" *ngIf="ProcessTransaction.processName!='Proof Reading'">Query</option>
-                <option value="Query for Special Pricing" *ngIf="ProcessTransaction.processName!='Proof Reading'">Query for Special
+                <option value="Query" *ngIf="data.processName!='Proof Reading'">Query</option>
+                <option value="Query for Special Pricing" *ngIf="data.processName!='Proof Reading'">Query for Special
                   Pricing</option>
                 <option value="Work Incomplete">Work Incomplete</option>
-                <option value="Error" *ngIf="ProcessTransaction.processName!='Production'">Error</option>
+                <option value="Error" *ngIf="data.processName!='Production'">Error</option>
                 <option value="Completed With Error"
-                  *ngIf="ProcessTransaction.processName!='Production' && ProcessTransaction.processName!='Proof Reading'">Completed With Error
+                  *ngIf="data.processName!='Production' && data.processName!='Proof Reading'">Completed With Error
                 </option>
-                <option value="No Need Revise" *ngIf="ProcessTransaction.processName=='Quality'">No Need
+                <option value="No Need Revise" *ngIf="data.processName=='Quality'">No Need
                   Revise</option>
               </select>
             </div>

@@ -15,6 +15,7 @@ import { QualityComponent } from '../quality/quality.component';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { data } from 'jquery';
 import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-qualitytable',
   templateUrl: './qualitytable.component.html',
@@ -53,7 +54,7 @@ export class QualitytableComponent {
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _coreService:CoreService,private sewOutService:SewOutService ,private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService,private qualitycomponent:QualityComponent,private workflowService:WorkflowService) { }
+  constructor(private router:Router,private workflowservice: WorkflowService,private _coreService:CoreService,private sewOutService:SewOutService ,private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService,private qualitycomponent:QualityComponent,private workflowService:WorkflowService) { }
 
   ngOnInit(): void {
     // //ScopeDropdown
@@ -72,7 +73,7 @@ export class QualitytableComponent {
   //to save the checkbox values
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedproduction)
+    
     if (completed == true) {
       this.selectedproduction.push(item)
     }
@@ -86,7 +87,7 @@ export class QualitytableComponent {
         })
       }
     }
-    console.log("after", this.selectedproduction)
+    
   }
 
   showAlert() {
@@ -121,7 +122,7 @@ export class QualitytableComponent {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(freshdata => {
       this.spinnerService.requestEnded();
-      console.log(freshdata,"totaldata");
+      
       
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
@@ -175,7 +176,7 @@ export class QualitytableComponent {
     })
   }
   getTabValue() {
-//console.log("Inside table", this.qualitycomponent.getCurrentTab());
+//
     return this.qualitycomponent.getCurrentTab();
   }
 
@@ -233,7 +234,7 @@ lnkviewedit(data) {
           "isJobFilesNotTransfer": true
         }
       this.http.post<any>(environment.apiURL+`Allocation/processMovement`,processMovement).subscribe( result => {
-        console.log(result,"processMovementworkkk");
+        
             if (result.Success == true) {
                 localStorage.setItem("WFTId", result.wftId);
                 localStorage.setItem("WFMId", result.wfmid);
@@ -260,11 +261,8 @@ lnkviewedit(data) {
             localStorage.setItem("JId", data.jid);
             localStorage.setItem("processid", data.processId);
             // $location.path('/ProcessTransaction');
-            this.dialog.open(QualityWorkflowComponent,{
-              width: '80vw',
-              height: '80vh',
-              data
-            })            
+            this.workflowservice.setData( data);
+              this.router.navigate(['/topnavbar/qualityworkflow']);         
         }
     }
 };
@@ -273,7 +271,7 @@ lnkviewedit(data) {
 
   BindPendingJobs() {
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(result => {
-      console.log(result,"buddyproofmainwwww");
+      
     });
   }
 

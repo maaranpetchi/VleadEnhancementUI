@@ -13,7 +13,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { writeFile } from 'xlsx';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
-
+import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-quality-workflow',
@@ -66,6 +67,7 @@ export class QualityWorkflowComponent implements OnInit {
   commentsToClient: string = '';
   txtbpsoStitchCount: number = 0;
   footerDropdown: boolean = false;
+  data: any;
   ngOnInit(): void {
     this.getIsvalue();
 
@@ -75,16 +77,20 @@ export class QualityWorkflowComponent implements OnInit {
     this.rbnError();
 
 
+
   }
 
-  constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, private dialog: MatDialog, private loginService: LoginService, private spinnerService: SpinnerService, public dialogRef: MatDialogRef<QualityWorkflowComponent>
+  constructor(private location:Location,private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService,
   ) {
-    console.log(data, "processdata");
+    this.data = this.workflowservice.getData();
+    
   }
 
 
 
-
+  Back(){
+    this.location.back();
+  }
 
   //upperbody
   viewDetails(data) {
@@ -153,7 +159,7 @@ export class QualityWorkflowComponent implements OnInit {
   AttachedFiles1: File[] = [];
 
   onFileSelected(event: any) {
-    console.log(event)
+    
     const file: File = event.target.files[0];
     this.AttachedFiles = [event.target.files[0], ...this.AttachedFiles];//store the selected file in selectdfile;
     this.AttachedFiles1 = [event.target.files[0].name, ...this.AttachedFiles1];//store the selected file in selectdfile;
@@ -166,7 +172,7 @@ export class QualityWorkflowComponent implements OnInit {
   //ishold ,sam
   getIsholdSampValue() {
     this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localStorage.getItem("WFTId")}/${this.loginService.getUsername()}`).subscribe(result => {
-      console.log(result, "getIsholdSampValue");
+      
 
       this.ProcessTransaction = result.getWorkflowDetails;
       this.revisionCheck = result.ChkRevise;
@@ -174,7 +180,7 @@ export class QualityWorkflowComponent implements OnInit {
       this.isHold = result.isHold;
       this.SameEmp = result.sameEmp;
       this.Checkbench = result.checkbench;
-      console.log(this.Checkbench, "Checkbenchkullavalue");
+      
 
       if (result.getWorkflowDetails.workStatus == 'Working') {
         this.disableWorkType = false;
@@ -203,7 +209,7 @@ export class QualityWorkflowComponent implements OnInit {
     if (workType == 'Start') {
       this.disableWorkType = false;
       this.showFiles = true;
-      console.log("Method Started 1");
+      
       this.footerDropdown = true;
       this.ChangeWorkflow(workType);
     }
@@ -211,7 +217,7 @@ export class QualityWorkflowComponent implements OnInit {
       if (this.AttachedFiles.length == 0) {
         Swal.fire(
           'Please choose the file!',
-         'Alert',
+          'Alert',
           'info'
         )
 
@@ -415,7 +421,6 @@ export class QualityWorkflowComponent implements OnInit {
               this.confirmationMessage,
               'success'
             )
-            this.closeDialog();
 
           });
 
@@ -428,11 +433,24 @@ export class QualityWorkflowComponent implements OnInit {
             this.BindWorkDetails();
             this.confirmationMessage = ChangeWorkflowResult.message;
             this.spinnerService.requestEnded();
-            Swal.fire(
-              'Done!',
-              this.confirmationMessage,
-              'success'
-            )
+            if (ChangeWorkflowResult.success == true) {
+              Swal.fire(
+                'Done!',
+                this.confirmationMessage,
+                'success'
+              ).then((result) => {
+                if (result.isConfirmed) {
+                  this.location.back();               }
+              })
+            }
+            else {
+              Swal.fire(
+                'Error!',
+                this.confirmationMessage,
+                'error'
+              )
+            }
+
           });
         }
       }
@@ -474,7 +492,7 @@ export class QualityWorkflowComponent implements OnInit {
 
 
   BindWorkDetails() {
-    console.log("Method started 3");
+    
 
     let processTransaction = {
       "wftid": localStorage.getItem("WFTId"),
@@ -513,15 +531,15 @@ export class QualityWorkflowComponent implements OnInit {
       "selectedRows": []
     }
     this.http.post<any>(environment.apiURL + "Workflow/GetProductionWorkList", processTransaction).subscribe((result) => {
-      console.log(result.summary.summaryHistory, "Normal");
-      console.log(result.summary.summaryHistory[0], "Normal");
+      
+      
       this.dataSource = new MatTableDataSource<any>(result.jobHistory); // to display the details in table
       this.dataSource.paginator = this.paginator;
       let History = result.summary.summaryHistory;
       this.SummaryHistory = History[0];
 
-      console.log(History[0], " vale History[0] history");
-      console.log(History, "Array summary history");
+      
+      
       this.TotalTimeWorked = result.summary.summaryHistory[0].totalTime;
       this.Break = result.summary.summaryHistory[0].break;
       this.Training = result.summary.summaryHistory[0].trainingorMeeting;
@@ -538,7 +556,7 @@ export class QualityWorkflowComponent implements OnInit {
         this.showFiles = true;
       }
 
-      console.log(result, "resultBinddetails");
+      
 
     });
   }
@@ -566,7 +584,7 @@ export class QualityWorkflowComponent implements OnInit {
 
   ///to get the error dropdown value
   rbnError() {
-    console.log(localStorage.getItem('WFTId'), "local storage from the wftid");
+    
 
     this.http.get<any>(environment.apiURL + `Workflow/GetErrorCategories/${localStorage.getItem('WFTId')}/${this.loginService.getUsername()}`).subscribe(result => {
       this.errorCategory = result.errorCategories;
@@ -614,7 +632,5 @@ export class QualityWorkflowComponent implements OnInit {
 
 
 
-  closeDialog() {
-    this.dialogRef.close();
-  }
+
 }

@@ -11,6 +11,8 @@ import { ProdjobpopupComponent } from '../prodjobpopup/prodjobpopup.component';
 import { ProductionworkflowComponent } from '../productionworkflow/productionworkflow.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { QualityWorkflowComponent } from '../../Quality/quality-workflow/quality-workflow.component';
+import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-productiontable',
@@ -45,7 +47,7 @@ export class ProductiontableComponent {
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient,private loginservice: LoginService,private dialog:MatDialog,private spinnerService:SpinnerService) { }
+  constructor(private http: HttpClient,private loginservice: LoginService,private dialog:MatDialog,private spinnerService:SpinnerService,private workflowservice:WorkflowService,private router:Router) { }
 
   ngOnInit(): void {
     // //ScopeDropdown
@@ -67,7 +69,7 @@ export class ProductiontableComponent {
   //to save the checkbox values
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedproduction)
+    
     if (completed == true) {
       this.selectedproduction.push(item)
     }
@@ -81,7 +83,7 @@ export class ProductiontableComponent {
         })
       }
     }
-    console.log("after", this.selectedproduction)
+    
   }
 
   showAlert() {
@@ -115,7 +117,7 @@ export class ProductiontableComponent {
   freshJobs() {
     
     this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(freshdata => {
-      console.log(freshdata,"freshdata");
+      
       this.dataSource =  new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -221,7 +223,7 @@ openJobDetailsDialog(data){
             "isJobFilesNotTransfer": true
           }
         this.http.post<any>(environment.apiURL+`Allocation/processMovement`,processMovement).subscribe( result => {
-          console.log(result,"processMovementworkkk");
+          
               if (result.Success == true) {
                   localStorage.setItem("WFTId", result.wftId);
                   localStorage.setItem("WFMId", result.wfmid);
@@ -248,11 +250,9 @@ openJobDetailsDialog(data){
               localStorage.setItem("JId", data.jid);
               localStorage.setItem("processid", data.processId);
               // $location.path('/ProcessTransaction');
-              this.dialog.open(QualityWorkflowComponent,{
-                width: '80vw',
-                height: '80vh',
-                data
-              })            
+              this.workflowservice.setData( data);
+              
+              this.router.navigate(['/topnavbar/qualityworkflow']);    
           }
       }
   };
@@ -269,7 +269,7 @@ openJobDetailsDialog(data){
   
     BindPendingJobs() {
       this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(result => {
-        console.log(result,"buddyproofmainwwww");
+        
       });
     }
 

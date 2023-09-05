@@ -4,7 +4,17 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class WorkflowService {
-  data: any;
+  public sharedData: any;
 
   constructor() { }
+
+    
+  setData(data: any) {
+    this.sharedData = data;
+  }
+
+  getData() {
+    return this.sharedData;
+  }
+  
 }

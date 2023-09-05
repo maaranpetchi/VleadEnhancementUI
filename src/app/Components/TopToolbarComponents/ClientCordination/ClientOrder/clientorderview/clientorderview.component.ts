@@ -42,7 +42,7 @@ export class ClientorderviewComponent {
       this.files = result.files;
       if (this.files.length > 0) {
         this.files.forEach((value: string) => {
-          const url = `/api/Allocation/downloadFilesTest/${path}/${value}`;
+          const url =environment.apiURL+`/api/Allocation/downloadFilesTest/${path}/${value}`;
           this.fileDownload(url, value);
         });
       }

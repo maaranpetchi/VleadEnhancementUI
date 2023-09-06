@@ -208,6 +208,10 @@
       <mat-list-item routerLink="JobFilesLocationMaster" *ngIf="this.checkIsTrue([1101], isAdmin)">
         <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">JOB FILES LOCATION MASTER</span>
       </mat-list-item>
+      
+      <mat-list-item routerLink="clientindex/completedjobs" >
+        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">TRANSITION FILES</span>
+      </mat-list-item>
 
       <mat-list-item routerLink="ITAsset" *ngIf="this.checkIsTrue([1101], isAdmin)">
         <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">IT ASSET</span>

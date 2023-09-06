@@ -31,6 +31,8 @@ export class TopnavbarComponent implements OnInit {
   isAdmin: any;
   menus: any;
   showingMenu: any;
+  username: string | null;
+  UserId: string | null;
   constructor(private _dialog: MatDialog, private loginservice: LoginService, private router: Router, private logoutService: LogoutService, private cookieService: CookieService, private http: HttpClient, private spinnerService: SpinnerService) { }
   ngOnInit(): void {
     this.getProcesses();
@@ -148,7 +150,14 @@ export class TopnavbarComponent implements OnInit {
     else if (process.id == 1013) {
       this.cookieService.set('processId', process.id);
       this.cookieService.set('processName', process.name);
-      this.router.navigate(['/topnavbar/Reports']);
+
+      this.username = this.loginservice.getUsername();
+      this.UserId = this.loginservice.getUserId();
+      const url = `http://servicedesk.vleadservices.com:85/#/Login?id=${this.UserId}`;
+
+      // Open the URL in a new tab/window
+      window.open(url, '_blank');
+    
     }
   }
 

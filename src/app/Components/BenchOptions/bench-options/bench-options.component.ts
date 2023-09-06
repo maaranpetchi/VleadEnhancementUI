@@ -6,7 +6,7 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/Environments/environment';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-bench-options',
   templateUrl: './bench-options.component.html',
@@ -27,8 +27,21 @@ export class BenchOptionsComponent implements OnInit {
 
   GetStatuslist: any[] = [];
   getStatus() {
-    this.http.get<any>(environment.apiURL + `BenchOption/GetStatus?EmployeeId=${this.loginservice.getUsername()}`).subscribe(results => {
-      this.GetStatuslist = results.data
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `BenchOption/GetStatus?EmployeeId=${this.loginservice.getUsername()}`).subscribe({next:(results) => {
+      this.spinnerService.requestEnded();
+
+      this.GetStatuslist = results.data;
+    },
+    error: (err) => {
+      this.spinnerService.resetSpinner(); // Reset spinner on error
+      console.error(err); 
+      Swal.fire(
+        'Error!',
+        'An error occurred!',
+        'error'
+      );
+    }
     })
   }
 
@@ -38,15 +51,24 @@ export class BenchOptionsComponent implements OnInit {
         EmployeeId: this.loginservice.getUsername(),
         Status:''
       }
-
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Start`, Startbench).subscribe(result => {
-        console.log(result, "Start");
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Start`, Startbench).subscribe({next:(result) => {
+        this.spinnerService.requestEnded();
         this.list = result;
         if (result.data == true) {
           this.disableWorkType = true;
           this.disableWorkTypeEnd = false;
         }
-
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred!',
+          'error'
+        );
+      }
       });
 
 
@@ -59,15 +81,25 @@ export class BenchOptionsComponent implements OnInit {
 
 
 
-      
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Break`, Startbench).subscribe(result => {
-        console.log(result, "Break");
+      this.spinnerService.requestStarted();
+
+      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Break`, Startbench).subscribe({next:(result) => {
+        this.spinnerService.requestEnded();
         this.list = result;
         if (result.data == true) {
           this.disableWorkType = false;
           this.disableWorkTypeEnd = true;
         }
-
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred!',
+          'error'
+        );
+      }
       });
 
     }
@@ -78,8 +110,10 @@ export class BenchOptionsComponent implements OnInit {
         EmployeeId: this.loginservice.getUsername(),
         Remarks: this.Remarks,
       }
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=End`, Startbench).subscribe({next:(result) => {
+        this.spinnerService.requestEnded();
 
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=End`, Startbench).subscribe(result => {
         this.list = result;
         if (result.data == true) {
           this.Statusid = "";
@@ -88,6 +122,16 @@ export class BenchOptionsComponent implements OnInit {
           this.disableWorkTypeEnd = true;
           this._coreService.openSnackBar("End files successfully!")
         }
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred !',
+          'error'
+        );
+      }
       });
       // else {
       //     alert('in else');

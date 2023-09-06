@@ -51,7 +51,7 @@ export class IndexchecklistComponent implements OnInit {
 
   openvendor() {
     const dialogRef = this._dialog.open(AddchecklistComponent, {
-      height: '60vh',
+      height: '70vh',
       width: '50vw'
     });
     dialogRef.afterClosed().subscribe({

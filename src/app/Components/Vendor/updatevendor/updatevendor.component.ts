@@ -120,8 +120,11 @@ export class UpdatevendorComponent implements OnInit {
       this.empForm.value.amtPaid.value = 0;
     }
   }
-
+  amtPaid:any;
   onSubmitDetails() {
+console.log(this.empForm.value.amtPaid,"Formvalue")
+console.log(this.amtPaid,"ngmodel")
+  
     let payload = {
       "id": this.data.data.id,
       "vendorName": this.data.data.vendorName,
@@ -129,8 +132,8 @@ export class UpdatevendorComponent implements OnInit {
       "invoiceDate": this.empForm.value.invoiceDate,
       "invoiceValue": this.empForm.value.invoiceValue,
       "pendingAmount": this.empForm.value.pendingAmount,
-      "amountbePaid": this.empForm.value.amountsToBePaid,
-      "amountPaid": this.empForm.value.amtPaid,
+      "amountPaid": this.amtPaid,
+      "amountbePaid": 0,
       "employeeId": this.loginservice.getUserId(),
     }
     this.http.post<any>(environment.apiURL + `ITAsset/nUpdateVendorDetails`, payload).subscribe(result => {

@@ -17,7 +17,7 @@ import { IndexchecklistComponent } from '../indexchecklist/indexchecklist.compon
 export class AddchecklistComponent implements OnInit {
 
   constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, private _coreService: CoreService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, public dialogRef: MatDialogRef<AddchecklistComponent>) {
-    console.log(data, "injected");
+    
     if (this.data && this.data.type === "edit") {
       this.fetchDataAndOpenForm();
     }
@@ -121,8 +121,7 @@ export class AddchecklistComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get(environment.apiURL + `CustomerVsChecklist/GetChecklistDetails?id=${this.data.data.id}`).subscribe((data: any) => {
       this.spinnerService.requestEnded();
-      this.selectedDepartment = data.dept.id;
-      this.selectedCustomer = data.customer.id;
+      
 
 
       let UploadPayload = {
@@ -259,8 +258,8 @@ export class AddchecklistComponent implements OnInit {
       this.http.post<any>(environment.apiURL + `CustomerVsChecklist/UpdateChecklist`, UploadPayload).subscribe({
         next: (val: any) => {
           this.spinnerService.requestEnded();
-          Swal.fire(
-            'Updated!',
+          if(val.message == true){ Swal.fire(
+            'Done!',
             'Employee detail updated!',
             'success'
           ).then((result) => {
@@ -268,7 +267,20 @@ export class AddchecklistComponent implements OnInit {
               this.router.navigate(['/topnavbar/CustomerVsChecklist']);
           }
           })
-          this.dialogRef.close();
+          this.dialogRef.close();}
+          else{
+            Swal.fire(
+              'Error!',
+              'Employee Not updated!',
+              'error'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                this.router.navigate(['/topnavbar/CustomerVsChecklist']);
+            }
+            })
+            this.dialogRef.close();
+          }
+         
 
 
         },

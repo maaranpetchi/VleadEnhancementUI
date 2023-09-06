@@ -18,6 +18,8 @@ export class DashboardComponent implements OnInit {
   public isChecked: boolean=true;
   process: { Id: any; Name: any; };
   isAdmin: any;
+  UserId: string;
+  username: string;
   constructor(private http:HttpClient,private router:Router,private loginservice:LoginService,private spinnerService:SpinnerService,private cookieService:CookieService) { }
 
   ngOnInit(): void {
@@ -134,7 +136,13 @@ console.log(this.Processes ,"thisProcesses");
     else if (process.id == 1013) {
       this.cookieService.set('processId', process.id);
       this.cookieService.set('processName', process.name);
-      this.router.navigate(['/topnavbar/Reports']);
+      this.username = this.loginservice.getUsername();
+      this.UserId = this.loginservice.getUserId();
+      const url = `http://servicedesk.vleadservices.com:85/#/Login?id=${this.UserId}`;
+
+      // Open the URL in a new tab/window
+      window.open(url, '_blank');
+
     }
   }
 

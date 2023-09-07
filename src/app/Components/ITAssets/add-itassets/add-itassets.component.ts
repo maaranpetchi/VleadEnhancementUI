@@ -40,10 +40,16 @@ export class AddItassetsComponent implements OnInit {
     this.getPcType();
     this.getSoftwareData();
     this.getTableData();
-    this.apiResponseData = this.sharedDataService.getData();
 
+    if (this.sharedDataService.shouldFetchData) {
+      const data = this.sharedDataService.getData();
+      console.log(data, "Data 1");
+      this.apiResponseData = data.data;
+      console.log(this.apiResponseData, "apiresponsedata");
 
-    this.fetchUpdateData();
+      this.fetchUpdateData();
+      this.sharedDataService.shouldFetchData = false;
+    }
   }
   constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: ItassetsService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
 
@@ -74,7 +80,11 @@ export class AddItassetsComponent implements OnInit {
       }
     });
   }
-
+  resetFormGroups() {
+    // Reset the form groups by setting their values to null or empty
+    this.hardwareStepFormGroup.reset();
+    this.softwareStepFormGroup.reset();
+  }
 
   fetchUpdateData() {
     console.log(this.apiResponseData.itheDetailList.id, "getting ID");

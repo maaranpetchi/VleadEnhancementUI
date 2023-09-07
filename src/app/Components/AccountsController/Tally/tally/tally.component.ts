@@ -46,7 +46,7 @@ export class TallyComponent implements OnInit {
   }
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
+
     if (completed == true) {
       this.selectedInvoices.push(item)
     }
@@ -60,54 +60,60 @@ export class TallyComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
+
+    console.log(this.selectedInvoices, "selectedInvoices")
+
   }
 
   setExchangeHeader() {
-    let temparray: any[] = []
+    let temparray: any[] = [];
     let skip: boolean;
     this.dataSource.data.filter((y: any) => {
       skip = false;
-      this.selectedInvoices.forEach(x => {
+      this.selectedInvoices.forEach((x) => {
         if (y.id === x.id) {
           temparray.push({
             ...y,
             exchangeRate: this.exchangeHeader,
             isSelected: true
-          })
+          });
           skip = true;
         }
-
-      })
+      });
       if (!skip) {
-        temparray.push(y)
+        temparray.push(y);
       }
-    })
+    });
+
+    console.log(temparray, "Temparray");
+
     this.dataSource.data = temparray;
+    console.log(this.dataSource.data, "datasource");
+
   }
 
   ngOnInit(): void {
-this.getClient();
+    this.getClient();
   }
-getClient(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL + 'Invoice/GetClient').subscribe({
-    next:(data) => {
-    this.spinnerService.requestEnded();
-    this.data = data;
-    console.log(data);
-    },
-    error: (err) => {
-       this.spinnerService.resetSpinner(); // Reset spinner on error
-       console.error(err);
-       Swal.fire(
-         'Error!',
-         'An error occurred !.',
-         'error'
-       );
-     }
-  });
-}
+  getClient() {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + 'Invoice/GetClient').subscribe({
+      next: (data) => {
+        this.spinnerService.requestEnded();
+        this.data = data;
+
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
+    });
+  }
   data: any = {
     clientList: [],
   };
@@ -125,7 +131,7 @@ getClient(){
 
 
 
- 
+
 
   onSubmit() {
     // Call the API to get the search results
@@ -134,23 +140,24 @@ getClient(){
       "customerID": this.myForm.value?.ClientId,
       "fromDate": this.myForm.value?.fromDate,
       "toDate": this.myForm.value?.toDate
-    }).subscribe({next:(results: any) => {
-      // Set the search results in the data source
-      this.spinnerService.requestEnded();
-      this.dataSource.data = results.getInvoice;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      console.log(results, "results")
-    },
-    error: (err) => {
-       this.spinnerService.resetSpinner(); // Reset spinner on error
-       console.error(err);
-       Swal.fire(
-         'Error!',
-         'An error occurred !.',
-         'error'
-       );
-     }
+    }).subscribe({
+      next: (results: any) => {
+        // Set the search results in the data source
+        this.spinnerService.requestEnded();
+        this.dataSource.data = results.getInvoice;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
 
     })
   }
@@ -174,21 +181,30 @@ getClient(){
     }
     this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + 'Invoice/GetExchangeRatetoInvoice', data).subscribe({
-      next:(data) => {
-this.spinnerService.requestEnded();
-      this.selectedInvoices = [];
-      this.onSubmit();
+      next: (data) => {
+        this.spinnerService.requestEnded();
+        Swal.fire(
+          'Done!',
+          data.stringList,
+          'success'
+        ).then((result)=>{
+          if(result.isConfirmed){
+            this.selectedInvoices = [];
+            this.onSubmit();
+          }
+        });
+
       },
       error: (err) => {
-         this.spinnerService.resetSpinner(); // Reset spinner on error
-         console.error(err);
-         Swal.fire(
-           'Error!',
-           'An error occurred !.',
-           'error'
-         );
-       }
-  
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
+
     })
   }
 
@@ -260,20 +276,29 @@ this.spinnerService.requestEnded();
       "exchangeRate": 0
     }
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'Invoice/GetCopytoIntegration', data).subscribe({ next:(data) => {
-      this.spinnerService.requestEnded();
-      this.selectedInvoices = [];
-      this.onSubmit();
-    },
-    error: (err) => {
-       this.spinnerService.resetSpinner(); // Reset spinner on error
-       console.error(err);
-       Swal.fire(
-         'Error!',
-         'An error occurred !.',
-         'error'
-       );
-     }
+    this.http.post<any>(environment.apiURL + 'Invoice/GetCopytoIntegration', data).subscribe({
+      next: (data) => {
+        this.spinnerService.requestEnded();
+        Swal.fire(
+          'Done!',
+          data.stringList,
+          'success'
+        ).then((result)=>{
+          if(result.isConfirmed){
+            this.selectedInvoices = [];
+            this.onSubmit();
+          }
+        });
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
 
     })
   }

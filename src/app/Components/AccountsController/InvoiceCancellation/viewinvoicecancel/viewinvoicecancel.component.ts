@@ -38,6 +38,7 @@ export class ViewinvoicecancelComponent  implements OnInit {
   openPopupForm(invoiceNo: string): void {
     const dialogRef = this.dialog.open(PopupinvoicecancellistComponent, {
       width: '1000px',
+      height:'70vh',
       data: { invoiceNo: invoiceNo}
     });
   
@@ -79,7 +80,11 @@ export class ViewinvoicecancelComponent  implements OnInit {
 
 
 
-  applyFilter(filterValue: string) {
+  employeeFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

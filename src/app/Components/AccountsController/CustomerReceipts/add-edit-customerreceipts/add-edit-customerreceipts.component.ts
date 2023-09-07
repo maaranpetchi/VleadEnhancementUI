@@ -19,9 +19,9 @@ export class AddEditCustomerreceiptsComponent implements OnInit {
   apiResponseData: any;
   ngOnInit(): void {
     const data = this._empservice.getData();
-    console.log(data, "Data 1");
+    
     this.apiResponseData = data.data;
-    console.log(this.apiResponseData, "apiresponsedata");
+    
     this.voucherNumber= this.apiResponseData.voucherNo
     this.voucherDate= this.apiResponseData.collectionDate;
     this.referenceNumber=this.apiResponseData.referenceNo;

@@ -54,7 +54,9 @@ export class ItAssetindexComponent implements OnInit {
       "id": id,
     }
     this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`,payload).subscribe(results => {
-      this.sharedDataService.setData(results);
+      this.sharedDataService.setData({ type: 'EDIT', data: results });
+      this.sharedDataService.shouldFetchData = true;
+
       this.router.navigate(['/topnavbar/addITAsset']);
     });
     

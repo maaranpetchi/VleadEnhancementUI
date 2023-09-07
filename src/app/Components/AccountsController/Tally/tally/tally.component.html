@@ -66,9 +66,9 @@
 
                                         <mat-form-field>
                                             <mat-label>Exchange Header</mat-label>
-                                            <input matInput [(ngModel)]="exchangeHeader" placeholder="Enter exchange header">
+                                            <input matInput [(ngModel)]="exchangeHeader" [ngModelOptions]="{standalone: true}" name="exchangeHeader" placeholder="Enter exchange header">
                                         </mat-form-field>
-                                        <button mat-raised-button color="primary" (click)="setExchangeHeader()">Set</button>
+                                        <button mat-raised-button type="button" color="primary" (click)="setExchangeHeader()">Set</button>
                                     
                                 </div>
                             </div>
@@ -212,7 +212,9 @@
             </div>
                
         <div class="matbuttonaign">
-            <button (click)="updateintegration()" mat-flat-button color="primary">Update Exchange Rate</button>
+            <button class="btn btn-success" (click)="movetointegration()">Move to Integration</button>
+
+            <button class="btn btn-success" (click)="updateintegration()">Update Exchange Rate</button>
         </div>
         </div>
     </div>
@@ -220,5 +222,3 @@
 </div>
 </body>
 </html>
-
-

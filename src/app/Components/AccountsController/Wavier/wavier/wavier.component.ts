@@ -7,6 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { PopupwavierconfirmationComponent } from '../popupwavierconfirmation/popupwavierconfirmation.component';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 declare var $: any;
 @Component({
   selector: 'app-wavier',
@@ -26,7 +28,7 @@ export class WavierComponent {
 
   clients: any[]; // Change to match the shape of your client data
 
-  constructor(private http: HttpClient, private dialog: MatDialog) { }
+  constructor(private http: HttpClient, private dialog: MatDialog,private spinnerservice:SpinnerService) { }
   displayedColumns: string[] = [
     'selected',
     'jobnumber',
@@ -42,10 +44,9 @@ export class WavierComponent {
   selectedInvoices: any[] = [];
 
 
-  applyFilter(event: Event) {
+  employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -150,14 +151,23 @@ export class WavierComponent {
       this.selectedFileName = '';
       this.fromDate = '';
       this.toDate = '';
+this.spinnerservice.requestStarted();
+      this.http.get<any[]>(environment.apiURL+'Customer/GetCustomers').subscribe({next:(clientdata) => {
+        this.spinnerservice.requestEnded();
 
-      this.http.get<any[]>(environment.apiURL+'Customer/GetCustomers').subscribe(clientdata => {
         this.clients = clientdata;
+      },
+      error: (err) => {
+        this.spinnerservice.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
       });
-      // PricingBillingInvoiceFactory.GetCompletedJobs('getCustomers').$promise.then(function (result) {
-      //     // GetCustomers = result;  
-      //     GetCustomers = result.StringList;
-      // });
+
 
     }
     else if (this.selectedFilter == 4) {
@@ -207,8 +217,10 @@ export class WavierComponent {
         JobClosedUTC: this.fromDate,
         DateofUpload: this.toDate
       };
-      this.http.post<any>(environment.apiURL+'Invoice/GetWaiverJobWithclientIdfileName', jobOrder).subscribe(response => {
-      console.log(response, "response");
+      this.spinnerservice.requestStarted();
+
+      this.http.post<any>(environment.apiURL+'Invoice/GetWaiverJobWithclientIdfileName', jobOrder).subscribe({next:(response) => {
+        this.spinnerservice.requestEnded();
         
       this.dataSource.data = response.waiverJobList;
         // Sort dataSource based on MatSort
@@ -216,7 +228,16 @@ export class WavierComponent {
         // Paginate dataSource based on MatPaginator
         this.dataSource.paginator = this.paginator;
         console.log(response.waiverJobList);
-
+      },
+      error: (err) => {
+        this.spinnerservice.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
       });
       // PricingBillingInvoiceFactory.GetJobsHistory('GetWaiverJobWithclientIdfileName', jobOrder).$promise.then(function (result) {
       //    completedjobs.data = result.WaiverJobList;

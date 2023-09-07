@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class ItassetsService {
 
   private sharedData: any;
-
+  shouldFetchData: boolean = true;
   constructor() { }
 
   setData(data: any) {

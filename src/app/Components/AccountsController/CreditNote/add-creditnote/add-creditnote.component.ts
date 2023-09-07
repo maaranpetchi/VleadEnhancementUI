@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from 'src/Environments/environment';
 import { AddeditemployeevsdivisionComponent } from 'src/app/Components/EmployeeVSDivision/addeditemployeevsdivision/addeditemployeevsdivision.component';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CreditnoteService } from 'src/app/Services/AccountController/CreditNote/creditnote.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
@@ -35,6 +36,7 @@ export class AddCreditnoteComponent implements OnInit {
     private loginservice: LoginService,
     private http: HttpClient,
     private router: Router,
+    private spinnerservice:SpinnerService,
     private _empservice: CreditnoteService,
     private dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -54,25 +56,40 @@ export class AddCreditnoteComponent implements OnInit {
   }
   ngOnInit(): void {
     // customer dropdown fetch the values from the API
-    this._empservice.getcustomerdropdown().subscribe(customerdata => {
-      this.Customerdropdownvalues = customerdata;
-      // Sort the array by a specific property
-      this.Customerdropdownvalues.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        } else if (a.name > b.name) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-    });
+this.fetchCustomerData();
 
     //Invoice number dropdown
 
   }
 
+fetchCustomerData(){
+  this.spinnerservice.requestStarted();
+  this._empservice.getcustomerdropdown().subscribe({next:(customerdata) => {
+    this.spinnerservice.requestEnded();
 
+    this.Customerdropdownvalues = customerdata;
+    // Sort the array by a specific property
+    this.Customerdropdownvalues.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  },
+  error: (err) => {
+    this.spinnerservice.resetSpinner(); // Reset spinner on error
+    console.error(err); 
+    Swal.fire(
+      'Error!',
+      'An error occurred !.',
+      'error'
+    );
+  }
+  });
+}
   selectedValue: any;
 
   invoiceDate: any = ""
@@ -80,20 +97,43 @@ export class AddCreditnoteComponent implements OnInit {
   adjustedAmount: number = 0;
   amountToBeAdjusted: number = 0;
   invoicenumberdetails() {
-    this.http.get<any>(environment.apiURL + `Receivable/GetInvoice?invoiceNo=${this.selectedinvoiceoption}&customerId=${this.selectedCustomerOption}`).subscribe(data => {
-      console.log(data)
+    this.spinnerservice.requestStarted();
+    this.http.get<any>(environment.apiURL + `Receivable/GetInvoice?invoiceNo=${this.selectedinvoiceoption}&customerId=${this.selectedCustomerOption}`).subscribe({next:(data) => {
+      this.spinnerservice.requestEnded();
       this.invoiceDetails = data
       this.invoiceDate = new Date(data.invoiceDate).toLocaleDateString()
       this.invoiceValue = data.invoiceValue
       this.adjustedAmount = data.adjustmentAmount
       this.amountToBeAdjusted = data.invoiceValue - data.adjustmentAmount
+    },
+    error: (err) => {
+      this.spinnerservice.resetSpinner(); // Reset spinner on error
+      console.error(err); 
+      Swal.fire(
+        'Error!',
+        'An error occurred !.',
+        'error'
+      );
+    }
     });
 
   }
 
   onchangesubmit() {
-    this.http.get<any[]>(environment.apiURL + `Receivable/GetCustomerInvoice?CustomerId=${this.selectedCustomerOption}`).subscribe(data => {
+    this.spinnerservice.requestStarted();
+    this.http.get<any[]>(environment.apiURL + `Receivable/GetCustomerInvoice?CustomerId=${this.selectedCustomerOption}`).subscribe({next:(data) => {
+      this.spinnerservice.requestEnded();
       this.invoicedropdownvalues = data;
+    },
+    error: (err) => {
+      this.spinnerservice.resetSpinner(); // Reset spinner on error
+      console.error(err); 
+      Swal.fire(
+        'Error!',
+        'An error occurred !.',
+        'error'
+      );
+    }
     });
 
   }
@@ -157,7 +197,9 @@ export class AddCreditnoteComponent implements OnInit {
       ],
 
     };
+    this.spinnerservice.requestStarted();
     this.http.post<any>(environment.apiURL + `Receivable/CreateCreditNote`, receivable).subscribe(data => {
+      this.spinnerservice.requestEnded();
       if (data.creditNoteList == "False") {
 
         Swal.fire(

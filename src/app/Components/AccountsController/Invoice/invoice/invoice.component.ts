@@ -27,7 +27,7 @@ export class InvoiceComponent implements OnInit {
   @ViewChild('table2Paginator') table2Paginator: MatPaginator;
 
 
-  constructor(private http: HttpClient, private loginservice:LoginService, private _empService: PricingcalculationService, private dialog: MatDialog, private spinnerService: SpinnerService) { }
+  constructor(private http: HttpClient, private loginservice: LoginService, private _empService: PricingcalculationService, private dialog: MatDialog, private spinnerService: SpinnerService) { }
 
   displayedColumns: string[] = [
     'selected',
@@ -60,7 +60,7 @@ export class InvoiceComponent implements OnInit {
   }
   selectedInvoices: any[] = [];
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
+
     if (completed == true) {
       this.selectedInvoices.push(item)
     }
@@ -74,16 +74,16 @@ export class InvoiceComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
+
   }
 
 
 
   selectedGeneratedInvoices: any[] = [];
   setGeneratedAll(completed: boolean, item: any) {
-    console.log("before", this.selectedGeneratedInvoices)
+
     if (completed == true) {
-      this.selectedGeneratedInvoices.push({...item, BillingCycleType: item.BillingCycleType ? item.BillingCycleType : 0 })
+      this.selectedGeneratedInvoices.push({ ...item, BillingCycleType: item.BillingCycleType ? item.BillingCycleType : 0, specialPrice: item.specialPrice ? item.specialPrice : 0 })
     }
     else {
 
@@ -95,7 +95,7 @@ export class InvoiceComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedGeneratedInvoices)
+
   }
 
 
@@ -103,13 +103,11 @@ export class InvoiceComponent implements OnInit {
   openDialog() {
     let clientid = 0;
     if (this.selectedInvoices.length == 0) {
-      const dialogRef = this.dialog.open(PopupinvoiceComponent, {
-        width: '500px',
-        height: '150px',
-        data: 'Please select the list items!'
-
-      }
-      );
+      Swal.fire(
+        'Alert!',
+        'Please select the list item!',
+        'info'
+      )
     }
     else {
       let temporaryarray: any[] = [];
@@ -215,72 +213,78 @@ export class InvoiceComponent implements OnInit {
 
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.table1Paginator;
-        console.log(res);
+
 
       }
     });
   }
   onSubmit() {
     // Call the API to get the search results
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + 'Invoice/GetClientDetails', {
       "clientId": this.myForm.value?.ClientId,
       "fromDate": this.myForm.value?.fromDate,
       "toDate": this.myForm.value?.toDate
     }).subscribe((results: any) => {
       // Set the search results in the data source
-
+      this.spinnerService.requestEnded();
       this.dataSource.data = results.getInvoice;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.table1Paginator;
-      console.log(results, "results")
+
     }
     )
   }
 
   onInvoiceCalculation(item: any) {
     // Call the API to get the search results
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + 'Invoice/GenerateInvoice', item).subscribe((results: any) => {
       // Set the search results in the data source
-      const dialogRef = this.dialog.open(PopupinvoiceComponent, {
-        width: '500px',
-        height: '150px',
-        data: 'Updated successfully!'
-      }
-      );
+      this.spinnerService.requestEnded();
+
+      Swal.fire(
+        results.stringList,
+      )
     }
     )
   }
 
-///Genrated Invoice
-Clientid:any;
-GenratedInvoicedataSource = new MatTableDataSource();
-displayedGenaratedInvoiceColumns: string[] = [
-  'selected','Client', 'JobId', 'JobDate', 'FileName', 'ProjectCode',
-  'Department', 'JobStatus', 'Scope', 'StitchCount',
-  'EstimatedTime', 'PricingType', 'ESTFileReceived', 'ESTDateofUpload',
-  'Rate'
-];
+  ///Genrated Invoice
+  Clientid: any;
+  GenratedInvoicedataSource = new MatTableDataSource();
+  displayedGenaratedInvoiceColumns: string[] = [
+    'selected', 'Client', 'JobId', 'JobDate', 'FileName', 'ProjectCode',
+    'Department', 'JobStatus', 'Scope', 'StitchCount',
+    'EstimatedTime', 'PricingType', 'ESTFileReceived', 'ESTDateofUpload',
+    'Rate'
+  ];
 
-getGeneratedInvoice(){
-  console.log(this.ClientGeneratedId,"ClientId");
-  
-  let payload={
-    "clientId":this.ClientGeneratedId 
+  getGeneratedInvoice() {
+
+
+    let payload = {
+      "clientId": this.ClientGeneratedId
+    }
+    this.spinnerService.requestStarted();
+
+    this.http.post<any>(environment.apiURL + `Invoice/GetCalculatedPrice`, payload).subscribe(result => {
+      this.spinnerService.requestEnded();
+      this.GenratedInvoicedataSource.data = result.getInvoice;
+      this.GenratedInvoicedataSource.paginator = this.table1Paginator;
+    })
   }
-  this.http.post<any>(environment.apiURL + `Invoice/GetCalculatedPrice`,payload).subscribe(result =>{
-    this.GenratedInvoicedataSource.data = result.getInvoice;
-    this.GenratedInvoicedataSource.paginator = this.table1Paginator;
-  })
-}
 
   ///confirm invoicr////
   ConfirmInvoicedataSource = new MatTableDataSource();
 
-  getConfirmInvoiceTable(){
-    this.http.get<any>(environment.apiURL+`Invoice/GetAllInvoiceMasterDetails`).subscribe(results =>{
-      this.ConfirmInvoicedataSource =new MatTableDataSource(results.getInvoice);
+  getConfirmInvoiceTable() {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Invoice/GetAllInvoiceMasterDetails`).subscribe(results => {
+      this.spinnerService.requestEnded();
+      this.ConfirmInvoicedataSource = new MatTableDataSource(results.getInvoice);
       this.ConfirmInvoicedataSource.sort = this.sort;
-     this.ConfirmInvoicedataSource.paginator = this.table2Paginator;
+      this.ConfirmInvoicedataSource.paginator = this.table2Paginator;
     })
   }
 
@@ -291,13 +295,13 @@ getGeneratedInvoice(){
     'DigiFileCount', 'Payable', 'PaymentMode'
   ];
 
-  openConfirmDialog(data){
-    
+  openConfirmDialog(data) {
+
     const dialogRef = this.dialog.open(DetailsComponent, {
       data
     });
-    
-    console.log(dialogRef);
+
+
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
@@ -307,18 +311,18 @@ getGeneratedInvoice(){
       },
     });
   }
-  ClientGeneratedId:any;
-  btnSubmitRecalculate(){
+  ClientGeneratedId: any;
+  btnSubmitRecalculate() {
 
-    if (this.ClientGeneratedId == undefined || this.ClientGeneratedId== null) {
+    if (this.ClientGeneratedId == undefined || this.ClientGeneratedId == null) {
       Swal.fire(
         'Alert!',
         'Please Select a Client.',
         'info'
       )
-  }
-  else {
-    
+    }
+    else {
+
       if (this.selectedGeneratedInvoices.length == 0) {
         Swal.fire(
           'Alert!',
@@ -326,8 +330,8 @@ getGeneratedInvoice(){
           'info'
         )
       }
-      else{
-        let payload={
+      else {
+        let payload = {
           "jobId": "string",
           "shortName": "string",
           "scopeId": 0,
@@ -341,7 +345,7 @@ getGeneratedInvoice(){
           "id": 0,
           "jId": 0,
           "pricingTypeId": 0,
-          "getInvoice": this.selectedGeneratedInvoices      ,
+          "getInvoice": this.selectedGeneratedInvoices,
           "fileReceivedDate": "2023-08-21T11:59:16.821Z",
           "isBillable": true,
           "specialPrice": 0,
@@ -349,8 +353,11 @@ getGeneratedInvoice(){
           "isWaiver": true,
           "jobStatusId": 0
         }
-    
-        this.http.post<any>(environment.apiURL+`Invoice/GenerateReCalculateInvoice`,payload).subscribe(results =>{
+        this.spinnerService.requestStarted();
+
+        this.http.post<any>(environment.apiURL + `Invoice/GenerateReCalculateInvoice`, payload).subscribe(results => {
+          this.spinnerService.requestEnded();
+
           Swal.fire(
             'Done!',
             results.stringList,
@@ -358,8 +365,8 @@ getGeneratedInvoice(){
           )
         })
       }
-  }
-  
+    }
+
   }
 
 
@@ -372,48 +379,50 @@ getGeneratedInvoice(){
       )
     }
     else {
-let payload={
-  "jobId": "string",
-  "shortName": "string",
-  "scopeId": 0,
-  "scopeDesc": "string",
-  "clientId": this.clientId,
-  "billingCycleType": "string",
-  "dateofUpload": "2023-08-21T13:54:54.873Z",
-  "createdBy": this.loginservice.getUsername(),
-  "departmentId": 0,
-  "tranId": 0,
-  "id": 0,
-  "jId": 0,
-  "pricingTypeId": 0,
-  "getInvoice": this.selectedGeneratedInvoices,
-  "fileReceivedDate": "2023-08-21T13:54:54.873Z",
-  "isBillable": true,
-  "specialPrice": 0,
-  "estimatedTime": 0,
-  "isWaiver": true,
-  "jobStatusId": 0
-}
+      let payload = {
+        "jobId": "string",
+        "shortName": "string",
+        "scopeId": 0,
+        "scopeDesc": "string",
+        "clientId": this.clientId,
+        "billingCycleType": "string",
+        "dateofUpload": "2023-08-21T13:54:54.873Z",
+        "createdBy": this.loginservice.getUsername(),
+        "departmentId": 0,
+        "tranId": 0,
+        "id": 0,
+        "jId": 0,
+        "pricingTypeId": 0,
+        "getInvoice": this.selectedGeneratedInvoices,
+        "fileReceivedDate": "2023-08-21T13:54:54.873Z",
+        "isBillable": true,
+        "specialPrice": 0,
+        "estimatedTime": 0,
+        "isWaiver": true,
+        "jobStatusId": 0
+      }
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `Invoice/GenerateConfirmInvoice`, payload).subscribe(results => {
+        this.spinnerService.requestEnded();
 
-this.http.post<any>(environment.apiURL+`Invoice/GenerateConfirmInvoice`,payload).subscribe(results =>{
-  if(results.stringList="VoucherControl is Missing"){
-    Swal.fire(
-      'alert!',
-      results.stringList,
-      'info'
-    )
-  }
-  else{
-    Swal.fire(
-      'Done!',
-      results.stringList,
-      'success'
-    )
-  }
-  
+        if (results.stringList = "VoucherControl is Missing") {
+          Swal.fire(
+            'alert!',
+            results.stringList,
+            'info'
+          )
+        }
+        else {
+          Swal.fire(
+            'Done!',
+            results.stringList,
+            'success'
+          )
+        }
 
-})
+
+      })
     }
-}
+  }
 
 }

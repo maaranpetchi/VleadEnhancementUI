@@ -64,7 +64,10 @@ export class LoginComponent implements OnInit {
           this.cookieService.set('token', result.user.employeeName);
           this.cookieService.set('username', result.user.employeeId);
           this.cookieService.set('UserId', result.user.id);
-
+          localStorage.setItem('token', result.user.employeeName);
+          localStorage.setItem('username', result.user.employeeId);
+          localStorage.setItem('UserId', result.user.id);
+          
           // this.cookieService.set('password',window.btoa( result.user.password));
           this.username = this.user;
           this.router.navigate(['/topnavbar/dashboard']);

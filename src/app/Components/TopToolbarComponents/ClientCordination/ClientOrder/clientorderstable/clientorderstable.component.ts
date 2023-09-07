@@ -13,6 +13,7 @@ import { ClientorderviewComponent } from '../clientorderview/clientorderview.com
 import { environment } from 'src/Environments/environment';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { LoginService } from 'src/app/Services/Login/login.service';
 @Component({
   selector: 'app-clientorderstable',
   templateUrl: './clientorderstable.component.html',
@@ -118,7 +119,7 @@ export class ClientorderstableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService) { }
+  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService,private loginservice:LoginService) { }
 
   ngOnInit(): void {
     // //DivisionApiDatadropdown
@@ -341,7 +342,7 @@ export class ClientorderstableComponent implements OnInit {
       TransactionId: GetAllvalues.transactionType,
       DepartmentId: GetAllvalues.workType,
       ClientId: GetAllvalues.clientId,
-      EmployeeId: 152,
+      EmployeeId: this.loginservice.getUsername(),
       FileReceivedDate: GetAllvalues.fileReceivedDate,
       ClientOrderId: GetAllvalues.orderId,
       CCId: GetAllvalues.ccId,//
@@ -502,7 +503,7 @@ export class ClientorderstableComponent implements OnInit {
         TransactionId: GetAllvalues.transactionType,
         DepartmentId: GetAllvalues.workType,
         ClientId: GetAllvalues.clientId,
-        EmployeeId: 152,
+        EmployeeId: this.loginservice.getUsername(),
         FileReceivedDate: GetAllvalues.fileReceivedDate,
         ClientOrderId: GetAllvalues.orderId,
         CCId: GetAllvalues.ccId,//

@@ -52,7 +52,7 @@
   
   .container{
     background-color: white;
-    height: 120h;
+    height: 140h;
     margin-top: 36px;
 }
   
@@ -141,7 +141,7 @@
   
   .container {
     background-color: white;
-    height: 120vh;
+    height: 140vh;
     margin-top: 36px;
 }
   
@@ -156,6 +156,7 @@
     display: flex;
     align-items: center;
     padding: 20px;
+    gap:35px;
     justify-content: center;
   }
   .mat-elevation-z8 {

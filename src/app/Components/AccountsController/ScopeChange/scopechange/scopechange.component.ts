@@ -159,6 +159,8 @@ export class ScopechangeComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any[]>(environment.apiURL + 'dropdown/getcustomers').subscribe({
       next: (clientdata) => {
+        this.spinnerService.requestEnded();
+
         this.Clientdropdownvalues = clientdata;
       },
       error: (err) => {

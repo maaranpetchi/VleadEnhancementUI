@@ -7,7 +7,8 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreditnoteService } from 'src/app/Services/AccountController/CreditNote/creditnote.service';
-
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-creditnoteindex',
   templateUrl: './creditnoteindex.component.html',
@@ -29,6 +30,7 @@ export class CreditnoteindexComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private _dialog: MatDialog,
+    private spinnerservice:SpinnerService,
     private _empService: CreditnoteService,
     private _coreService: CoreService,
     private http: HttpClient,) { }
@@ -54,9 +56,12 @@ export class CreditnoteindexComponent {
   }
 
   getEmployeeList() {
+    this.spinnerservice.requestStarted();
+
     this._empService.getEmployeeList().subscribe({
 
       next: (res) => {
+        this.spinnerservice.requestEnded();
 
         this.dataSource = new MatTableDataSource(res);
 
@@ -64,7 +69,15 @@ export class CreditnoteindexComponent {
         this.dataSource.paginator = this.paginator;
 
       },
-      error: console.log,
+      error: (err) => {
+        this.spinnerservice.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
     });
   }
   // this._empService.getEmployeeList().then((res)=>{console.log(res)}).catch(err=> console.log(err));

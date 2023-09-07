@@ -6,6 +6,7 @@ import { ClientorderstableComponent } from '../clientorderstable.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/Environments/environment';
+import { LoginService } from 'src/app/Services/Login/login.service';
 
 interface TableData {
   fileName: string;
@@ -42,7 +43,8 @@ export class FileconvertComponent implements OnInit {
 
   @Output() childEvent = new EventEmitter();
   division = 0;
-  constructor(private http: HttpClient, private _dialog: MatDialog, private snackBar: MatSnackBar, public dialogRef: MatDialogRef<FileconvertComponent>,
+  
+  constructor(private loginservice:LoginService  ,private http: HttpClient, private _dialog: MatDialog, private snackBar: MatSnackBar, public dialogRef: MatDialogRef<FileconvertComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       console.log(data, "data");
 
@@ -74,7 +76,7 @@ export class FileconvertComponent implements OnInit {
         TransactionId: GetAllvalues.transactionType,
         DepartmentId: GetAllvalues.workType,
         ClientId: GetAllvalues.clientId,
-        EmployeeId: 152,
+        EmployeeId: this.loginservice.getUsername(),
         FileReceivedDate: GetAllvalues.fileReceivedDate,
         ClientOrderId: GetAllvalues.orderId,
         CCId: GetAllvalues.ccId,//

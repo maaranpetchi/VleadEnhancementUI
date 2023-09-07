@@ -85,7 +85,7 @@
         <div class="col-4">
 
           <mat-grid-list cols="1" rowHeight="100px"  gutterSize="16px">
-            <a routerLink="/topnavbar/index">
+            <a (click)="report()">
               <mat-grid-tile class="Reportstitle" *ngIf="IsMenuHaveAccess(1013)" >
                 <!-- first card component goes here -->
                 Reports

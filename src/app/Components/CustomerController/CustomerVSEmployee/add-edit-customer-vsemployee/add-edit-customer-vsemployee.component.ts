@@ -88,7 +88,18 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
       }).subscribe({
         next:(result) =>{
           this.spinnerService.requestEnded();
-          this._coreService.openSnackBar("updated data successfully");
+          Swal.fire(
+            'Done!',
+            'Updated Data Successfully!',
+            'success'
+          );        }, error: (err) => {
+          this.spinnerService.resetSpinner(); // Reset spinner on error
+          console.error(err);
+          Swal.fire(
+            'Error!',
+            'Unable to update',
+            'error'
+          );
         }
       })
       // console.log(this.myForm.value)

@@ -51,7 +51,7 @@ export class PricingcalculationComponent implements OnInit {
     }
   }
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
+
     if (completed == true) {
       this.selectedInvoices.push(item)
     }
@@ -65,7 +65,7 @@ export class PricingcalculationComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
+
   }
 
 
@@ -113,7 +113,7 @@ export class PricingcalculationComponent implements OnInit {
         'Please Select the Items!',
         'warning'
       )
-  
+
     }
     else {
       let temporaryarray: any[] = [];
@@ -180,10 +180,7 @@ export class PricingcalculationComponent implements OnInit {
 
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-        console.log(res);
-
-      },
-      error: console.log,
+      }
     });
   }
   onSubmit() {
@@ -211,7 +208,11 @@ export class PricingcalculationComponent implements OnInit {
         'Done!',
         results.stringList,
         'success'
-      )
+      ).then((result) => {
+        if (result.isConfirmed) {
+          this.getEmployeeList();
+        }
+      })
     }, error => {
       this.spinnerService.resetSpinner();
     }

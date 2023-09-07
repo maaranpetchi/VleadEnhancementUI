@@ -151,8 +151,8 @@ export class TopnavbarComponent implements OnInit {
       this.cookieService.set('processId', process.id);
       this.cookieService.set('processName', process.name);
 
-      this.username = this.loginservice.getUsername();
-      this.UserId = this.loginservice.getUserId();
+      this.username = localStorage.getItem('username');
+      this.UserId = localStorage.getItem('UserId');
       const url = `http://servicedesk.vleadservices.com:85/#/Login?id=${this.UserId}`;
 
       // Open the URL in a new tab/window

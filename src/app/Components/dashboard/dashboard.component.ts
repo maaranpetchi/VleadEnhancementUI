@@ -146,6 +146,14 @@ console.log(this.Processes ,"thisProcesses");
     }
   }
 
+  report(){
+    this.username = this.loginservice.getUsername();
+    this.UserId = this.loginservice.getUserId();
+    const url = `http://servicedesk.vleadservices.com:85/#/Login?id=${this.UserId}`;
+
+    // Open the URL in a new tab/window
+    window.open(url, '_blank');
+  }
 permission: any[] = []
   checkIsAdmin() {
     // this.loader = true;

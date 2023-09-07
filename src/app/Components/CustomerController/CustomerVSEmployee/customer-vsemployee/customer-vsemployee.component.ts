@@ -134,7 +134,7 @@ export class CustomerVSEmployeeComponent implements OnInit {
     console.log("datavalue" + data);
 
     const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
-      height: '60vh',
+      // height: '40vh',
       width: '50vw',
       data
     });

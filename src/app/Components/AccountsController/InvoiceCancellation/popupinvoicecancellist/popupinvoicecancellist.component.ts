@@ -33,8 +33,11 @@ export class PopupinvoicecancellistComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event): void {
+  employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

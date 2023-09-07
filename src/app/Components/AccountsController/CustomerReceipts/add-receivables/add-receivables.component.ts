@@ -73,7 +73,7 @@ export class AddReceivablesComponent implements OnInit {
     //invoicenumber
     this.http.get<any>(environment.apiURL + `Receivable/GetCustomerInvoice?CustomerId=${id}`)
       .subscribe(invoicenumberdata => {
-        console.log(invoicenumberdata, "InvoicenumberData")
+        
 
         this.invoicenumberdropdownvalue = invoicenumberdata;
       });
@@ -157,7 +157,7 @@ export class AddReceivablesComponent implements OnInit {
     let adjustedAmount:any[]=[];
     let receivableAdjustment:any[]=[];
     if (this.CollectionBalanceAmount == 0) {
-console.log(this.AddedInvoice,"AddedInvoice");
+
 
             if (this.AddedInvoice.length != 0) {
               this.AddedInvoice.forEach( function (adjustments) {
@@ -217,7 +217,7 @@ console.log(this.AddedInvoice,"AddedInvoice");
 
             this.http.post<any>(environment.apiURL+`Receivable/CreateReceivable`,receivable).subscribe(result => {
                 //alert(JSON.stringify(result.Receivables));
-                console.log(result,"ReceivableResult");
+                
                 
                 if (result.receivables == "False") {
                   

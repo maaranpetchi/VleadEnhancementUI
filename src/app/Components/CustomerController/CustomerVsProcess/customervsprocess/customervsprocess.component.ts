@@ -81,47 +81,23 @@ export class CustomervsprocessComponent implements OnInit {
   });
   ngOnInit(): void {
     this.getEmployeeList();
-   this.getDepartmentlist();
-   
-
-
-  }
-  getAllCustomer() {
-    this.spinnerService.requestStarted();
-    this.http.get<any[]>(environment.apiURL + 'user/getallcustomers')
-      .subscribe({
-        next: (customers) => {
-          this.spinnerService.requestEnded();
-          this.customers = customers.sort((a, b) => a.name.localeCompare(b.name));
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner(); // Reset spinner on error
-          console.error(err);
-          Swal.fire(
-            'Error!',
-            'An error occurred !',
-            'error'
-          );
-        }
+    this._empService.getOptions()
+      .subscribe(options => {
+        this.spinnerService.requestEnded();
+        this.departmentList = options;
       });
 
-  }
-
-  getDepartmentlist(){
-    this.spinnerService.requestStarted();
-    this._empService.getOptions()
-    .subscribe(options => {
-      this.spinnerService.requestEnded();
-      this.departmentList = options;
-    });
-  }
-  getDDLList(){
-    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'CustomerVsProcess/GetAllddlList').subscribe(data => {
-      this.spinnerService.requestEnded();
       this.data = data;
       console.log(data);
+
     });
+
+    this.http.get<any[]>(environment.apiURL + 'user/getallcustomers')
+      .subscribe(customers => {
+        this.customers = customers.sort((a, b) => a.name.localeCompare(b.name));
+      });
+
   }
 
   onOptionSelected(event: any, myForm: FormGroup) {
@@ -162,15 +138,13 @@ export class CustomervsprocessComponent implements OnInit {
   // this._empService.getEmployeeList().then((res)=>{console.log(res)}).catch(err=> console.log(err));
 
 
-  employeeFilter(event: Event) {
+  employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
-
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
     this._empService.deleteEmployee(id).subscribe({
@@ -230,7 +204,7 @@ export class CustomervsprocessComponent implements OnInit {
 
     console.log(this.myForm);
     this.submitted = true;
-    this.http.post(environment.apiURL + 'CustomerVsProcess/AddProcessworkflow', {
+    this.http.post<any>(environment.apiURL + 'CustomerVsProcess/AddProcessworkflow', {
       "selectedScopes": this.myForm.value.scopeName,
       "departmentId": this.myForm.value.departmentList,
       "customerId": this.myForm.value.customer,
@@ -240,22 +214,35 @@ export class CustomervsprocessComponent implements OnInit {
       "nextProcessId": this.myForm.value.NextProcess,
       "statusId": this.myForm.value.status,
       "createdBy": parseInt(this.loginservice.getUsername())
-    }).subscribe(() => {
-      // clear form fields
-      this.spinnerService.requestEnded();
-      Swal.fire(
-        'Done!',
-        ' Data Added Successfully!',
-        'success'
-      )
-      this.submitted = false;
-      this.getEmployeeList();
+    }).subscribe({
+      next: (response) => {
+        // clear form fields
+        this.spinnerService.requestEnded();
+        Swal.fire(
+          'Done!',
+          response.message,
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.getEmployeeList();
+          }
+        })
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
     });
   }
 
 
   refreshPage() {
-    this.getEmployeeList();
+    window.location.reload();
   }
 
 }

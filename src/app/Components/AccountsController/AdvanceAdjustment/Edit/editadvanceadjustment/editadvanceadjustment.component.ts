@@ -108,7 +108,7 @@ export class EditadvanceadjustmentComponent {
   items: any[] = [];
 
   addItem(itemForm) {
-    console.log(itemForm, "itemform");
+    
 
     if (!itemForm.valid) {
       return; // prevent adding the item if the form is not valid
@@ -139,10 +139,10 @@ export class EditadvanceadjustmentComponent {
   amountvalidationerror: boolean = true;
 
   amountvalidation() {
-    // console.log("eenter the values by the user changes");
+    // 
 
     const enteredAmount = this.invoiceForm.get('enteramount')?.value;
-    console.log("Enter the amount", this.InvoiceAmount);
+    
 
     if (this.input6 > this.InvoiceAmount) {
       this.amountvalidationerror = true;
@@ -157,7 +157,7 @@ export class EditadvanceadjustmentComponent {
   }
   onFormSubmit() {
     this.spinnerService.requestStarted();
-    console.log(this.items, "Advanceadjustemnt");
+    
     let temparray = this.items.map(x => {
       return {
         "invoiceId": x.id,

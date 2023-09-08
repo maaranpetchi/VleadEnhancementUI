@@ -17,6 +17,7 @@ import { error } from 'jquery';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { ProductionQuotationComponent } from '../production-quotation/production-quotation.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-productionallocationtable',
@@ -58,6 +59,7 @@ export class ProductionallocationtableComponent implements OnInit {
   selectedScope: any = 0;
   estTime = 0;
 
+  selection = new SelectionModel<Element>(true, []);
   @ViewChild('paginator1') paginator1: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -180,11 +182,12 @@ export class ProductionallocationtableComponent implements OnInit {
         this.scopes.sort((a, b) => a.name.localeCompare(b.name)); // Sort the scopes based on the 'name' property
       });
   }
-
+  filterValue:any=null;
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -203,33 +206,33 @@ export class ProductionallocationtableComponent implements OnInit {
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
-  setAll(completed: boolean, item: any) {
-    console.log('item: ' + item);
-    console.log('before', this.selectedQuery);
-    if (completed == true) {
-      if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-      if (item.employeeId == null) item.employeeId = 0;
-      if (item.estimatedTime == null) item.estimatedTime = 0;
-      this.selectedQuery.push({
-        ...item,
-        CategoryDesc: '',
-        Comments: '',
-        CommentsToClient: '',
-        Remarks: '',
-        SelectedEmployees: [],
-        SelectedRows: [],
-      });
-    } else {
-      if (this.selectedQuery.find((x) => x.id == item.id)) {
-        this.selectedQuery = this.selectedQuery.filter((x) => {
-          if (x.id != item.id) {
-            return item;
-          }
-        });
-      }
-    }
-    console.log('after', this.selectedQuery);
-  }
+  // setAll(completed: boolean, item: any) {
+  //   console.log('item: ' + item);
+  //   console.log('before', this.selectedQuery);
+  //   if (completed == true) {
+  //     if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
+  //     if (item.employeeId == null) item.employeeId = 0;
+  //     if (item.estimatedTime == null) item.estimatedTime = 0;
+  //     this.selectedQuery.push({
+  //       ...item,
+  //       CategoryDesc: '',
+  //       Comments: '',
+  //       CommentsToClient: '',
+  //       Remarks: '',
+  //       SelectedEmployees: [],
+  //       SelectedRows: [],
+  //     });
+  //   } else {
+  //     if (this.selectedQuery.find((x) => x.id == item.id)) {
+  //       this.selectedQuery = this.selectedQuery.filter((x) => {
+  //         if (x.id != item.id) {
+  //           return item;
+  //         }
+  //       });
+  //     }
+  //   }
+  //   console.log('after', this.selectedQuery);
+  // }
 
   setEmployeeAll(completed: boolean, item: any) {
     console.log('before', this.selectedEmployee);
@@ -274,43 +277,46 @@ export class ProductionallocationtableComponent implements OnInit {
     }
     console.log('after', this.selectedEmployee);
   }
-  setExchangeHeader() {
-    console.log('exchangeHeader', this.exchangeHeader);
-    console.log(this.selectedQuery, 'selectrow');
+  // setExchangeHeader() {
+  //   console.log('exchangeHeader', this.exchangeHeader);
+  //   console.log(this.selectedQuery, 'selectrow');
 
-    let temparray: any[] = [];
-    let selected:any[]=[];
-    let skip: boolean;
-    this.dataSource.data.filter((y: any) => {
-      skip = false;
-      this.selectedQuery.forEach((x) => {
-        let id: string = y.jobId;
-        if (id == x.jobId) {
-          temparray.push({
-            ...y,
-            allocatedEstimatedTime: this.exchangeHeader,
-            isSelected: true,
-          });
-          selected.push({
-            ...y,
-            CategoryDesc: '',
-            Comments: '',
-            CommentsToClient: '',
-            Remarks: '',
-            SelectedEmployees: [],
-            SelectedRows: [],
-            allocatedEstimatedTime: this.exchangeHeader})
-          skip = true;
-        }
-      });
-      if (!skip) {
-        temparray.push(y);
-      }
-    });
-    this.dataSource.data = temparray;
-    this.selectedQuery=selected;
-  }
-  
+  //   let temparray: any[] = [];
+  //   let selected:any[]=[];
+  //   let skip: boolean;
+  //   this.dataSource.data.filter((y: any) => {
+  //     skip = false; 
+  //     this.selection.selected.forEach((x:any) => {
+  //       let id: string = y.jobId;
+  //       if (id == x.jobId) {
+  //         temparray.push({
+  //           ...y,
+  //           allocatedEstimatedTime: this.exchangeHeader,
+  //           isSelected: true,
+  //         });
+  //         selected.push({
+  //           ...y,
+  //           CategoryDesc: '',
+  //           Comments: '',
+  //           CommentsToClient: '',
+  //           Remarks: '',
+  //           SelectedEmployees: [],
+  //           SelectedRows: [],
+  //           allocatedEstimatedTime: this.exchangeHeader})
+  //         skip = true;
+  //       }
+  //     });
+  //     if (!skip) {
+  //       temparray.push(y);
+  //     }
+  //   });
+  //   this.dataSource.data = temparray;
+  //   this.selectedQuery=this.selection.selected;
+  // }
+    setExchangeHeader(){
+      console.log("exchange",this.selection.selected)
+      this.selection.selected.forEach((x:any)=>x.allocatedEstimatedTime=this.exchangeHeader);
+    }
   benchChecked: boolean = false;
   onBenchCheckboxChange(event: any) {
     this.benchChecked = event.checked;
@@ -718,7 +724,8 @@ export class ProductionallocationtableComponent implements OnInit {
 
   selectedJobs: any[] = [];
   onSubmit() {
-    
+    console.log("setall",this.selection);
+    this.selection.selected.forEach(x=>this.setAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -733,8 +740,8 @@ export class ProductionallocationtableComponent implements OnInit {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount > 1) {
-            
-            alert('Please select one Employee!');
+            Swal.fire('Info!', 'Please select one Employee!', 'info');
+            // alert('Please select one Employee!');
           }
           else {
             console.log();
@@ -742,7 +749,9 @@ export class ProductionallocationtableComponent implements OnInit {
             for (var i = 0; i < selectedJobCount; i++) {
             console.log(this.selectedQuery, "est time for job");
                 if (this.selectedJobs[i].allocatedEstimatedTime == undefined || this.selectedJobs[i].allocatedEstimatedTime == "" || this.selectedJobs[i].allocatedEstimatedTime == 0) {
-                    alert('Please enter Estimated Time for Selected Job');
+                    // alert('Please enter Estimated Time for Selected Job');
+            Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
+                    
                     return;
                 }
             }
@@ -755,26 +764,33 @@ export class ProductionallocationtableComponent implements OnInit {
               this.selectedEmployee[i].estTime == '' ||
               this.selectedEmployee[i].estTime == 0
             ) {
-              alert('Please enter Estimated Time for Selected Employee');
+              Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
+              // alert('Please enter Estimated Time for Selected Employee');
               return;
             }
           }
           this.postJobs();
         }
       } else {
-        alert('Please select Job and Employeesss');
+        Swal.fire('Info!', 'Please select Job and Employees!', 'info');
+
+        // alert('Please select Job and Employeesss');
         
         
       }
     } else {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedEmployeeCount > 1) {
-          alert('Please select one Employee!');
+        Swal.fire('Info!', 'Please select one Employee!', 'info');
+
+          // alert('Please select one Employee!');
           return;
         }
         this.postJobs();
       } else {
-        alert('Please select Job and Employee');
+        Swal.fire('Info!', 'Please select Job and Employee!', 'info');
+
+        // alert('Please select Job and Employee');
         // $('#alertPopup').modal('show');
       }
     }
@@ -859,17 +875,15 @@ export class ProductionallocationtableComponent implements OnInit {
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-            alert('Following Job Ids are assigne to same employee ' + strJobId);
+        Swal.fire('Info!', 'Following Job Ids are assigne to same Employee!', 'info',strJobId);
+            
+            // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
         }
       );
     } else {
       this.jobMovement(processMovement);
     }
-  }
-  refreshPage() {
-    this.freshJobs();
-    // window.location.reload();
   }
   jobMovement(processMovement) {
     var confirmationMessage: any;
@@ -882,7 +896,8 @@ export class ProductionallocationtableComponent implements OnInit {
         confirmationMessage = response;
         this.spinnerService.requestEnded();
         if (response.success === false) {
-          alert("Error the job assigned")
+        Swal.fire('Info!', 'Error the job assigned!', 'info');
+          // alert("Error the job assigned")
         }else if(response.success === true){
           Swal.fire(
             'Done!',
@@ -959,10 +974,53 @@ export class ProductionallocationtableComponent implements OnInit {
 
  
   }
+  refreshPage() {
+    this.freshJobs();
+    // window.location.reload();
+  }
+  
   ProcessMovementData(url: string, data: any): Observable<any> {
     return this.http.post(
       environment.apiURL + 'Allocation/QARestriction ',
       data
     );
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    console.log("record 5",this.selection)
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if(this.filterValue){
+    this.selection.clear();
+      this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+    console.log("record 6",this.selection.selected)
+ 
+  }
+  setAll(item: any) {
+    console.log('item: ' + item);
+    console.log('before', this.selectedQuery);
+    
+      if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
+      if (item.employeeId == null) item.employeeId = 0;
+      if (item.estimatedTime == null) item.estimatedTime = 0;
+      this.selectedQuery.push({
+        ...item,
+        CategoryDesc: '',
+        Comments: '',
+        CommentsToClient: '',
+        Remarks: '',
+        SelectedEmployees: [],
+        SelectedRows: [],
+      });
+    console.log('after', this.selectedQuery);
   }
 }

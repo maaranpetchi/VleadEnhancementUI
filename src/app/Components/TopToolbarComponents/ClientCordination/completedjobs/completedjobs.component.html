@@ -8,16 +8,12 @@
     <title>Document</title>
 </head>
 
-<body style="height:123vh">
-
     <div class="main-body">
-        <div class="container" id="table-container">
+        <div id="table-container">
             <h3 style="font-family:'Times New Roman', Times, serif">Completed Jobs ({{CompletedJobsCount ? CompletedJobsCount:0}})</h3>
-
-
             <mat-tab-group dynamicHeight (selectedTabChange)="getCompletedJobData()" >
                 <mat-tab  style="width:300px" label="{{ 'Ready To Upload Jobs (' + (CompletedJobsCount ? CompletedJobsCount:0) + ')' }}">
-                    <div class="example-small-box mat-elevation-z4">
+                    <div class="example-small-box mat-elevation-z8">
                         <!-- <mat-form-field> 
                             <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
                         </mat-form-field> -->
@@ -218,27 +214,26 @@
                             <!-- Table Rows -->
                             <tr mat-row *matRowDef="let job; columns: displayedColumns;"></tr>
                         </table>
-                        <mat-paginator [pageSizeOptions]="[25, 50,75,100]"
-                            aria-label="Select page of users"></mat-paginator>
-
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field>
-                                    <mat-label>Remarks</mat-label>
-                                    <textarea matInput placeholder="Enter Remarks" name="Remarks" (change)="getRemarkValue($event)"></textarea>
-                                </mat-form-field>
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-primary" (click)="bulkUpload()">Bulk Upload</button>
-                            </div>
-                        </div>
-
+                       
 
                     </div>
                 </mat-tab>
             </mat-tab-group>
+            <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <mat-form-field>
+                    <mat-label>Remarks</mat-label>
+                    <textarea matInput placeholder="Enter Remarks" name="Remarks" (change)="getRemarkValue($event)"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" (click)="bulkUpload()">Bulk Upload</button>
+            </div>
+        </div>
         </div>
     </div>
-</body>
+    
 
 </html>

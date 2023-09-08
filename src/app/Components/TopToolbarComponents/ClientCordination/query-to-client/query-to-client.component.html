@@ -3,10 +3,20 @@
             <table mat-table [dataSource]="dataSource" matSort id="custom-table"
             class="table table-sm table-responsive table table-bordered text-center">
             <!--Checkbox to select the values--> 
-                    <ng-container matColumnDef="selected">
+                    <!-- <ng-container matColumnDef="selected">
                         <th mat-sort-header mat-header-cell *matHeaderCellDef > Select </th>
                         <td mat-cell  *matCellDef="let element" > <mat-checkbox  (change)="setAll($event.checked,element)" ></mat-checkbox> </td>
                         
+                    </ng-container> -->
+                    <ng-container matColumnDef="selected">
+                      <th mat-sort-header mat-header-cell *matHeaderCellDef>
+                        <!-- Add a checkbox input for select all -->
+                        <mat-checkbox   (change)="selectAll($event.checked)"></mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        <!-- Use a separate checkbox for each row -->
+                        <mat-checkbox [(ngModel)]="element.isSelected"></mat-checkbox>
+                      </td>
                     </ng-container>
               <!-- Job ID Column -->
               <ng-container matColumnDef="jobId" >
@@ -103,8 +113,6 @@
               <!-- Table Rows -->
               <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
             </table>
-            
-            <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
-          
     </div>
+    <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
 </div>

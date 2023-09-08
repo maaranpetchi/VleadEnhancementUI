@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClientOrderTable</title>
 </head>
-<body>
     <div class="main-body">
         <div class="container" id="table-container">
             <div class="mat-elevation-z8">
-    
                 <table mat-table [dataSource]="dataSource" matSort id="custom-table"
                 class="table table-sm table-responsive table table-bordered text-center">
                     <!--Checkbox to select the values-->
@@ -88,26 +86,23 @@
     
                     <!-- Table Rows -->
                     <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
-                  
                 </table>
-                <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
-    
             </div>
-            <button class="btn btn-success" (click)="multiconvert()">Bulk Convert</button>
-            
-            <div class="division">
-                <mat-form-field>
-                    <mat-label>Divisions</mat-label>
-                    <mat-select [(value)]="selectdivision">
-                        <mat-option *ngFor="let Divisions of DivisionApiData" [value]="Divisions.id">
-                            {{ Divisions.divisionName }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-    
-            </div>
-    
+        </div>
+        <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
+       
+    </div>
+</html>
+<button class="btn btn-success" (click)="multiconvert()">Bulk Convert</button>
+    <div class="row">
+        <div class="division mt-3">
+            <mat-form-field>
+                <mat-label>Divisions</mat-label>
+                <mat-select [(value)]="selectdivision">
+                    <mat-option *ngFor="let Divisions of DivisionApiData" [value]="Divisions.id">
+                        {{ Divisions.divisionName }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
     </div>
-</body>
-</html>

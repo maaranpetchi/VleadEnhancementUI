@@ -11,14 +11,16 @@ import * as e from 'cors';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { ClientordinationindexComponent } from '../clientordinationindex/clientordinationindex.component';
 
-
 @Component({
   selector: 'app-query-to-client',
   templateUrl: './query-to-client.component.html',
-  styleUrls: ['./query-to-client.component.scss']
+  styleUrls: ['./query-to-client.component.scss'],
 })
 export class QueryToClientComponent implements OnInit {
-  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+  // selectAllcheck: false;
+  // dataSource: any[] = [];
+  @ViewChild(ClientordinationindexComponent)
+  ClientordinationindexComponent: ClientordinationindexComponent;
 
   displayedColumns: string[] = [
     'selected',
@@ -29,18 +31,18 @@ export class QueryToClientComponent implements OnInit {
     'fileInwardMode',
     'client',
     'customerSatisfaction',
-    'status'
+    'status',
   ];
   displayedColumnsVisibility: any = {
-    'selected':true,
-    'jobId':true,
-    'jobName':true,
-    'fileName':true,
-    'fileReceivedEstDate':true,
-    'fileInwardMode':true,
-    'client':true,
-    'customerSatisfaction':true,
-    'status':true
+    selected: true,
+    jobId: true,
+    jobName: true,
+    fileName: true,
+    fileReceivedEstDate: true,
+    fileInwardMode: true,
+    client: true,
+    customerSatisfaction: true,
+    status: true,
   };
   visibility() {
     let result: string[] = [];
@@ -73,24 +75,26 @@ export class QueryToClientComponent implements OnInit {
     if (this.displayedColumnsVisibility.status) {
       result.push('status');
     }
-    
-       return result;
+
+    return result;
   }
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient,private loginservice:LoginService, private dialog:MatDialog ,private spinnerService:SpinnerService) {}
+  constructor(
+    private http: HttpClient,
+    private loginservice: LoginService,
+    private dialog: MatDialog,
+    private spinnerService: SpinnerService
+  ) {}
 
   ngOnInit(): void {
-    console.log("POpup");
-    
+    console.log('POpup');
+
     //to get the data and show it in table
-
   }
-
-
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -99,112 +103,137 @@ export class QueryToClientComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  } 
-
+  }
 
   //to save the checkbox value
-  selectedQuery:any[]=[];
+  selectedQuery: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedQuery)
+    console.log('before', this.selectedQuery);
     if (completed == true) {
-      this.selectedQuery.push(item)
-    }
-    else {
-
-      if (this.selectedQuery.find(x => x.id == item.id)) {
-        this.selectedQuery = this.selectedQuery.filter(x => {
+      this.selectedQuery.push(item);
+    } else {
+      if (this.selectedQuery.find((x) => x.id == item.id)) {
+        this.selectedQuery = this.selectedQuery.filter((x) => {
           if (x.id != item.id) {
-            return item
+            return item;
           }
-        })
+        });
       }
     }
-    console.log("after", this.selectedQuery)
+    console.log('after', this.selectedQuery);
   }
 
-  convertedDate:string;
-queriesToClient(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe(data => {
-   this.spinnerService.requestEnded();
- 
-    this.dataSource = new MatTableDataSource(data.queryPendingJobs);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = true;
-    const apiDate = data.date; // Assuming the API response has a 'date' property
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-queryResponse(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
+  selectAll(checked: boolean): void {
+    this.dataSource.data.forEach((element) => {
+      element.isSelected = checked;
+    });
 
-    this.dataSource = new MatTableDataSource(data.quotationJobs);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = true;
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-cancelledJobs(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.dataSource = data.cancelledJobs;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = true;
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-quotationJobs(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.dataSource = data.quotationJobs;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = false;
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-
-
-tab(action) {
-  if (action == '1') {
-    this.queriesToClient();
+    
   }
-  else if (action == '2') {
-    this.queryResponse();
+  convertedDate: string;
+  queriesToClient() {
+    this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`
+      )
+      .subscribe(
+        (data) => {
+          this.spinnerService.requestEnded();
+
+          this.dataSource = new MatTableDataSource(data.queryPendingJobs);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.displayedColumnsVisibility.status = true;
+          const apiDate = data.date; // Assuming the API response has a 'date' property
+        },
+        (error) => {
+          this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+        }
+      );
   }
-  else if (action == '3') {
-    this.cancelledJobs();
+  queryResponse() {
+    this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`
+      )
+      .subscribe(
+        (data) => {
+          this.spinnerService.requestEnded();
+
+          this.dataSource = new MatTableDataSource(data.quotationJobs);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.displayedColumnsVisibility.status = true;
+        },
+        (error) => {
+          this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+        }
+      );
   }
-  else if (action == '4') {
-    this.quotationJobs();
+  cancelledJobs() {
+    this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`
+      )
+      .subscribe(
+        (data) => {
+          this.spinnerService.requestEnded();
+          this.dataSource = data.cancelledJobs;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.displayedColumnsVisibility.status = true;
+        },
+        (error) => {
+          this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+        }
+      );
+  }
+  quotationJobs() {
+    this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`
+      )
+      .subscribe(
+        (data) => {
+          this.spinnerService.requestEnded();
+          this.dataSource = data.quotationJobs;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.displayedColumnsVisibility.status = false;
+        },
+        (error) => {
+          this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+        }
+      );
   }
 
-}
+  tab(action) {
+    if (action == '1') {
+      this.queriesToClient();
+    } else if (action == '2') {
+      this.queryResponse();
+    } else if (action == '3') {
+      this.cancelledJobs();
+    } else if (action == '4') {
+      this.quotationJobs();
+    }
+  }
 
-getJobDetails(data){
-this.dialog.open(JobDetailsClientIndexComponent,{
-  width:'80vw',
-  data
-})
-}
+  getJobDetails(data) {
+    this.dialog.open(JobDetailsClientIndexComponent, {
+      width: '80vw',
+      data,
+    });
+  }
 
-
-//040923
-
+  //040923
 }

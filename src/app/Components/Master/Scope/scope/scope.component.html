@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
-<body>
+<body style="height: 100vh;">
   <div class="container">
-    <!-- <div class=""> -->
     <div class="card">
       <div class="card-body bg-primary">
         <div class="row">
@@ -15,7 +14,7 @@
             <h3 class="text-white">
               <span class="scope-text">Scope</span>
               <button mat-icon-button class="square-button " data-bs-toggle="tooltip" data-bs-placement="bottom"
-                title="Add Scope!" color="success" (click)="addItem()">
+                title="Add User!" color="success" (click)="addItem()">
                 <span class="add-icon-bg">
                   <mat-icon class="add-icon">add_box</mat-icon>
                 </span>
@@ -89,13 +88,12 @@
   
               </table>
   
-              <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
             </div>
           </form>
         </div>
       </div>
     </div>
-    <!-- </div> -->
+    <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
   </div>
 </body>
 </html>

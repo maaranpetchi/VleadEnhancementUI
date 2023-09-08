@@ -75,7 +75,7 @@ export class UserMasterComponent implements OnInit {
   openAddUsers() {
     const dialogRef = this._dialog.open(AdduserMasterComponent, {
       width: '100%',
-      height: '400px',
+      height: '550px',
     })
     dialogRef.afterClosed().subscribe({
       next: (val) => {

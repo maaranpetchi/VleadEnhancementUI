@@ -138,11 +138,11 @@
                 <tr mat-header-row *matHeaderRowDef="visibility()"></tr>
                 <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
                 </table>
-                <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
               </div>
     
             </div>
         </div>
+        <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
     </div>
 </body>
 </html>

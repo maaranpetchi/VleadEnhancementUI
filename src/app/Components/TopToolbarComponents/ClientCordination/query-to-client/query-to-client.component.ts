@@ -14,7 +14,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 @Component({
   selector: 'app-query-to-client',
   templateUrl: './query-to-client.component.html',
-  styleUrls: ['./query-to-client.component.scss']
+  styleUrls: ['./query-to-client.component.scss'],
 })
 export class QueryToClientComponent implements OnInit {
   displayedColumns: string[] = [
@@ -26,18 +26,18 @@ export class QueryToClientComponent implements OnInit {
     'fileInwardMode',
     'client',
     'customerSatisfaction',
-    'status'
+    'status',
   ];
   displayedColumnsVisibility: any = {
-    'selected':true,
-    'jobId':true,
-    'jobName':true,
-    'fileName':true,
-    'fileReceivedEstDate':true,
-    'fileInwardMode':true,
-    'client':true,
-    'customerSatisfaction':true,
-    'status':true
+    selected: true,
+    jobId: true,
+    jobName: true,
+    fileName: true,
+    fileReceivedEstDate: true,
+    fileInwardMode: true,
+    client: true,
+    customerSatisfaction: true,
+    status: true,
   };
   visibility() {
     let result: string[] = [];
@@ -70,22 +70,25 @@ export class QueryToClientComponent implements OnInit {
     if (this.displayedColumnsVisibility.status) {
       result.push('status');
     }
-    
-       return result;
+
+    return result;
   }
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient,private loginservice:LoginService, private dialog:MatDialog ,private spinnerService:SpinnerService) {}
+  constructor(
+    private http: HttpClient,
+    private loginservice: LoginService,
+    private dialog: MatDialog,
+    private spinnerService: SpinnerService
+  ) {}
 
   ngOnInit(): void {
     //to get the data and show it in table
   this.queriesToClient();
   }
-
-
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -94,28 +97,25 @@ export class QueryToClientComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  } 
-
+  }
 
   //to save the checkbox value
-  selectedQuery:any[]=[];
+  selectedQuery: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedQuery)
+    console.log('before', this.selectedQuery);
     if (completed == true) {
-      this.selectedQuery.push(item)
-    }
-    else {
-
-      if (this.selectedQuery.find(x => x.id == item.id)) {
-        this.selectedQuery = this.selectedQuery.filter(x => {
+      this.selectedQuery.push(item);
+    } else {
+      if (this.selectedQuery.find((x) => x.id == item.id)) {
+        this.selectedQuery = this.selectedQuery.filter((x) => {
           if (x.id != item.id) {
-            return item
+            return item;
           }
-        })
+        });
       }
     }
-    console.log("after", this.selectedQuery)
+    console.log('after', this.selectedQuery);
   }
 
   convertedDate:string;
@@ -173,21 +173,17 @@ quotationJobs(){
 }
 
 
-tab(action) {
-  if (action == '1') {
-    this.queriesToClient();
+  tab(action) {
+    if (action == '1') {
+      this.queriesToClient();
+    } else if (action == '2') {
+      this.queryResponse();
+    } else if (action == '3') {
+      this.cancelledJobs();
+    } else if (action == '4') {
+      this.quotationJobs();
+    }
   }
-  else if (action == '2') {
-    this.queryResponse();
-  }
-  else if (action == '3') {
-    this.cancelledJobs();
-  }
-  else if (action == '4') {
-    this.quotationJobs();
-  }
-
-}
 
 getJobDetails(data){
 this.dialog.open(JobDetailsClientIndexComponent,{

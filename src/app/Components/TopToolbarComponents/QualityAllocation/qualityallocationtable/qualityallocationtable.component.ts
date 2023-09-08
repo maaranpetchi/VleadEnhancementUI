@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmployeePopupTableComponent } from '../employee-popup-table/employee-popup-table.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { SelectionModel } from '@angular/cdk/collections';
 interface Employee {
   id: number;
   name: string;
@@ -25,6 +26,7 @@ interface Employee {
 export class QualityallocationtableComponent implements OnInit {
   exchangenumber: number;
   dataEmployeeSource: MatTableDataSource<Employee>;
+  selection = new SelectionModel<Element>(true, []);
   displayedEmployeeColumns: string[] = ['selected', 'employee', 'shift'];
 
   scopes: any[] = [];
@@ -67,10 +69,20 @@ export class QualityallocationtableComponent implements OnInit {
     //Employeetable
   }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  // applyFilter(event: Event): void {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
 
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
+  filterValue:any=null;
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -89,10 +101,10 @@ export class QualityallocationtableComponent implements OnInit {
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
-  setAllJobs(completed: boolean, item: any) {
+  setAllJobs( item: any) {
     console.log('item: ' + item);
     console.log('before', this.selectedQuery);
-    if (completed == true) {
+    // if (completed == true) {
       if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
       if (item.employeeId == null) item.employeeId = 0;
       if (item.estimatedTime == null) item.estimatedTime = 0;
@@ -105,16 +117,16 @@ export class QualityallocationtableComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
       });
-    } else {
-      if (this.selectedQuery.find((x) => x.id == item.id)) {
-        this.selectedQuery = this.selectedQuery.filter((x) => {
-          if (x.id != item.id) {
-            return item;
-          }
-        });
-      }
+    // } else {
+    //   if (this.selectedQuery.find((x) => x.id == item.id)) {
+    //     this.selectedQuery = this.selectedQuery.filter((x) => {
+    //       if (x.id != item.id) {
+    //         return item;
+    //       }
+    //     });
+    //   }
       console.log('after', this.selectedQuery);
-    }
+    // }
   }
 
   setEmployeeAll(completed: boolean, item: any) {
@@ -458,6 +470,8 @@ export class QualityallocationtableComponent implements OnInit {
   data: any;
   onSubmit(data: any) {
     console.log(data, 'submit');
+    console.log("setall",this.selection);
+    this.selection.selected.forEach(x=>this.setAllJobs(x));
 
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
@@ -600,7 +614,8 @@ export class QualityallocationtableComponent implements OnInit {
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-            alert('Following Job Ids are assigne to same employee ' + strJobId);
+            Swal.fire('Info!', 'Following Job Ids are assigned to same Employee', 'info'+strJobId);
+            // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
         }
       );
@@ -711,5 +726,25 @@ export class QualityallocationtableComponent implements OnInit {
         }
       },
     });
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    console.log("record 5",this.selection)
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if(this.filterValue){
+    this.selection.clear();
+      this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+    console.log("record 6",this.selection.selected)
+ 
   }
 }

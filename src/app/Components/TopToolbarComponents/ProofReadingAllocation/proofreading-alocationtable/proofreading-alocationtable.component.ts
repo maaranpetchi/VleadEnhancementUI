@@ -10,6 +10,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { Observable } from 'rxjs';
 import { EmployeePopupComponent } from '../employee-popup/employee-popup.component';
 import { JobCategorypopupComponent } from '../job-categorypopup/job-categorypopup.component';
+import { SelectionModel } from '@angular/cdk/collections';
 interface Employee {
   id: number;
   name: string;
@@ -50,6 +51,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   estTime: number;
+  selection = new SelectionModel<Element>(true, []);
 
   constructor(
     private http: HttpClient,
@@ -64,10 +66,12 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     //Employeetable
   }
 
+  filterValue:any=null;
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -640,5 +644,25 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         }
       },
     });
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    console.log("record 5",this.selection)
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if(this.filterValue){
+    this.selection.clear();
+      this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+    console.log("record 6",this.selection.selected)
+ 
   }
 }

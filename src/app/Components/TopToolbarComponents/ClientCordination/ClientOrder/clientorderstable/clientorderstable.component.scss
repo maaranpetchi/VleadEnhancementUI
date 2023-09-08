@@ -1,6 +1,6 @@
 .division{
     display: flex;
-    justify-content: center;
+    justify-content: start;
 }
 
 .filecount{
@@ -15,11 +15,11 @@ cursor: pointer;
     display: block;
     // width: 85vw;
 }
-// .mat-elevation-z8{
-// overflow-x: auto;
-// }
+.mat-elevation-z8{
+overflow-x: auto;
+}
 #table-container {
-    height: 70vh; /* Set a fixed height of 50% of the viewport height */
+    height: 50vh; /* Set a fixed height of 50% of the viewport height */
     overflow-y: auto;  
   }
   #custom-table {

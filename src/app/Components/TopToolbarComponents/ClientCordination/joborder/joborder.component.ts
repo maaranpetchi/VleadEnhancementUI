@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { ClientcordinationService } from 'src/app/Services/CoreStructure/ClientCordination/clientcordination.service';
@@ -29,7 +30,8 @@ export class JoborderComponent implements OnInit {
     // Prevent Saturday and Sunday from being selected.
     return day !== 0 && day !== 6;
   };
-  constructor(private http: HttpClient, private coreService: CoreService, private _fb: FormBuilder, private loginservice: LoginService, private clientcordinationservice: ClientcordinationService, private spinnerservice: SpinnerService) {
+  constructor(private http: HttpClient, private coreService: CoreService, private _fb: FormBuilder, private loginservice: LoginService, private clientcordinationservice: ClientcordinationService, private spinnerservice: SpinnerService,
+    private router :Router) {
     this.joborder = this._fb.group({
       jobno: [{ value: '', disabled: true }],
       jobdate: [{ value: new Date().toLocaleDateString('en-GB'), disabled: true }],
@@ -166,7 +168,9 @@ export class JoborderComponent implements OnInit {
   }
 
 
-
+  onCancel(){
+    this.router.navigate(['topnavbar/clientindex']);
+  }
 
   onFormSubmit() {
     if (this.selectedFile.length === 0) {

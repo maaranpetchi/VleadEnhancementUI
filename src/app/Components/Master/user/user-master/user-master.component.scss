@@ -8,3 +8,25 @@
     width: 75%; /* Set the table width to 75% of its container */
     border-collapse: collapse; /* Optional: Collapse borders between table cells */
   }
+  .add-icon {
+    color: rgb(252, 255, 252);
+    margin-top: 8px;
+    text-align:  center;
+    width: 100%;
+    height: 100%;
+    font-size: 18px; /* Adjust the value as needed */
+  }
+  .small-input .mat-input-element {
+    height: 50px;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .add-icon-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: green;
+  }

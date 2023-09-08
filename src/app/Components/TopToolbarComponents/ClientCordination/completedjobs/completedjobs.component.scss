@@ -1,12 +1,13 @@
-.mat-elevation-z4{
-    overflow: auto;
-}
-#table-container {
-    height: 70vh; /* Set a fixed height of 50% of the viewport height */
-    overflow-y: auto;  
+.mat-elevation-z8{
+  overflow-x: auto;
+
   }
-  #custom-table {
-    width: 75%; /* Set the table width to 75% of its container */
-    border-collapse: collapse; /* Optional: Collapse borders between table cells */
-  }
-  
+  #table-container {
+      // height: 50vh; /* Set a fixed height of 50% of the viewport height */
+      overflow-y: auto;  
+    }
+    #custom-table {
+      height: 50vh;
+      width: 75%; /* Set the table width to 75% of its container */
+      border-collapse: collapse; /* Optional: Collapse borders between table cells */
+    }

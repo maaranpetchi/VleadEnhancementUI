@@ -42,7 +42,7 @@ export class BuddyProofComponent {
   //to save the checkbox values
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedproduction)
+    
     if (completed == true) {
       this.selectedproduction.push(item)
     }
@@ -56,7 +56,7 @@ export class BuddyProofComponent {
         })
       }
     }
-    console.log("after", this.selectedproduction)
+    
   }
 
   currentTab = 1;
@@ -130,7 +130,7 @@ export class BuddyProofComponent {
   
   getCount() {
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(freshdataCount => {
-      console.log(freshdataCount,"buddyproofmain");
+      
       this.freshJobsCount = freshdataCount.freshJobsCount;
       this.RevisionJobsCount = freshdataCount.revisionJobsCount;
       this.ReworkJobsCount = freshdataCount.reworkJobsCount;

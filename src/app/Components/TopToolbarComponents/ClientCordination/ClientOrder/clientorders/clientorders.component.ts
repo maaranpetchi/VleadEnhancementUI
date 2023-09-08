@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { data } from 'jquery';
 import { environment } from 'src/Environments/environment';
-
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-clientorders',
   templateUrl: './clientorders.component.html',
@@ -13,20 +14,34 @@ export class ClientordersComponent implements OnInit {
   @ViewChild(ClientorderstableComponent) ClientorderstableComponent: ClientorderstableComponent;
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private spinnerService:SpinnerService) {
   }
 
   DivisionApiData: any[];
   ngOnInit(): void {
-    //division dropdown
-    this.http.get<any>(environment.apiURL+'ClientOrderService/nGetDivisionForJO').subscribe(divisiondata => {
-      this.DivisionApiData = divisiondata;
-    })
+this.getDivisionAPi();
 this.getmattabcount();
 this.getclientordercount();
   }
 
-
+getDivisionAPi(){
+      //division dropdown
+      this.spinnerService.requestStarted();
+      this.http.get<any>(environment.apiURL+'ClientOrderService/nGetDivisionForJO').subscribe({next:(divisiondata) => {
+        this.spinnerService.requestEnded();
+        this.DivisionApiData = divisiondata;
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err); 
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
+      })
+}
 
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
@@ -86,12 +101,14 @@ this.getclientordercount();
   NewJobCount: any;
   QuoteJobCount: any;
   getclientordercount() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
-      console.log(responsedata1,"NewJobTabCount");
+      this.spinnerService.requestEnded();
       this.NewJobCount = responsedata1.count;
     });
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
-      console.log(responsedata2, "QuoteJobCountresponsedata2");
+      this.spinnerService.requestEnded();
       this.QuoteJobCount = responsedata2.count;
       console.log(this.NewJobCount + this.QuoteJobCount, "completedcountvalues");
     });
@@ -106,31 +123,47 @@ this.getclientordercount();
   QueryforjobJobTabCount:number;
 
   getmattabcount(){
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
+      this.spinnerService.requestEnded();
+
       this.NewJobTabCount = responsedata1.count;
     });
+
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
+      this.spinnerService.requestEnded();
+
       this.QuotationTabCount = responsedata2.count;
     });
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/3`).subscribe(responsedata3 => {
-   console.log();
+      this.spinnerService.requestEnded();
    
     
       this.ConvertedJobTabCount = responsedata3.count;
     });
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/4`).subscribe(responsedata4 => {
-     console.log();
+      this.spinnerService.requestEnded();
      
       this.DeletedJobTabCount = responsedata4.count;
     });
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/5`).subscribe(responsedata5 => {
-     console.log();
+      this.spinnerService.requestEnded();
      
        responsedata5
       this.QuoteNotApprovalJobTabCount = responsedata5.count;
     });
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `CustomerQuery/GetNotApprovedQueryForSPJobsToCCCount`).subscribe(responsedata6 => {
-   console.log();
+      this.spinnerService.requestEnded();
    
     
       this.QueryforjobJobTabCount = responsedata6.count;

@@ -14,6 +14,8 @@ import { environment } from 'src/Environments/environment';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
+
 @Component({
   selector: 'app-clientorderstable',
   templateUrl: './clientorderstable.component.html',
@@ -631,15 +633,24 @@ export class ClientorderstableComponent implements OnInit {
     }
 
     // console.log(senddata, "fileconvertdata");
-    this.spinnerService
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).subscribe(convertdata => {
+      this.spinnerService.requestEnded();
+
       let JobId = convertdata.jobId;
       if (JobId == `File Name Already Exist!` || JobId == "Previous Job is not closed for the File Name and Client!") {
         alert(JobId);
       }
       else {
-        this.coreService.openSnackBar("Bulk  Converted successfully");
-        window.location.reload();
+        Swal.fire(
+          'Done!',
+          'Bulk Converted Successfully!',
+          'success'
+        ).then((result)=>{
+          if(result.isConfirmed){
+            this.ngOnInit();
+          }
+        })
       }
     },
     error => {

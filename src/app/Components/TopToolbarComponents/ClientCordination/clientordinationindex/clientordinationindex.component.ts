@@ -17,6 +17,7 @@ export class ClientordinationindexComponent implements OnInit {
   constructor(private http: HttpClient, private loginservice: LoginService, private spinnerService: SpinnerService, private _empService: ClientcordinationService) { }
 
   ngOnInit(): void {
+    this.onTabChange(event);
     this.queriesToClient();
 
     this.getclientordercount();
@@ -28,10 +29,12 @@ export class ClientordinationindexComponent implements OnInit {
 
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
-    console.log("first", event);
-    this.SetIndex = event.index
-    console.log(this.SetIndex, "IndexNumber");
-    this._empService.setData({ data: this.SetIndex });
+    
+    this.SetIndex = event.index ?  event.index:0
+    console.log(this.SetIndex,"SetIndex");
+    
+    
+    this._empService.setData({ data: this.SetIndex ? this.SetIndex:0 });
 
     switch (event.index) {
       case 0: // Fresh Jobs tab
@@ -93,13 +96,13 @@ export class ClientordinationindexComponent implements OnInit {
   QuoteJobCount: any;
   getclientordercount() {
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
-      console.log(responsedata1, "NewJobTabCount");
+      
       this.NewJobCount = responsedata1.count;
     });
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
-      console.log(responsedata2, "QuoteJobCountresponsedata2");
+      
       this.QuoteJobCount = responsedata2.count;
-      console.log(this.NewJobCount + this.QuoteJobCount, "completedcountvalues");
+      
     });
   }
 

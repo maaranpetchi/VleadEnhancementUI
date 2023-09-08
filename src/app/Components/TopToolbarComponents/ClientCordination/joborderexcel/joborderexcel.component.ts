@@ -65,7 +65,10 @@ export class JoborderexcelComponent implements OnInit {
       fd.append('Files', this.selectedFile[i]);
     }
     fd.append('Id', employeeId);
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + `JobOrder/PostImportExcel?EmployeeId=${parseInt(this.loginservice.getUsername())}`, fd).subscribe(response => {
+      this.spinnerService.requestEnded();
+
       this.postBindFileInward();
       this.postFileInwardType();
     }, (error) => {
@@ -82,7 +85,7 @@ export class JoborderexcelComponent implements OnInit {
       this.spinnerService.requestEnded();
       this.ViewImportExcel = fileinwarddata;
       this.dataSource = fileinwarddata;
-      console.log(fileinwarddata, "postbindfile");
+      
 
     }, (error) => {
       // Handle error (optional)
@@ -96,7 +99,7 @@ export class JoborderexcelComponent implements OnInit {
     this.clientcordinationservice.getBindFileInwardOnlyTrue().subscribe(inwarddata => {
       this.spinnerService.requestEnded();
       this.ViewImportExcelTrue = inwarddata;
-      console.log(inwarddata, "postbindfile");
+      
     }, (error) => {
       // Handle error (optional)
       this.spinnerService.resetSpinner();
@@ -169,7 +172,7 @@ export class JoborderexcelComponent implements OnInit {
       this.clientcordinationservice.postexcelSubmit(payload).subscribe(postdataresult => {
         // this.spinnerService.requestEnded();
         this.ViewImportExcelFinal = postdataresult;
-        console.log(this.ViewImportExcelFinal, "ViewImportExcelFinal");
+        
         this.clientcordinationservice.getBindFileInward();
         Swal.fire(
           'Done!',
@@ -185,7 +188,11 @@ export class JoborderexcelComponent implements OnInit {
 
     }
     else {
-      alert("No Success file imported.");
+      Swal.fire(
+        'Alert!',
+        'No Success file imported',
+        'info'
+      );
     }
   };
 

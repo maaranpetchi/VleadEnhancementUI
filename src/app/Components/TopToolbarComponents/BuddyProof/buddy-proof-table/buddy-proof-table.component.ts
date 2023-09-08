@@ -70,7 +70,7 @@ export class BuddyProofTableComponent implements OnInit {
   selectedQuery: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedQuery)
+    
     if (completed == true) {
       this.selectedQuery.push(item)
     }
@@ -180,13 +180,13 @@ export class BuddyProofTableComponent implements OnInit {
   scopeDropdown() {
     this.buddyService.getScopeDropdown().subscribe(scopedata => {
       this.scopes = scopedata.scopeDetails
-      console.log("scopedata");
+      
 
     })
   }
 
   getTabValue() {
-    console.log("Inside table", this.buddyproofcomponent.getCurrentTab());
+    
     return this.buddyproofcomponent.getCurrentTab();
   }
 

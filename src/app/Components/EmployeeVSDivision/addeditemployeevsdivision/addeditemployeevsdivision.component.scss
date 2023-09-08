@@ -8,7 +8,9 @@
   height: 60vh; /* Set a fixed height of 50% of the viewport height */
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
 }
-
+input#mat-input-4 {
+  width: 6vw;
+}
 
 /* Define the custom-table class for styling */
 #custom-table {

@@ -420,7 +420,11 @@ export class QualityWorkflowComponent implements OnInit {
               'Done!',
               this.confirmationMessage,
               'success'
-            )
+            ).then((result)=>{
+              if(result.isConfirmed){
+                this.location.back();  
+              }
+            })
 
           });
 
@@ -440,7 +444,8 @@ export class QualityWorkflowComponent implements OnInit {
                 'success'
               ).then((result) => {
                 if (result.isConfirmed) {
-                  this.location.back();               }
+                  this.location.back();        
+                       }
               })
             }
             else {

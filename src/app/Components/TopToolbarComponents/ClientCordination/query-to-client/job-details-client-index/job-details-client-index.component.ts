@@ -25,6 +25,9 @@ export class JobDetailsClientIndexComponent implements OnInit {
   JobCommonDetailsJob: any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService) {
+    console.log(this.data,"Injected data");
+    
+    
     this.gettingindex = this._empService.getData()??0;
 
 
@@ -171,7 +174,11 @@ export class JobDetailsClientIndexComponent implements OnInit {
           ' Done!',
           result.message,
           'success'
-        )
+        ).then((response)=>{
+          if(response.isConfirmed){
+            this.ngOnInit();
+          }
+        })
       }
       else {
         Swal.fire(
@@ -293,7 +300,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
 
 
   submitpostQueryData(data) {
-    console.log(this.QueryEstimatedTime, "QueryEstimatedTime");
+    console.log(this.QueryDetailsList, "QueryDetailsList");
 
     this.selectedJobs = [{
       DepartmentId: this.data.departmentId,
@@ -315,7 +322,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.stitchcount = null;
     }
     else {
-      this.scopeid = this.QueryDetailsList.scope.id;
+      this.scopeid = this.QueryDetailsList.scope?.id;
       //esttime = $scope.QueryDetailsList.Value;
       this.esttime = this.QueryDetailsList.estimatedTime;
       this.stitchcount = this.QueryDetailsList.stitchCount;
@@ -406,7 +413,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
         console.log(results, "Resultsquery");
         this.QueryDetailsList = results;
         this.QueryEstimatedTime = results.estimatedTime;
-        this.QueryEstimatedScope = results.scope.description;
+        this.QueryEstimatedScope = results.scope?.description;
         this.QueryEstimatedSpecialPrice = results.specialPrice;
       })
 

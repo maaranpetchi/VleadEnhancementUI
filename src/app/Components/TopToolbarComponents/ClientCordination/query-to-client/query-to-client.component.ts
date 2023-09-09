@@ -149,7 +149,7 @@ cancelledJobs(){
   this.spinnerService.requestStarted();
   this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
     this.spinnerService.requestEnded();
-    this.dataSource = data;
+    this.dataSource = data.cancelledJobs;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.displayedColumnsVisibility.status = true;
@@ -162,7 +162,7 @@ quotationJobs(){
   this.spinnerService.requestStarted();
   this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
     this.spinnerService.requestEnded();
-    this.dataSource = data;
+    this.dataSource = data.quotationJobs;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.displayedColumnsVisibility.status = false;
@@ -186,10 +186,13 @@ quotationJobs(){
   }
 
 getJobDetails(data){
-this.dialog.open(JobDetailsClientIndexComponent,{
+  const dialogRef =  this.dialog.open(JobDetailsClientIndexComponent,{
   width:'80vw',
   data
 })
+dialogRef.afterClosed().subscribe(result => {
+this.ngOnInit();
+});
 }
 
 }

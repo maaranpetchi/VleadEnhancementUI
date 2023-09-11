@@ -86,7 +86,7 @@ export class CompletedjobsComponent implements OnInit {
   setAll(completed: boolean, item: any) {
     console.log("before", this.selectedQuery)
     if (completed == true) {
-      this.selectedQuery.push({...item,Comments:'',CategoryDesc:'',SelectedRows:[],CommentsToClient:'',SelectedEmployees:[]})
+      this.selectedQuery.push({ ...item, Comments: '', CategoryDesc: '', SelectedRows: [], CommentsToClient: '', SelectedEmployees: [] })
     }
     else {
 
@@ -100,7 +100,7 @@ export class CompletedjobsComponent implements OnInit {
     }
     console.log("after", this.selectedQuery)
   }
-  postdatabulk: any[]=[];
+  postdatabulk: any[] = [];
   bulkUpload() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
@@ -154,20 +154,24 @@ export class CompletedjobsComponent implements OnInit {
     this.http.post<any>(environment.apiURL + `Allocation/processMovement`, bulkuploaddata).subscribe(data => {
       this.spinnerService.requestEnded();
 
-      if(data.success == true){
-  Swal.fire(
-    'Done!',
-    data.message,
-    'success'
-  )
-}
-else{
-  Swal.fire(
-    'Error!',
-    data.message,
-    'error'
-  )
-}
+      if (data.success == true) {
+        Swal.fire(
+          'Done!',
+          data.message,
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.getCompletedJobData();
+          }
+        })
+      }
+      else {
+        Swal.fire(
+          'Error!',
+          data.message,
+          'error'
+        )
+      }
     });
   }
 

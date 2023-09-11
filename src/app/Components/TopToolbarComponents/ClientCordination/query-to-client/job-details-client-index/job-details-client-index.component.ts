@@ -25,16 +25,17 @@ export class JobDetailsClientIndexComponent implements OnInit {
   JobCommonDetailsJob: any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService) {
-    console.log(this.data,"Injected data");
-    
-    
-    this.gettingindex = this._empService.getData()??0;
+    console.log(this.data, "Injected data");
+    this.JobCommonDetailsJob = this.data.jobStatusDescription;
+
+    this.gettingindex = this._empService.getData() ?? 0;
 
 
-    if (this.gettingindex==0||this.gettingindex.data == 0) {
+    if (this.gettingindex == 0 || this.gettingindex.data == 0 || this.gettingindex.data == 3) {
       this.popupStatus = true;
     }
     console.log(this.gettingindex, "GettingIndex");
+    console.log(this.JobCommonDetailsJob, "JobCommonDetailsJob");
 
   }
 
@@ -61,7 +62,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.spinnerService.requestEnded();
       this.dataJobSource = jobdata.jobHistory;
       this.JobCommonDetails = jobdata.jobCommonDetails;
-      this.JobCommonDetailsJob = jobdata.jobStatusDescription;
+
       console.log(jobdata, "JobDetails");
       console.log(this.JobCommonDetails, " JobCommonDetails");
     });
@@ -83,85 +84,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
   res1: string;
 
 
-  //   this.selectedJobs = [{
-  //     DepartmentId: data.departmentId,
-  //     TranMasterId: data.tranMasterId,
-  //     JId: data.jid,
-  //     CustomerId: data.customerId,
-  //     JobId: "",
-  //     Remarks: "",
-  //     Comments: "",
-  //     TimeStamp: "",
-  //     CategoryDesc: "",
-  //     SelectedRows: [],
-  //     FileInwardType: "",
-  //     CommentsToClient: "",
-  //     SelectedEmployees: []
-  //   }];
-
-
-  //   var processMovement = {
-  //     "id": 0,
-  //     "statusId": data.statusId.toString(),
-  //     "selectedScopeId": 0,
-  //     "autoUploadJobs": true,
-  //     "employeeId": this.loginservice.getUsername(),
-  //     "remarks": this.remarks,
-  //     "isBench": true,
-  //     "jobId": data.jobId,
-  //     "value": 0,
-  //     "amount": 0,
-  //     "stitchCount": 0,
-  //     "estimationTime": 0,
-  //     "dateofDelivery": "2023-06-24T09:40:49.877Z",
-  //     "comments": "string",
-  //     "validity": 0,
-  //     "copyFiles": true,
-  //     "updatedBy": 0,
-  //     "jId": data.jid,
-  //     "estimatedTime": data.estimatedTime !== null ? data.estimatedTime : 0,
-  //     "tranMasterId": 0,
-  //     "selectedRows": this.selectedJobs,
-  //     "selectedEmployees": [],
-  //     "departmentId": 0,
-  //     "updatedUTC": "2023-06-24T09:40:49.877Z",
-  //     "categoryDesc": "string",
-  //     "allocatedEstimatedTime": 0,
-  //     "tranId": 0,
-  //     "fileInwardType": "string",
-  //     "timeStamp": data.timeStamp,
-  //     "scopeId": data.scopeId ? data.scopeId : 0,
-  //     "quotationRaisedby": 0,
-  //     "quotationraisedOn": "2023-06-24T09:40:49.877Z",
-  //     "clientId": data.clientId,
-  //     "customerId": 0,
-  //     "fileReceivedDate": data.estfileReceivedDate,
-  //     "commentsToClient": "string",
-  //     "isJobFilesNotTransfer": true
-  //   }
-
-
-  //   this.jobMovement(processMovement);
-  //   const res: string = btoa(this.data.jid);
-  //   const res1: string = btoa(this.data.statusId);
-
-  //   if (this.data.statusId === 6 || this.data.statusId === 8) {
-  //     const url = environment.apiURL + 'ClientOrderLocal/SendMailForQueryJobs';
-  //     const params = new HttpParams()
-  //       .set('WFMId', this.data.tranMasterId
-  //       )
-  //       .set('JobId', res)
-  //       .set('StatusIdVal', res1);
-
-  //     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-  //     const options = { headers: headers, params: params };
-
-  //     this.http.post(url, null, options).subscribe((response) => {
-  //       this._coreService.openSnackBar('Data added successfully');
-  //       this.dialogRef.close();
-  //     });
-  //   }
-  // };
 
   confirmationMessage: string;
   jobMovement(processMovement) {
@@ -174,8 +96,8 @@ export class JobDetailsClientIndexComponent implements OnInit {
           ' Done!',
           result.message,
           'success'
-        ).then((response)=>{
-          if(response.isConfirmed){
+        ).then((response) => {
+          if (response.isConfirmed) {
             this.ngOnInit();
           }
         })
@@ -214,15 +136,15 @@ export class JobDetailsClientIndexComponent implements OnInit {
   stitchcount: any;
   //bottom dropdowns
   getAmountForSpecialPrice(data) {
-     this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
 
     this.http.post<any>(environment.apiURL + 'JobOrder/getJobHistory', this.data.jid).subscribe(jobdata => {
       this.http.get<any>(environment.apiURL + `ClientOrderService/QueryDetails?WFTId=${this.data.tranId}&WFMId=${this.data.tranMasterId}`).subscribe(result => {
         this.spinnerService.requestEnded();
 
         this.QueryDetailsList = result;
-        console.log(result,"GetAmountbutton");
-        
+        console.log(result, "GetAmountbutton");
+
 
         if (this.QueryDetailsList == undefined) {
           this.scopeid = null;
@@ -233,62 +155,62 @@ export class JobDetailsClientIndexComponent implements OnInit {
           this.scopeid = result.scopeId;
           this.esttime = result.estimatedTime;
           this.stitchcount = result.stitchCount;
-        
-        var processMovementPayload = {
-          "id": 0,
-          "processId": 0,
-          "statusId": this.queryStatus,
-          "selectedScopeId": parseInt(this.data.scopeId), // Parse the value to an integer
-          "autoUploadJobs": true,
-          "employeeId": this.loginservice.getUsername(),
-          "remarks": this.remarks,
-          "isBench": true,
-          "jobId": "string",
-          "value": 0,
-          "amount": 0,
-          "stitchCount": this.data.stitchCount,
-          "estimationTime":  this.QueryDetailsList.estimatedTime,
-          "dateofDelivery": "2023-07-03T12:35:41.988Z",
-          "comments": "string",
-          "validity": 0,
-          "copyFiles": true,
-          "updatedBy": 0,
-          "jId": this.data.jid,
-          "estimatedTime": 0,
-          "tranMasterId": 0,
-          "selectedRows": [],
-          "selectedEmployees": [],
-          "departmentId": this.data.departmentId,
-          "updatedUTC": "2023-07-03T12:35:41.988Z",
-          "categoryDesc": "string",
-          "allocatedEstimatedTime": 0,
-          "tranId": 0,
-          "fileInwardType": "string",
-          "timeStamp": "string",
-          "scopeId": 0,
-          "quotationRaisedby": 0,
-          "quotationraisedOn": "2023-07-03T12:35:41.988Z",
-          "clientId": this.data.clientId,
-          "customerId": 0,
-          "fileReceivedDate": this.data.fileReceivedDate,
-          "commentsToClient": "string",
-          "isJobFilesNotTransfer": true
-        };
-        this.spinnerService.requestStarted();
-        this.http.post<any>(environment.apiURL + `Allocation/getAmountForSpecialPrice`, processMovementPayload).subscribe(result => {
-          this.spinnerService.requestEnded();
 
-          this.pricingAmount = result.amount;
-          if (result.message != "") {
-            alert(result.message);
-          }
-          console.log(result, "postresult");
-        });
-        console.log(result, "QueryDetailsList");
-    
-      }
+          var processMovementPayload = {
+            "id": 0,
+            "processId": 0,
+            "statusId": this.queryStatus,
+            "selectedScopeId": parseInt(this.data.scopeId), // Parse the value to an integer
+            "autoUploadJobs": true,
+            "employeeId": this.loginservice.getUsername(),
+            "remarks": this.remarks,
+            "isBench": true,
+            "jobId": "string",
+            "value": 0,
+            "amount": 0,
+            "stitchCount": this.data.stitchCount,
+            "estimationTime": this.QueryDetailsList.estimatedTime,
+            "dateofDelivery": "2023-07-03T12:35:41.988Z",
+            "comments": "string",
+            "validity": 0,
+            "copyFiles": true,
+            "updatedBy": 0,
+            "jId": this.data.jid,
+            "estimatedTime": 0,
+            "tranMasterId": 0,
+            "selectedRows": [],
+            "selectedEmployees": [],
+            "departmentId": this.data.departmentId,
+            "updatedUTC": "2023-07-03T12:35:41.988Z",
+            "categoryDesc": "string",
+            "allocatedEstimatedTime": 0,
+            "tranId": 0,
+            "fileInwardType": "string",
+            "timeStamp": "string",
+            "scopeId": 0,
+            "quotationRaisedby": 0,
+            "quotationraisedOn": "2023-07-03T12:35:41.988Z",
+            "clientId": this.data.clientId,
+            "customerId": 0,
+            "fileReceivedDate": this.data.fileReceivedDate,
+            "commentsToClient": "string",
+            "isJobFilesNotTransfer": true
+          };
+          this.spinnerService.requestStarted();
+          this.http.post<any>(environment.apiURL + `Allocation/getAmountForSpecialPrice`, processMovementPayload).subscribe(result => {
+            this.spinnerService.requestEnded();
+
+            this.pricingAmount = result.amount;
+            if (result.message != "") {
+              alert(result.message);
+            }
+            console.log(result, "postresult");
+          });
+          console.log(result, "QueryDetailsList");
+
+        }
       });
-    
+
     });
   };
 
@@ -387,11 +309,11 @@ export class JobDetailsClientIndexComponent implements OnInit {
   popupStatus: boolean = false;
   SpecialPrice: boolean = false;
   AmountValue: boolean = false;
-  specialPrice:boolean  = false;
+  specialPrice: boolean = false;
 
   //ngmodel
   queryStatus: any;
-  StitchCount:any;
+  StitchCount: any;
   //Method
   statusChange(statusId) {
     if (statusId == 19) {
@@ -424,4 +346,8 @@ export class JobDetailsClientIndexComponent implements OnInit {
     }
   };
 
+
+  close() {
+    this.dialogRef.close();
+  }
 }

@@ -149,9 +149,12 @@ export class CompletedjobsComponent implements OnInit {
       "commentsToClient": "string",
       "isJobFilesNotTransfer": true
     }
+    this.spinnerService.requestStarted();
 
     this.http.post<any>(environment.apiURL + `Allocation/processMovement`, bulkuploaddata).subscribe(data => {
-if(data.success == true){
+      this.spinnerService.requestEnded();
+
+      if(data.success == true){
   Swal.fire(
     'Done!',
     data.message,

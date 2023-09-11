@@ -415,7 +415,7 @@ export class QualityWorkflowComponent implements OnInit {
             this.BindWorkDetails();
             this.confirmationMessage = ChangeWorkflowResult.message;
             this.spinnerService.requestEnded();
-
+if(ChangeWorkflowResult.success == true){
             Swal.fire(
               'Done!',
               this.confirmationMessage,
@@ -425,7 +425,14 @@ export class QualityWorkflowComponent implements OnInit {
                 this.location.back();  
               }
             })
-
+          }
+          else{
+            Swal.fire(
+              'Error!',
+              this.confirmationMessage,
+              'error'
+            )
+          }
           });
 
 
@@ -480,12 +487,22 @@ export class QualityWorkflowComponent implements OnInit {
       this.http.post<any>(environment.apiURL + `Workflow/ChangeWorkflow/${this.data.wftid}`, fd).subscribe(ChangeWorkflowResult => {
         if (workType == 'End') {
           this.BindWorkDetails();
-          this.confirmationMessage = ChangeWorkflowResult.Message;
+          this.confirmationMessage = ChangeWorkflowResult.message;
+
+          if(ChangeWorkflowResult.success ==true) {
           Swal.fire(
             'Done!',
             this.confirmationMessage,
             'success'
           )
+          }
+          else{
+            Swal.fire(
+              'Error!',
+              this.confirmationMessage,
+              'error'
+            )
+          }
         }
         else {
           this.BindWorkDetails();

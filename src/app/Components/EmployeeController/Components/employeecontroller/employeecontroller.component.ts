@@ -65,6 +65,7 @@ export class EmployeecontrollerComponent implements OnInit {
 
     })
   }
+  //Delete Functionality
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
 

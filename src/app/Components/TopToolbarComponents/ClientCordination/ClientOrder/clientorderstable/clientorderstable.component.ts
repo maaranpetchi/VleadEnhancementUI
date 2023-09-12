@@ -394,15 +394,15 @@ export class ClientorderstableComponent implements OnInit {
       "username": "string",
       "salesPersonName": "string",
       "clientSalesPerson": "string",
-      customerName: "string",
+      "customerName": "string",
       "temp": "string",
       "style": "string",
       "projectCode": "string",
       "teamCode": "string",
       "schoolName": "string",
-      ground: "string",
-      gender: "string",
-      fileInwardMode: "string",
+      "ground": "string",
+      "gender": "string",
+      "fileInwardMode": "string",
       "status": true,
       "fileReceivedDate": "2023-05-12T07:08:03.495Z",
       "jobDescription": "string",
@@ -494,6 +494,8 @@ export class ClientorderstableComponent implements OnInit {
     let Gridwithmultiplefilesname: any[] = [];
     for (var i = 0; i < this.selectedproduction.length; i++) {
       let GetAllvalues = this.selectedproduction[i];
+      console.log(GetAllvalues,"GetAllvalues");
+      
       let GetAddList =
       {
         FileName: GetAllvalues.fileName,
@@ -523,7 +525,7 @@ export class ClientorderstableComponent implements OnInit {
         customerName: "string",
         temp: "string",
         style: "string",
-        projectCode: "string",
+        projectCode: GetAllvalues.projectCode,
         teamCode: "string",
         schoolName: "string",
         ground: "string",

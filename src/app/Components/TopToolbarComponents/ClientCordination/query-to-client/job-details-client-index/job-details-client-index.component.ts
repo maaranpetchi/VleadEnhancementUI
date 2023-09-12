@@ -51,7 +51,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
   pricingAmount: string; // to store the priceAmount value
   ngOnInit() {
     this.getJobHistory();
-    this.getJobqueryHistory();
 
 
   }
@@ -61,6 +60,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
     this.http.post<any>(environment.apiURL + 'JobOrder/getJobHistory', this.data.jid).subscribe(jobdata => {
       this.spinnerService.requestEnded();
       this.dataJobSource = jobdata.jobHistory;
+      this.dataQuerySource = jobdata.jobQueryHistory;
       this.JobCommonDetails = jobdata.jobCommonDetails;
 
       console.log(jobdata, "JobDetails");
@@ -68,13 +68,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
     });
   }
 
-  getJobqueryHistory() {
-    this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'JobOrder/getJobHistory', this.data.jid).subscribe(getJobqueryHistorydata => {
-      this.spinnerService.requestEnded();
-      this.dataQuerySource = getJobqueryHistorydata.jobQueryHistory;
-    });
-  }
+
   QueryDetailsList: any;
   selectedJobs: any;
 
@@ -91,7 +85,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
     this.http.post<any>(environment.apiURL + `Allocation/processMovement`, processMovement).subscribe(result => {
       this.spinnerService.requestEnded();
 
-      if (result.message == "Job sent as query") {
+      if (result.success == true) {
         Swal.fire(
           ' Done!',
           result.message,
@@ -322,7 +316,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.SpecialPrice = false;
       this.AmountValue = true;
       this.spinnerService.requestStarted();
-      this.http.get<any>(environment.apiURL + `ClientOrderService/QuotationDetails?JobId=${this.data.jid}`).subscribe(result => {
+      this.http.get<any>(environment.apiURL + `ClientOrderService/QuotationDetails?JobId=${this.data.jobId}`).subscribe(result => {
         this.spinnerService.requestEnded();
 
         this.QuotationDetailsList = result;

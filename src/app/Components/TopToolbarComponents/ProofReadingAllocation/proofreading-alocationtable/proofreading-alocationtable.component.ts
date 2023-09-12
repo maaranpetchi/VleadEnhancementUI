@@ -66,7 +66,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     //Employeetable
   }
 
-  filterValue:any=null;
+  filterValue: any = null;
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
@@ -207,9 +207,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
           // employee table details
-          this.dataEmployeeSource = new MatTableDataSource(
-            freshJobs.employees
-          );
+          this.dataEmployeeSource = new MatTableDataSource(freshJobs.employees);
           console.log('freshJobs');
         },
         error: (err) => {
@@ -534,7 +532,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
 
   jobMovement(processMovement) {
     var confirmationMessage: any;
-    const AttachedFiles = [];
+    let AttachedFiles = [];
     this.selectedJobs = processMovement.selectedRows;
     this.selectedEmployee = processMovement.selectedEmployees;
     this.http
@@ -542,38 +540,93 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       .subscribe((result) => {
         confirmationMessage = result;
       });
-    this.http
-      .post(environment.apiURL + 'Allocation/processMovement', processMovement)
-      .subscribe((result) => {
-        confirmationMessage = result;
-        // if (AttachedFiles.length > 0) {
-        //     var fd = new FormData();
-        //     for (let i = 0; i < AttachedFiles.length; i++) {
-        //       fd.append('file', AttachedFiles[i]);
-        //     }
+    if (AttachedFiles.length > 0) {
+      var fd = new FormData();
+      for (let i = 0; i < AttachedFiles.length; i++) {
+        fd.append('file', AttachedFiles[i]);
+      }
+      let file = {
+        orderId: 0,
+        isClientOrder: 0,
+        processId: 0,
+        statusId: 0,
+        sourcePath: 'string',
+        dynamicFolderPath: 'string',
+        folderPath: 'string',
+        fileName: 'string',
+        fileCount: 0,
+        wfmId: 0,
+        wftId: 0,
+        orignalPath: 'string',
+        orignalDynamicPath: 'string',
+        jobId: 'string',
+        isProcessWorkFlowTranInserted: 0,
+        isCopyFiles: 0,
+        pid: 0,
+        fakeProcessId: 0,
+        fakeStatusId: 0,
+        fakeDynamicFolderPath: 'string',
+        jobFileName: 'string',
+        files: ['string'],
+        message: 'string',
+        creditMessage: 'string',
+        clientName: 'string',
+        clientId: 0,
+      };
+      this.spinnerService.requestStarted();
+      const orderId = processMovement.orderId;
+      const processId = this.data.processId;
+      const statusId = this.data.statusId;
+      this.http
+        .post(
+          environment.apiURL +
+            `File/uploadFiles/${orderId}/0/${processId}/${statusId}/1/${processId}/${statusId}`,
+          file
+        )
+        .subscribe({
+          next: (data) => {
+            this.spinnerService.requestEnded();
+            console.log(data);
+            AttachedFiles = [];
+          },
+          error: (err) => {
+            this.spinnerService.resetSpinner();
+            console.log(err);
+          },
+        });
+    }
+    // this.http
+    //   .post(environment.apiURL + 'Allocation/processMovement', processMovement)
+    //   .subscribe((result) => {
+    //     confirmationMessage = result;
+    // if (AttachedFiles.length > 0) {
+    //     var fd = new FormData();
+    //     for (let i = 0; i < AttachedFiles.length; i++) {
+    //       fd.append('file', AttachedFiles[i]);
+    //     }
 
-        // $parent.loader = true;
-        // serviceCall.uploadFile('uploadFiles', result.OrderId, 0, ProcessId, processMovement.StatusId, 1, ProcessId, processMovement.StatusId, fd).$promise.then(function (uploadResult) {
-        //     quotationquerySubmitted = false;
-        //     QuotationpopupSubmitForm.$setPristine();
-        //     AttachedFiles = [];
-        //     $('#fileUpload').val('');
-        //     $('#confirmedPopup').modal('show');
-        // }
+    // $parent.loader = true;
+    // serviceCall.uploadFile('uploadFiles', result.OrderId, 0, ProcessId, processMovement.StatusId, 1, ProcessId, processMovement.StatusId, fd).$promise.then(function (uploadResult) {
+    //     quotationquerySubmitted = false;
+    //     QuotationpopupSubmitForm.$setPristine();
+    //     AttachedFiles = [];
+    //     $('#fileUpload').val('');
+    //     $('#confirmedPopup').modal('show');
+    // }
 
-        // })
-        // .catch(function (response) {
-        //     console.log(response);
-        // }).finally(function () {
-        //     // parent.loader = false;
-        // });
-        // }
-        // Isbench = false;
-        // $('#confirmedPopup').modal('show');
-        // clear();
-        // $('#quotationModal').modal('hide');
-        // selectedGrid = '';
-      });
+    // })
+    // .catch(function (response) {
+    //     console.log(response);
+    // }).finally(function () {
+    //     // parent.loader = false;
+    // });
+    // }
+    // Isbench = false;
+    // $('#confirmedPopup').modal('show');
+    // clear();
+    // $('#quotationModal').modal('hide');
+    // selectedGrid = '';
+    // });
   }
 
   onSubmits(type: any, data: any) {
@@ -652,17 +705,15 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
 
   masterToggle() {
-    console.log("record 5",this.selection)
+    console.log('record 5', this.selection);
     if (this.isAllSelected()) {
       this.selection.clear();
-    }
-    else if(this.filterValue){
-    this.selection.clear();
-      this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    } else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach((x) => this.selection.select(x));
     } else {
-      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.dataSource.data.forEach((row) => this.selection.select(row));
     }
-    console.log("record 6",this.selection.selected)
- 
+    console.log('record 6', this.selection.selected);
   }
 }

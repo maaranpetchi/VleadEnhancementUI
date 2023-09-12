@@ -897,17 +897,16 @@ export class ProductionallocationtableComponent implements OnInit {
         this.spinnerService.requestEnded();
         if (response.success === false) {
         Swal.fire('Info!', 'Error the job assigned!', 'info');
-          // alert("Error the job assigned")
         }else if(response.success === true){
           Swal.fire(
             'Done!',
             'Job assigned successfully!',
             'success'
           )
-          this.http
-          .post(environment.apiURL + 'Allocation/processMovement', processMovement)
-          .subscribe((result) => {
-            confirmationMessage = result;
+          // this.http
+          // .post(environment.apiURL + 'Allocation/processMovement', processMovement)
+          // .subscribe((result) => {
+            // confirmationMessage = result;
             if (AttachedFiles.length > 0) {
               var fd = new FormData();
               for (let i = 0; i < AttachedFiles.length; i++) {
@@ -957,7 +956,7 @@ export class ProductionallocationtableComponent implements OnInit {
                   }
                 })
             }
-          });
+          // });
           this.router.navigate(["topnavbar/production"]);
           this.refreshPage();
         }

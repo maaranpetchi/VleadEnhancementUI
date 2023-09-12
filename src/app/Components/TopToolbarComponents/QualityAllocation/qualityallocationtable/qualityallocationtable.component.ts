@@ -77,7 +77,7 @@ export class QualityallocationtableComponent implements OnInit {
   //     this.dataSource.paginator.firstPage();
   //   }
   // }
-  filterValue:any=null;
+  filterValue: any = null;
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
@@ -101,22 +101,22 @@ export class QualityallocationtableComponent implements OnInit {
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
-  setAllJobs( item: any) {
+  setAllJobs(item: any) {
     console.log('item: ' + item);
     console.log('before', this.selectedQuery);
     // if (completed == true) {
-      if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-      if (item.employeeId == null) item.employeeId = 0;
-      if (item.estimatedTime == null) item.estimatedTime = 0;
-      this.selectedQuery.push({
-        ...item,
-        CategoryDesc: '',
-        Comments: '',
-        CommentsToClient: '',
-        Remarks: '',
-        SelectedEmployees: [],
-        SelectedRows: [],
-      });
+    if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
+    if (item.employeeId == null) item.employeeId = 0;
+    if (item.estimatedTime == null) item.estimatedTime = 0;
+    this.selectedQuery.push({
+      ...item,
+      CategoryDesc: '',
+      Comments: '',
+      CommentsToClient: '',
+      Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+    });
     // } else {
     //   if (this.selectedQuery.find((x) => x.id == item.id)) {
     //     this.selectedQuery = this.selectedQuery.filter((x) => {
@@ -125,7 +125,7 @@ export class QualityallocationtableComponent implements OnInit {
     //       }
     //     });
     //   }
-      console.log('after', this.selectedQuery);
+    console.log('after', this.selectedQuery);
     // }
   }
 
@@ -470,8 +470,8 @@ export class QualityallocationtableComponent implements OnInit {
   data: any;
   onSubmit(data: any) {
     console.log(data, 'submit');
-    console.log("setall",this.selection);
-    this.selection.selected.forEach(x=>this.setAllJobs(x));
+    console.log('setall', this.selection);
+    this.selection.selected.forEach((x) => this.setAllJobs(x));
 
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
@@ -614,7 +614,11 @@ export class QualityallocationtableComponent implements OnInit {
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-            Swal.fire('Info!', 'Following Job Ids are assigned to same Employee', 'info'+strJobId);
+            Swal.fire(
+              'Info!',
+              'Following Job Ids are assigned to same Employee',
+              'info' + strJobId
+            );
             // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
         }
@@ -634,7 +638,7 @@ export class QualityallocationtableComponent implements OnInit {
         environment.apiURL + 'Allocation/processMovement',
         processMovement
       )
-      .subscribe((result) => {
+      .subscribe((result: any) => {
         this.confirmationMessage = result.message;
         Swal.fire('Done!', result.message, 'success');
       });
@@ -643,18 +647,25 @@ export class QualityallocationtableComponent implements OnInit {
       for (let i = 0; i < AttachedFiles.length; i++) {
         fd.append('file', AttachedFiles[i]);
       }
+      const orderId = processMovement.orderId;
+      const processId = this.data.processId;
+      const statusId = this.data.statusId;
       this.spinner.requestStarted();
-      // this.http
-      //   .post<any>(environment.apiURL + `File/uploadFiles/${}/${}/${}/${}/${}/${}/${}`, processMovement)
-      //   .subscribe((response) => {
-      //     if (response) {
-      //       this.spinner.requestEnded();
+      this.http
+        .post<any>(
+          environment.apiURL +
+            `/${orderId}/0/${processId}/${statusId}/1/${processId}/${statusId}`,
+          processMovement
+        )
+        .subscribe((response) => {
+          if (response) {
+            this.spinner.requestEnded();
 
-      //       AttachedFiles = [];
-      //     } else {
-      //       this.spinner.resetSpinner();
-      //     }
-      //   });
+            AttachedFiles = [];
+          } else {
+            this.spinner.resetSpinner();
+          }
+        });
     }
   }
 
@@ -734,17 +745,15 @@ export class QualityallocationtableComponent implements OnInit {
   }
 
   masterToggle() {
-    console.log("record 5",this.selection)
+    console.log('record 5', this.selection);
     if (this.isAllSelected()) {
       this.selection.clear();
-    }
-    else if(this.filterValue){
-    this.selection.clear();
-      this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    } else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach((x) => this.selection.select(x));
     } else {
-      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.dataSource.data.forEach((row) => this.selection.select(row));
     }
-    console.log("record 6",this.selection.selected)
- 
+    console.log('record 6', this.selection.selected);
   }
 }

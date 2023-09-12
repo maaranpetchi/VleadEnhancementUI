@@ -202,7 +202,9 @@ export class JobDetailsClientIndexComponent implements OnInit {
 
             this.pricingAmount = result.amount;
             if (result.message != "") {
-              alert(result.message);
+              Swal.fire(
+                result.message
+              )
             }
             console.log(result, "postresult");
           });

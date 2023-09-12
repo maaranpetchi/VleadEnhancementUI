@@ -171,9 +171,9 @@ export class QualityWorkflowComponent implements OnInit {
 
   //ishold ,sam
   getIsholdSampValue() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localStorage.getItem("WFTId")}/${this.loginService.getUsername()}`).subscribe(result => {
-      
-
+      this.spinnerService.requestEnded();
       this.ProcessTransaction = result.getWorkflowDetails;
       this.revisionCheck = result.ChkRevise;
       // $scope.workFlowForm.CopyPreviousFiles = false;
@@ -484,7 +484,9 @@ if(ChangeWorkflowResult.success == true){
 
     else {
       fd.append('data', JSON.stringify(processTransaction));
+      this.spinnerService.requestStarted();
       this.http.post<any>(environment.apiURL + `Workflow/ChangeWorkflow/${this.data.wftid}`, fd).subscribe(ChangeWorkflowResult => {
+        this.spinnerService.requestEnded();
         if (workType == 'End') {
           this.BindWorkDetails();
           this.confirmationMessage = ChangeWorkflowResult.message;
@@ -552,9 +554,9 @@ if(ChangeWorkflowResult.success == true){
       "tranFileUploadPath": "string",
       "selectedRows": []
     }
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + "Workflow/GetProductionWorkList", processTransaction).subscribe((result) => {
-      
-      
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource<any>(result.jobHistory); // to display the details in table
       this.dataSource.paginator = this.paginator;
       let History = result.summary.summaryHistory;
@@ -607,15 +609,18 @@ if(ChangeWorkflowResult.success == true){
   ///to get the error dropdown value
   rbnError() {
     
-
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Workflow/GetErrorCategories/${localStorage.getItem('WFTId')}/${this.loginService.getUsername()}`).subscribe(result => {
+      this.spinnerService.requestEnded();
       this.errorCategory = result.errorCategories;
     });
   };
   //to get scope dropdown value
   Scope: any = [];
   getScope() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getCustomerScopeValues/${this.data.departmentId}/${this.data.clientId}`).subscribe(data => {
+      this.spinnerService.requestEnded();
       if (data.scopeDetails.length > 0) {
         this.Scope = data.scopeDetails;
       }
@@ -639,8 +644,10 @@ if(ChangeWorkflowResult.success == true){
       this.disable = true;
       this.CopyPreviousFiles = true;
     }
-
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getCustomerScopeValues/1/${this.data.clientId}`).subscribe(result => {
+      this.spinnerService.requestEnded();
+
       if (result.scopeDetails.length > 0) {
         this.Scope = result.scopeDetails;
       }

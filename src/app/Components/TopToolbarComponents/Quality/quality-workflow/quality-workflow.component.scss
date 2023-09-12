@@ -7,6 +7,10 @@
 cursor:pointer;
 }
 
+
+body{
+  overflow-x: hidden;
+}
 .Row {
   display: table-row;
 }
@@ -61,9 +65,9 @@ cursor:pointer;
   color: red;
 }
 
-.container {  
+.container{
   display: grid;
-  grid-template-columns: 0.6fr 24.4fr 0fr;
+  grid-template-columns: 0.6fr 95.4fr 3fr;
   grid-template-rows: -0.8fr 1.9fr 0.9fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -71,4 +75,12 @@ cursor:pointer;
       ". . ."
       ". . ."
       ". . .";
+}
+
+.status {
+  width: 17vw;
+}
+
+.form-control {
+  width: 74%;
 }

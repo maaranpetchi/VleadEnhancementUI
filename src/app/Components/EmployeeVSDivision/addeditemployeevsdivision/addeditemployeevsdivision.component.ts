@@ -10,6 +10,7 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { throwDialogContentAlreadyAttachedError } from '@angular/cdk/dialog';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-addeditemployeevsdivision',
@@ -78,6 +79,8 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
     });
   }
   onSubmit() {
+    console.log("setall",this.selection);
+    this.selection.selected.forEach(x=>this.setAll2(x));
     this.spinnerService.requestStarted();
     if (this.table1selectedarray.length > 0 && this.table2selectedarray.length > 0) {
       const selectedValues = this.myForm.get('selectedValues')?.value
@@ -141,9 +144,30 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   }
 
 
-  setAll2(completed: boolean, item: any) {
-    if (completed == true) {
+  setAll2( item: any) {
       this.table2selectedarray.push({ id: item.id })
+  }
+  selection = new SelectionModel<Element>(true, []);
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.table2Data.data.length;
+    return numSelected === numRows;
+  }
+
+  filterValue:any;
+  
+  masterToggle() {
+    console.log("record 5",this.selection)
+    if (this.isAllSelected()) {
+      this.selection.clear();
     }
+    else if(this.filterValue){
+    this.selection.clear();
+      this.table2Data.filteredData.forEach(x=>this.selection.select(x));
+    } else {
+      this.table2Data.data.forEach(row => this.selection.select(row));
+    }
+    console.log("record 6",this.selection.selected)
+ 
   }
 }

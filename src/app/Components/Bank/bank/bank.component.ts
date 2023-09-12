@@ -119,7 +119,6 @@ this.http.post<any>(environment.apiURL +`ITAsset/nSetBankDetails`,postData).subs
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

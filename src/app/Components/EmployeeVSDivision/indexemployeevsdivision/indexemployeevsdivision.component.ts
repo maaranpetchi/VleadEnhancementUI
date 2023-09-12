@@ -40,8 +40,8 @@ export class indexemployeevsdivisionComponent implements OnInit {
 
   openAddEditEmpForm() {
     const dialogRef = this._dialog.open(AddeditemployeevsdivisionComponent,{
-      height: '80vh',
-      width: '80vw'
+      //height: '80vh',
+      //width: '80vw'
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {

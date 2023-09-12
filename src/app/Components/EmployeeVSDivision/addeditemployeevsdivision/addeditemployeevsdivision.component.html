@@ -1,96 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div class="empvsdiv">
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-        <h1 style="font-family: 'Times New Roman', Times, serif;color:#186be9;text-align: center;">Employee VS Divsion</h1>
-        <div class="row">
-            <div class="col">
-                <div class="table-container">
-                    <mat-table id="custom-table" [dataSource]="table1Data">
-                        <!-- Define columns and rows here -->
-                        <ng-container matColumnDef="employeeCode">
-                            <mat-header-cell *matHeaderCellDef> EmployeeCode </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.employeeCode }} </mat-cell>
-                        </ng-container>
-    
-                        <ng-container matColumnDef="employeeName">
-                            <mat-header-cell *matHeaderCellDef> EmployeeName </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.employeeName }} </mat-cell>
-                        </ng-container>
-    
-                        <ng-container matColumnDef="selected">
-                            <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                <mat-checkbox [formControlName]="element.employeeId.toString()"
-                                    (change)="setAll($event.checked,element)"></mat-checkbox>
-    
-                            </mat-cell>
-                        </ng-container>
-    
-                        <mat-header-row *matHeaderRowDef="['employeeCode', 'employeeName', 'selected']"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: ['employeeCode', 'employeeName', 'selected']"></mat-row>
-    
-                    </mat-table>
-                </div>
-                <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]"
-                        aria-label="Select page of users"></mat-paginator>
-            </div>
-            <div class="col">
-                <div class="table-container">
-    
-                    <mat-table id="custom-table" [dataSource]="table2Data">
-                        <!-- Define columns and rows here -->
-                        <ng-container matColumnDef="divisionName">
-                            <mat-header-cell *matHeaderCellDef> Divisions </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.divisionName }} </mat-cell>
-                        </ng-container>
-    
-                        <!-- <ng-container matColumnDef="selected">
-                            <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                <mat-checkbox [formControlName]='element.id.toString()+"hi"'
-                                    (change)="setAll2($event.checked,element)"></mat-checkbox>
-                            </mat-cell>
-                        </ng-container> -->
-                        
-                        <ng-container matColumnDef="selected">
-                            <mat-header-cell *matHeaderCellDef>
-                              <mat-checkbox (change)="$event ? masterToggle() : null"
-                                            [checked]="selection.hasValue() && isAllSelected()"
-                                            [indeterminate]="selection.hasValue() && !isAllSelected()">
-                              </mat-checkbox>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row">
-                              <div class="checkbox-container">
-                                <mat-checkbox (click)="$event.stopPropagation()"
-                                              (change)="$event ? selection.toggle(row) : null"
-                                              [checked]="selection.isSelected(row)">
-                                </mat-checkbox>
-                                <span>{{ row.name }}</span> <!-- Assuming 'name' is a property in your row object -->
-                              </div>
-                            </mat-cell>
-                          </ng-container>
-                          
-                        <mat-header-row *matHeaderRowDef="['divisionName', 'selected']"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: ['divisionName','selected']"></mat-row>
-                    </mat-table>
-                </div>
-                <mat-paginator #paginator2 [pageSizeOptions]="[25, 50,75,100]"></mat-paginator>
 
-            </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body style="height:100vh">
+  <div class="container">
+    <!-- <div class=""> -->
+    <div class="card">
+      <div class="card-body bg-primary">
+        <div class="row">
+          <div class="col-md">
+            <h3 class="text-white text-center">Employee VS Division</h3>
+          </div>
         </div>
-    
-       <div class="buttons" style="float: right;padding:20px">
-        <button type="submit" class="btn btn-primary">Submit</button>
-       </div>
-    
-    </form>
-</div>
+        <div class="card-body bg-white">
+
+          <div class="row">
+            <div class="col-7">
+              <div class="table-container table-responsive mt-4">
+                <table class="table table-bordered text-center" mat-table [dataSource]="table1Data" matSort>
+                    <ng-container matColumnDef="selected">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Select </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox [formControlName]="element.employeeId.toString()"
+                                (change)="setAll($event.checked,element)"></mat-checkbox>
+
+                        </td>
+                    </ng-container>
+                
+                  <ng-container matColumnDef="employeeCode">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      <div class="header-wrapper">
+                        <div class="department-name text-start">Employee Code</div>
+                        <div class="filter-input">
+                          <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                        </div>
+                      </div>
+                    </th>
+                    <td mat-cell *matCellDef="let row"> {{row.employeeCode}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="employeeName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      <div class="header-wrapper">
+                        <div class="department-name text-start">Employee Name</div>
+                        <div class="filter-input">
+                          <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                        </div>
+                      </div>
+                    </th>
+                    <td mat-cell *matCellDef="let row"> {{row.employeeName}} </td>
+                  </ng-container>
+               
+                  <tr mat-header-row  *matHeaderRowDef="['employeeCode', 'employeeName', 'selected']"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ['employeeCode', 'employeeName', 'selected']"></tr>
+
+                  <!-- Row shown when there is no matching data. -->
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{table1Data.filter}}"</td>
+                  </tr>
+                  <!-- Row shown when there is no matching data. -->
+                  <ng-container *ngIf="table1Data?.data?.length === 0">
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" colspan="8">No data available</td>
+                    </tr>
+                  </ng-container>
+                </table>
+
+              </div>
+              <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]"
+              aria-label="Select page of users"></mat-paginator>
+            </div>
+            <div class="col-5">
+              <div class="table-container table-responsive mt-4">
+                <table class="table table-bordered text-center" mat-table [dataSource]="table2Data" matSort>
+                  <ng-container matColumnDef="selected">
+                    <mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="divisionName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      <div class="header-wrapper">
+                        <div class="department-name text-start">Divisions</div>
+                        <div class="filter-input">
+                          <input matInput (keyup)="applyEmployeeFilter($event)" placeholder="Filter" #input>
+                        </div>
+                      </div>
+                    </th>
+                    <td mat-cell *matCellDef="let row"> {{row.divisionName}} </td>
+                  </ng-container>
+                 
+                 
+                  <tr mat-header-row *matHeaderRowDef="['divisionName', 'selected']"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ['divisionName','selected']"></tr>
+
+                  <!-- Row shown when there is no matching data. -->
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{table2Data.filter}}"</td>
+                  </tr>
+                  <!-- Row shown when there is no matching data. -->
+                  <ng-container *ngIf="table2Data?.data?.length === 0">
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" colspan="8">No data available</td>
+                    </tr>
+                  </ng-container>
+
+                </table>
+
+                <mat-paginator #paginator2 [pageSizeOptions]="[25, 50,75,100]"></mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <button class="float-end bg-success text-white" mat-raised-button  (click)="onSubmit()">Submit</button>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
 </body>
+
 </html>

@@ -57,9 +57,9 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
     this.spinnerService.requestStarted();
 
     this.http.get<any>(environment.apiURL + 'EmployeeVsDivision/GetEmployee').subscribe(data => {
-      this.spinnerService.requestEnded();
       // this.table1Data =data.eEvDList ;
       this.table1Data = new MatTableDataSource(data.eEvDList);
+      this.spinnerService.requestEnded();
       this.table1Data.data.forEach(row => {
         this.myForm.addControl(row.employeeId.toString(), new FormControl());
       });
@@ -69,9 +69,11 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   }
 
   getTable2() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'EmployeeVsDivision/GetDivision').subscribe(data => {
-      // this.table2Data = data.dEvDList;
       this.table2Data = new MatTableDataSource(data.dEvDList);
+      this.spinnerService.requestEnded();
+
       this.table2Data.data.forEach(row => {
         this.myForm.addControl(row.id.toString() + "hi", new FormControl());
       });
@@ -109,8 +111,11 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'Done!',
             response.sEvDList,
             'success'
-          )
-          this.dialogRef.close();
+          ).then((result)=>{
+            if(result.isConfirmed){
+              this.dialogRef.close();
+            }
+          })
         }
 
         else {
@@ -118,7 +123,11 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'Error!',
             response.sEvDList,
             'error'
-          )
+          ).then((result)=>{
+            if(result.isConfirmed){
+              this.dialogRef.close();
+            }
+          })
         }
       });
     }
@@ -155,7 +164,25 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   }
 
   filterValue:any;
+  filterValue1:any;
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.table1Data.filter = this.filterValue.trim().toLowerCase();
   
+    if (this.table1Data.paginator) {
+      this.table1Data.paginator.firstPage();
+    }
+}
+
+applyEmployeeFilter(event: Event) {
+  this.filterValue1 = (event.target as HTMLInputElement).value;
+  this.table2Data.filter = this.filterValue1.trim().toLowerCase();
+  // this.selection.clear();
+  // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+  if (this.table2Data.paginator) {
+    this.table2Data.paginator.firstPage();
+  }
+}
   masterToggle() {
     console.log("record 5",this.selection)
     if (this.isAllSelected()) {

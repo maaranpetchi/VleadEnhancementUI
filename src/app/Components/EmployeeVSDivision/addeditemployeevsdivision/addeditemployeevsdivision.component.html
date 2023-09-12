@@ -51,14 +51,32 @@
                             <mat-cell *matCellDef="let element"> {{ element.divisionName }} </mat-cell>
                         </ng-container>
     
-                        <ng-container matColumnDef="selected">
+                        <!-- <ng-container matColumnDef="selected">
                             <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
                             <mat-cell *matCellDef="let element">
                                 <mat-checkbox [formControlName]='element.id.toString()+"hi"'
                                     (change)="setAll2($event.checked,element)"></mat-checkbox>
                             </mat-cell>
-                        </ng-container>
-    
+                        </ng-container> -->
+                        
+                        <ng-container matColumnDef="selected">
+                            <mat-header-cell *matHeaderCellDef>
+                              <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                              </mat-checkbox>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                              <div class="checkbox-container">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                              (change)="$event ? selection.toggle(row) : null"
+                                              [checked]="selection.isSelected(row)">
+                                </mat-checkbox>
+                                <span>{{ row.name }}</span> <!-- Assuming 'name' is a property in your row object -->
+                              </div>
+                            </mat-cell>
+                          </ng-container>
+                          
                         <mat-header-row *matHeaderRowDef="['divisionName', 'selected']"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: ['divisionName','selected']"></mat-row>
                     </mat-table>

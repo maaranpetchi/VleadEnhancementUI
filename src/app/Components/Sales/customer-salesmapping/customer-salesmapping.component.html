@@ -39,10 +39,24 @@
               <div class="table-container table-responsive mt-4">
                 <table class="table table-bordered text-center" mat-table [dataSource]="dataSource" matSort>
                   <ng-container matColumnDef="selected">
+                    <mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                      </mat-checkbox>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </mat-cell>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="selected">
                     <th mat-sort-header mat-header-cell *matHeaderCellDef mat-sort-header> Select </th>
                     <td mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.isSelected"
                         (change)="setAll($event.checked,element)"></mat-checkbox> </td>
-                  </ng-container>
+                  </ng-container> -->
                   <ng-container matColumnDef="customerName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       <div class="header-wrapper">
@@ -109,11 +123,25 @@
               <div class="table-container table-responsive mt-4">
                 <table class="table table-bordered text-center" mat-table [dataSource]="employeeDaSource" matSort>
                   <ng-container matColumnDef="selected">
+                    <mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? emplMasterToggle() : null"
+                                    [checked]="selection1.hasValue() && isEmplSelected()"
+                                    [indeterminate]="selection1.hasValue() && !isEmplSelected()">
+                      </mat-checkbox>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection1.toggle(row) : null"
+                                    [checked]="selection1.isSelected(row)">
+                      </mat-checkbox>
+                    </mat-cell>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="selected">
                     <th mat-sort-header mat-header-cell *matHeaderCellDef> Select </th>
                     <td mat-cell *matCellDef="let element"> <mat-checkbox
-                        (change)="setEmployeeAll($event.checked,element)"></mat-checkbox> </td>
+                        (change)="setEmployeeAll($event.checked)"></mat-checkbox> </td>
     
-                  </ng-container>
+                  </ng-container> -->
                   <ng-container matColumnDef="employeecode">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       <div class="header-wrapper">

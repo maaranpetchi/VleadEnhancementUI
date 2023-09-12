@@ -7,6 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
+import { SelectionModel } from '@angular/cdk/collections';
+import Swal from 'sweetalert2/src/sweetalert2.js';
 
 @Component({
   selector: 'app-customer-salesmapping',
@@ -21,7 +23,7 @@ export class CustomerSalesmappingComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private spinner: SpinnerService,
-    private loginservice: LoginService
+    private loginservice: LoginService,
   ) {}
 
   ngOnInit(): void {
@@ -51,19 +53,25 @@ export class CustomerSalesmappingComponent implements OnInit {
   employeeDaSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator1!: MatPaginator;
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  filterValue:any
+  filterValue1:any
+    applyFilter(event: Event): void {
+      this.filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = this.filterValue.trim().toLowerCase();
+      // this.selection.clear();
+      // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
   }
   applyEmployeeFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.employeeDaSource.filter = filterValue.trim().toLowerCase();
-    if (this.employeeDaSource.paginator) {
-      this.employeeDaSource.paginator.firstPage();
-    }
+      this.filterValue1 = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = this.filterValue1.trim().toLowerCase();
+      // this.selection.clear();
+      // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
   }
   checkAdmin(): Observable<any> {
     return this.http.get(
@@ -78,10 +86,9 @@ export class CustomerSalesmappingComponent implements OnInit {
     );
   }
 
-  setAll(completed: boolean, item: any) {
-    console.log('item: ' + item);
+  setAll(item: any) {
+    console.log('item: ' + JSON.stringify(item));
     console.log('before', this.selectedQuery);
-    if (completed == true) {
       if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
       if (item.employeeId == null) item.employeeId = 0;
       if (item.estimatedTime == null) item.estimatedTime = 0;
@@ -94,24 +101,13 @@ export class CustomerSalesmappingComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
         customerId:[item.customerId],
-        CustomerName: item.employeeName
+        CustomerName: item.employeeName,
       });
-    } else {
-    if (this.selectedQuery.find((x) => x.id == item.id)) {
-      this.selectedQuery = this.selectedQuery.filter((x) => {
-        if (x.id != item.id) {
-          return item;
-        }
-      });
-      }
-    }
-    console.log('after', this.selectedQuery);
   }
 
-  setEmployeeAll(completed: boolean, item: any) {
+  setEmployeeAll( item: any) {
     console.log('before', this.selectedEmployee);
     console.log('item', item);
-    if (completed == true) {
         this.selectedEmployee.push({
           ...item,
           // CategoryDesc: '',
@@ -129,16 +125,6 @@ export class CustomerSalesmappingComponent implements OnInit {
           ShortName:item.employeeCode,
           TimeStamp: '',
         });
-    } else {
-    if (this.selectedEmployee.find((x) => x.id == item.id)) {
-      this.selectedEmployee = this.selectedEmployee.filter((x) => {
-        if (x.id != item.id) {
-          return item;
-        }
-      });
-      }
-    }
-    console.log('after', this.selectedEmployee);
   }
   onDropdownChange(): void {
     this.spinner.requestStarted();
@@ -186,6 +172,10 @@ export class CustomerSalesmappingComponent implements OnInit {
       });
   }
   onSubmit() {
+    this.spinner.requestStarted();
+    console.log("setall",this.selection);
+    this.selection.selected.forEach(x=>this.setAll(x));
+    this.selection1.selected.forEach(x=>this.setEmployeeAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -211,11 +201,23 @@ export class CustomerSalesmappingComponent implements OnInit {
               `CustomerMapping/CreateCustomerVsSalesEmployee`,
             savecustomervsSalesemp
           )
-          .subscribe((response) => {
-            if (response === true) {
-              alert('added');
-            } else {
-              console.log('error');
+          .subscribe((response:any) => {
+            if (response.message === "Salesperson assigned successfully") {
+              // alert('added');
+    this.spinner.requestEnded();
+
+              Swal.fire(
+                'Done!',
+                'Salesperson assigned successfully!',
+                'success'
+              )
+            } else{
+              Swal.fire(
+                'Done!',
+                'Salesperson assigned Failed!',
+                'error'
+              )
+                this.spinner.resetSpinner()
             }
           });
       // }
@@ -258,4 +260,47 @@ export class CustomerSalesmappingComponent implements OnInit {
 //         $('#alertPopup').modal('show');
 //     }
 // }
+selection = new SelectionModel<Element>(true, []);
+selection1 = new SelectionModel<Element>(true, []);
+
+isAllSelected() {
+  const numSelected = this.selection.selected.length;
+  const numRows = this.dataSource.data.length;
+  return numSelected === numRows;
+}
+
+masterToggle() {
+  console.log("record 5",this.selection)
+  if (this.isAllSelected()) {
+    this.selection.clear();
+  }
+  else if(this.filterValue){
+  this.selection.clear();
+    this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+  } else {
+    this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  console.log("record 6",this.selection.selected)
+
+}
+isEmplSelected() {
+  const numSelected = this.selection1.selected.length;
+  const numRows = this.employeeDaSource.data.length;
+  return numSelected === numRows;
+}
+
+emplMasterToggle() {
+  console.log("record 5",this.selection1)
+  if (this.isEmplSelected()) {
+    this.selection1.clear();
+  }
+  else if(this.filterValue1){
+  this.selection1.clear();
+    this.employeeDaSource.filteredData.forEach(x=>this.selection1.select(x));
+  } else {
+    this.employeeDaSource.data.forEach(row => this.selection1.select(row));
+  }
+  console.log("record 6",this.selection1.selected)
+
+}
 }

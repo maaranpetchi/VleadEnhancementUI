@@ -147,7 +147,7 @@ export class TopnavbarComponent implements OnInit {
       this.cookieService.set('processName', process.name);
       this.router.navigate(['/topnavbar/sewout']);
     }
-    else if (process.id == 1013) {
+    else if (process.id == 13) {
       this.cookieService.set('processId', process.id);
       this.cookieService.set('processName', process.name);
 

@@ -68,4 +68,24 @@ export class ClientorderviewComponent {
     saveAs(data, 'your-filename.xlsx');
   // }
   }
+
+
+
+  ///zip download
+  
+  enableZipDownloadBtn = false;
+
+  zipDownload(folderPath: string, fileName: string): void {
+    this.enableZipDownloadBtn = true;
+    folderPath = folderPath.replace(/\\/g, '_');
+    this.http.get(environment.apiURL+"Home/DownloadZipFile", {
+      responseType: 'arraybuffer',
+      params: { path: folderPath }
+    }).subscribe((response: ArrayBuffer) => {
+      const blob = new Blob([response], { type: "application/octet-stream" });
+      saveAs(blob, fileName + ".zip");
+    }, () => { }, () => {
+      this.enableZipDownloadBtn = false;
+    });
+  }
 }

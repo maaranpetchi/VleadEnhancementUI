@@ -11,7 +11,7 @@
     <div class="main-body">
         <div class="container">
             <div class="productionmain">
-                <h1 style="font-family:'Times New Roman', Times, serif;color:#137cdf">Clientorders({{NewJobCount +  QuoteJobCount}})</h1>
+                <h1 style="font-family:'Times New Roman', Times, serif;color:#137cdf">Clientorders({{NewJobCount ? NewJobCount:0 +  QuoteJobCount ? QuoteJobCount:0}})</h1>
                 <mat-tab-group  dynamicHeight (selectedTabChange)="onTabChange($event)">
                     <mat-tab label="{{ 'New Jobs (' + (NewJobTabCount ? NewJobTabCount:0) + ')' }}">
                     </mat-tab>

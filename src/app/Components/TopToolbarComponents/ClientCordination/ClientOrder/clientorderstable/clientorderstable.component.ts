@@ -121,7 +121,7 @@ export class ClientorderstableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService,private loginservice:LoginService) { }
+  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService, private loginservice: LoginService) { }
 
   ngOnInit(): void {
     // //DivisionApiDatadropdown
@@ -134,7 +134,7 @@ export class ClientorderstableComponent implements OnInit {
   fetchdivision() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/nGetDivisionForJO').subscribe(data => {
-    this.spinnerService.requestEnded();
+      this.spinnerService.requestEnded();
       this.DivisionApiData = data;
     });
   }
@@ -164,7 +164,7 @@ export class ClientorderstableComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe(binddata => {
       this.dataSource = binddata.data;
-    this.spinnerService.requestEnded();
+      this.spinnerService.requestEnded();
       this.displayedColumnsvisibility.filecount = true;
       this.displayedColumnsvisibility.actionicon = true;
       this.displayedColumnsvisibility.fileInwardMode = false;
@@ -178,9 +178,9 @@ export class ClientorderstableComponent implements OnInit {
       console.log(this.dataSource);
 
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    });
+      error => {
+        this.spinnerService.resetSpinner();
+      });
   }
   quotationjobs() {
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/2').subscribe(quotation => {
@@ -197,9 +197,9 @@ export class ClientorderstableComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    });
+      error => {
+        this.spinnerService.resetSpinner();
+      });
   }
   convertedjobs() {
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/3').subscribe(converted => {
@@ -216,9 +216,9 @@ export class ClientorderstableComponent implements OnInit {
       this.dataSource.sort = this.sort;
       console.log(this.dataSource);
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    });
+      error => {
+        this.spinnerService.resetSpinner();
+      });
   }
   deletedjobs() {
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/4').subscribe(deleted => {
@@ -235,9 +235,9 @@ export class ClientorderstableComponent implements OnInit {
       this.dataSource.sort = this.sort;
       console.log(this.dataSource);
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    });
+      error => {
+        this.spinnerService.resetSpinner();
+      });
   }
   quotenotapprovaljobs() {
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/5').subscribe(quotenotapproval => {
@@ -251,9 +251,9 @@ export class ClientorderstableComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    });
+      error => {
+        this.spinnerService.resetSpinner();
+      });
   }
   queryforsp() {
     this.http.get<any>(environment.apiURL + 'CustomerQuery/GetNotApprovedQueryForSPJobsToCC').subscribe(queryforsp => {
@@ -268,9 +268,9 @@ export class ClientorderstableComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    });
+      error => {
+        this.spinnerService.resetSpinner();
+      });
   }
 
 
@@ -394,15 +394,15 @@ export class ClientorderstableComponent implements OnInit {
       "username": "string",
       "salesPersonName": "string",
       "clientSalesPerson": "string",
-      "customerName": "string",
+      customerName: "string",
       "temp": "string",
       "style": "string",
       "projectCode": "string",
       "teamCode": "string",
       "schoolName": "string",
-      "ground": "string",
-      "gender": "string",
-      "fileInwardMode": "string",
+      ground: "string",
+      gender: "string",
+      fileInwardMode: "string",
       "status": true,
       "fileReceivedDate": "2023-05-12T07:08:03.495Z",
       "jobDescription": "string",
@@ -476,15 +476,30 @@ export class ClientorderstableComponent implements OnInit {
       let JobId = convertdata.jobId;
       this.spinnerService.requestEnded();
       if (JobId == `File Name Already Exist!,${GetAllvalues.fileName}` || JobId == "Previous Job is not closed for the File Name and Client!") {
-        alert(JobId);
+        Swal.fire(
+          'Alert!',
+          JobId,
+          'info'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        })
       }
       else {
-        this.coreService.openSnackBar("data added successfully");
-      }
+        Swal.fire(
+          'Done!',
+          'Data Converted Successfully!',
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        })      }
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    })
+      error => {
+        this.spinnerService.resetSpinner();
+      })
 
   } // added co if ends
 
@@ -494,8 +509,6 @@ export class ClientorderstableComponent implements OnInit {
     let Gridwithmultiplefilesname: any[] = [];
     for (var i = 0; i < this.selectedproduction.length; i++) {
       let GetAllvalues = this.selectedproduction[i];
-      console.log(GetAllvalues,"GetAllvalues");
-      
       let GetAddList =
       {
         FileName: GetAllvalues.fileName,
@@ -525,7 +538,7 @@ export class ClientorderstableComponent implements OnInit {
         customerName: "string",
         temp: "string",
         style: "string",
-        projectCode: GetAllvalues.projectCode,
+        projectCode: "string",
         teamCode: "string",
         schoolName: "string",
         ground: "string",
@@ -648,16 +661,16 @@ export class ClientorderstableComponent implements OnInit {
           'Done!',
           'Bulk Converted Successfully!',
           'success'
-        ).then((result)=>{
-          if(result.isConfirmed){
-            this.ngOnInit();
+        ).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
           }
         })
       }
     },
-    error => {
-      this.spinnerService.resetSpinner();
-    })
+      error => {
+        this.spinnerService.resetSpinner();
+      })
 
   }
 
@@ -694,6 +707,3 @@ export class ClientorderstableComponent implements OnInit {
 
 
 }
-
-
-

@@ -14,6 +14,7 @@ import { ClientcordinationService } from 'src/app/Services/CoreStructure/ClientC
 export class ClientordinationindexComponent implements OnInit {
   @ViewChild(QueryToClientComponent) QueryToClientComponent: QueryToClientComponent;
   SetIndex: any;
+  clientOrderCount: any;
   constructor(private http: HttpClient, private loginservice: LoginService, private spinnerService: SpinnerService, private _empService: ClientcordinationService) { }
 
   ngOnInit(): void {
@@ -92,18 +93,23 @@ export class ClientordinationindexComponent implements OnInit {
       this.CompletedJobsCount = response.clientDetails.resultForCompletedList;
     });
   }
-  NewJobCount: any;
-  QuoteJobCount: any;
+  NewJobCount: number  = 0;
+  QuoteJobCount: number = 0;
   getclientordercount() {
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
       
       this.NewJobCount = responsedata1.count;
-    });
+      console.log(this.NewJobCount);
+  
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
       
       this.QuoteJobCount = responsedata2.count;
-      
+      this.clientOrderCount = this.NewJobCount+ this.QuoteJobCount
+
     });
+  });
+  
+    
   }
 
 

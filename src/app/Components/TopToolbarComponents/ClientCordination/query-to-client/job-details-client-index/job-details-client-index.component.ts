@@ -92,6 +92,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
           'success'
         ).then((response) => {
           if (response.isConfirmed) {
+            this.dialogRef.close();
             this.ngOnInit();
           }
         })

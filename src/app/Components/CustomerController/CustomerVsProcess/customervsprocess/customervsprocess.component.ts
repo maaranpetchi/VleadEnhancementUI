@@ -135,8 +135,6 @@ export class CustomervsprocessComponent implements OnInit {
       error: console.log,
     });
   }
-  // this._empService.getEmployeeList().then((res)=>{console.log(res)}).catch(err=> console.log(err));
-
 
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -158,7 +156,6 @@ export class CustomervsprocessComponent implements OnInit {
         }).subscribe(data => {
           this.scopeList = data.getScopeList;
 
-          // console.log("scopelist" + JSON.stringify(this.scopeList));
         })
         this.refreshPage();
 

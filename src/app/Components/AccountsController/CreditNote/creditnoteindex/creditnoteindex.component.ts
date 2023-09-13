@@ -80,9 +80,7 @@ export class CreditnoteindexComponent {
       }
     });
   }
-  // this._empService.getEmployeeList().then((res)=>{console.log(res)}).catch(err=> console.log(err));
-
-
+ 
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

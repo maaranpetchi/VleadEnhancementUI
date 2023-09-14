@@ -91,8 +91,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   selectedEmployee: any[] = [];
 
   setAllJobs(completed: boolean, item: any) {
-    console.log('item: ' + item);
-    console.log('before', this.selectedQuery);
+  
     if (completed == true) {
       if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
       if (item.employeeId == null) item.employeeId = 0;
@@ -114,13 +113,12 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           }
         });
       }
-      console.log('after', this.selectedQuery);
+
     }
   }
 
   setEmployeeAll(completed: boolean, item: any) {
-    console.log('before', this.selectedEmployee);
-    console.log('item', item);
+   
     if (completed == true) {
       if (item.jId != null)
         this.selectedEmployee.push({
@@ -159,7 +157,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         });
       }
     }
-    console.log('after', this.selectedEmployee);
   }
 
   exchangeHeader: number;
@@ -208,7 +205,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           this.dataSource.sort = this.sort;
           // employee table details
           this.dataEmployeeSource = new MatTableDataSource(freshJobs.employees);
-          console.log('freshJobs');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -228,7 +224,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(revisionJobs.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log(' revisionJobs');
       });
   }
   reworkJobs() {
@@ -243,7 +238,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(reworkJobs.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log('reworkJobs');
       });
   }
   allocaetdJobs() {
@@ -258,7 +252,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(allocaetdJobs.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log('allocaetdJobs');
       });
   }
   queries() {
@@ -273,7 +266,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(queries.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log('queries');
       });
   }
   queryResposne() {
@@ -288,7 +280,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(queryResposne.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log('queries');
       });
   }
   errorJobs() {
@@ -303,7 +294,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(errorJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log('errorJobs');
       });
   }
   quotationJobs() {
@@ -318,14 +308,12 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(quotationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
-        console.log('errorJobs');
       });
   }
 
   estTimeinput: any[] = [];
 
   afterCellEdit(rowEntity: any) {
-    console.log('editfield', rowEntity);
     if (parseInt(this.loginservice.getProcessId()) == 2) {
       var colls = this.estTimeinput;
       var Esttime1 = colls[0].estimatedTime;
@@ -377,14 +365,12 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
   data: any;
   onSubmit(data: any) {
-    console.log(data, 'submit');
 
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployee.length;
-    console.log(selectedJobCount, 'JOB COUNT');
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
@@ -488,7 +474,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       isJobFilesNotTransfer: true,
     };
 
-    console.log(data, 'post Jobs');
 
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
@@ -586,7 +571,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.spinnerService.requestEnded();
-            console.log(data);
             AttachedFiles = [];
           },
           error: (err) => {
@@ -630,7 +614,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
 
   onSubmits(type: any, data: any) {
-    console.log(data, 'submited');
 
     var confirmationMessage: any;
 
@@ -705,7 +688,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
 
   masterToggle() {
-    console.log('record 5', this.selection);
     if (this.isAllSelected()) {
       this.selection.clear();
     } else if (this.filterValue) {
@@ -714,6 +696,5 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     } else {
       this.dataSource.data.forEach((row) => this.selection.select(row));
     }
-    console.log('record 6', this.selection.selected);
   }
 }

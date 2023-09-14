@@ -30,7 +30,6 @@ export class SewOutComponent implements OnInit {
 
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedproduction)
     if (completed == true) {
       this.selectedproduction.push(item)
     }

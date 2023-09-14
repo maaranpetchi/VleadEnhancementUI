@@ -118,7 +118,6 @@ export class EmployeePopupTableComponent implements OnInit {
       )
       .subscribe(
         (response:any) => {
-          console.log(response);
           this.dataSource = new MatTableDataSource(response.pendingJobsWithEmployeeId);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;

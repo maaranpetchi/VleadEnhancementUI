@@ -27,7 +27,6 @@ export class QuotationPopupComponent implements OnInit {
     private loginservice: LoginService,
     private spinnerService: SpinnerService
   ) {
-    console.log(data, "pop-updata");
     
   }
 
@@ -115,7 +114,6 @@ export class QuotationPopupComponent implements OnInit {
           confirmationMessage = response;
           if (response.success === true) {
             Swal.fire('Done!', 'Quotation assigned successfully!', 'success');
-            console.log('Condition is true:', response);
           } else {
             Swal.fire('Done!', 'Quotation assigned Failed!', 'error');
             console.log('Condition is false:', response);
@@ -135,7 +133,6 @@ export class QuotationPopupComponent implements OnInit {
                 .subscribe({
                   next: (data) => {
                     this.spinnerService.requestEnded();
-                    console.log(data);
                     this.selectedFile = [];
                   },
                   error: (err) => {

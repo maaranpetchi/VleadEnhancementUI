@@ -25,7 +25,7 @@ export class ProductionAllocatedPopupComponent implements OnInit {
     private router :Router,
   public dialogRef: MatDialogRef<ProductionAllocatedPopupComponent>
 
-  ) {console.log(data,"ProductionAllocatedPopupComponent");
+  ) {
   }
 
   displayedJobColumns: string[] = [
@@ -206,7 +206,6 @@ export class ProductionAllocatedPopupComponent implements OnInit {
     return pathParts[pathParts.length - 1];
   }
   onSubmit() {
-    console.log(this.selectedQureryStatus,"SelecedQyeryStatus");
 
       this.processMovement();
   }
@@ -263,7 +262,6 @@ export class ProductionAllocatedPopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    console.log(saveData,"savedata");
     
     this.http
       .post<any>(environment.apiURL + 'Allocation/processMovement', saveData)
@@ -363,7 +361,6 @@ export class ProductionAllocatedPopupComponent implements OnInit {
       )
       .subscribe(
         (response) => {
-          console.log(response);
 
           // Handle the API response
         },

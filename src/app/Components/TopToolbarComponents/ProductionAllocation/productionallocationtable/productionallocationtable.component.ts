@@ -206,37 +206,9 @@ export class ProductionallocationtableComponent implements OnInit {
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
-  // setAll(completed: boolean, item: any) {
-  //   console.log('item: ' + item);
-  //   console.log('before', this.selectedQuery);
-  //   if (completed == true) {
-  //     if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-  //     if (item.employeeId == null) item.employeeId = 0;
-  //     if (item.estimatedTime == null) item.estimatedTime = 0;
-  //     this.selectedQuery.push({
-  //       ...item,
-  //       CategoryDesc: '',
-  //       Comments: '',
-  //       CommentsToClient: '',
-  //       Remarks: '',
-  //       SelectedEmployees: [],
-  //       SelectedRows: [],
-  //     });
-  //   } else {
-  //     if (this.selectedQuery.find((x) => x.id == item.id)) {
-  //       this.selectedQuery = this.selectedQuery.filter((x) => {
-  //         if (x.id != item.id) {
-  //           return item;
-  //         }
-  //       });
-  //     }
-  //   }
-  //   console.log('after', this.selectedQuery);
-  // }
 
   setEmployeeAll(completed: boolean, item: any) {
-    console.log('before', this.selectedEmployee);
-    console.log('item', item);
+ 
     if (completed == true) {
       if (item.jId != null)
         this.selectedEmployee.push({
@@ -275,11 +247,9 @@ export class ProductionallocationtableComponent implements OnInit {
         });
       }
     }
-    console.log('after', this.selectedEmployee);
   }
   // setExchangeHeader() {
-  //   console.log('exchangeHeader', this.exchangeHeader);
-  //   console.log(this.selectedQuery, 'selectrow');
+
 
   //   let temparray: any[] = [];
   //   let selected:any[]=[];
@@ -314,7 +284,6 @@ export class ProductionallocationtableComponent implements OnInit {
   //   this.selectedQuery=this.selection.selected;
   // }
     setExchangeHeader(){
-      console.log("exchange",this.selection.selected)
       this.selection.selected.forEach((x:any)=>x.allocatedEstimatedTime=this.exchangeHeader);
     }
   benchChecked: boolean = false;
@@ -348,8 +317,7 @@ export class ProductionallocationtableComponent implements OnInit {
           );
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('freshJobs',            freshJobs.employees
-          );
+         
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -379,7 +347,6 @@ export class ProductionallocationtableComponent implements OnInit {
           );
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('revisionJobs');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -409,7 +376,6 @@ export class ProductionallocationtableComponent implements OnInit {
           );
           this.dataEmployeeSource.sort = this.sort;
           this.dataEmployeeSource.paginator = this.paginator2;
-          console.log('reworkJobs');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -445,7 +411,6 @@ export class ProductionallocationtableComponent implements OnInit {
           );
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('allocaetdJobs');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -473,7 +438,6 @@ export class ProductionallocationtableComponent implements OnInit {
           this.dataEmployeeSource = new MatTableDataSource(queries.employees);
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('queries');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -505,7 +469,6 @@ export class ProductionallocationtableComponent implements OnInit {
           );
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('queryResposne');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -533,7 +496,6 @@ export class ProductionallocationtableComponent implements OnInit {
           this.dataEmployeeSource.sort = this.sort;
           this.displayedColumnsVisibility.employee = false;
           this.displayedColumnsVisibility.quatationJobId = false;
-          console.log('errorJobs');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -563,7 +525,6 @@ export class ProductionallocationtableComponent implements OnInit {
           this.dataEmployeeSource = new MatTableDataSource(quotationJobs.employees);
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('quotationJobs');
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
@@ -609,7 +570,6 @@ export class ProductionallocationtableComponent implements OnInit {
     // }
   }
   afterCellEdit(rowEntity: any) {
-    console.log('editfield', rowEntity);
 
     if (parseInt(this.loginservice.getProcessId()) == 2) {
       var colls = this.estTimeinput;
@@ -724,7 +684,6 @@ export class ProductionallocationtableComponent implements OnInit {
 
   selectedJobs: any[] = [];
   onSubmit() {
-    console.log("setall",this.selection);
     this.selection.selected.forEach(x=>this.setAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
@@ -733,8 +692,7 @@ export class ProductionallocationtableComponent implements OnInit {
 
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployee.length;
-    console.log(selectedJobCount, 'JOB COUNT');
-    console.log(selectedEmployeeCount, 'EMPLOYEE COUNT');
+   
 
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
@@ -747,7 +705,6 @@ export class ProductionallocationtableComponent implements OnInit {
             console.log();
             
             for (var i = 0; i < selectedJobCount; i++) {
-            console.log(this.selectedQuery, "est time for job");
                 if (this.selectedJobs[i].allocatedEstimatedTime == undefined || this.selectedJobs[i].allocatedEstimatedTime == "" || this.selectedJobs[i].allocatedEstimatedTime == 0) {
                     // alert('Please enter Estimated Time for Selected Job');
             Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
@@ -946,7 +903,6 @@ export class ProductionallocationtableComponent implements OnInit {
                 .subscribe({
                   next: (data) => {
                     this.spinnerService.requestEnded();
-                    console.log(data);
                     AttachedFiles = [];
                     
                   },
@@ -991,7 +947,6 @@ export class ProductionallocationtableComponent implements OnInit {
   }
 
   masterToggle() {
-    console.log("record 5",this.selection)
     if (this.isAllSelected()) {
       this.selection.clear();
     }
@@ -1001,13 +956,10 @@ export class ProductionallocationtableComponent implements OnInit {
     } else {
       this.dataSource.data.forEach(row => this.selection.select(row));
     }
-    console.log("record 6",this.selection.selected)
  
   }
   setAll(item: any) {
-    console.log('item: ' + item);
-    console.log('before', this.selectedQuery);
-    
+  
       if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
       if (item.employeeId == null) item.employeeId = 0;
       if (item.estimatedTime == null) item.estimatedTime = 0;
@@ -1020,6 +972,5 @@ export class ProductionallocationtableComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
       });
-    console.log('after', this.selectedQuery);
   }
 }

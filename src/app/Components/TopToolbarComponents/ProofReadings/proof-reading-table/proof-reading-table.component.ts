@@ -156,7 +156,6 @@ export class ProofReadingTableComponent implements OnInit {
   //to save the checkbox values
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedproduction)
     if (completed == true) {
       this.selectedproduction.push(item)
     }
@@ -170,11 +169,9 @@ export class ProofReadingTableComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedproduction)
   }
 
   getTabValue() {
-    console.log("Inside table", this.proofreadingcomponent.getCurrentTab());
     return this.proofreadingcomponent.getCurrentTab();
   }
 
@@ -206,7 +203,6 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = false;
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
-    console.log(localStorage.getItem('selectedRadioValue'), "radioValue");
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/${this.selectedValue}`).subscribe({
       next: (freshJobs) => {
@@ -394,7 +390,6 @@ export class ProofReadingTableComponent implements OnInit {
           "isJobFilesNotTransfer": true
         }
       this.http.post<any>(environment.apiURL+`Allocation/processMovement`,processMovement).subscribe( result => {
-        console.log(result,"processMovementworkkk");
             if (result.Success == true) {
                 localStorage.setItem("WFTId", result.wftId);
                 localStorage.setItem("WFMId", result.wfmid);
@@ -432,7 +427,6 @@ export class ProofReadingTableComponent implements OnInit {
 
 BindPendingJobs() {
   this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(result => {
-    console.log(result,"buddyproofmainwwww");
   });
 }
 

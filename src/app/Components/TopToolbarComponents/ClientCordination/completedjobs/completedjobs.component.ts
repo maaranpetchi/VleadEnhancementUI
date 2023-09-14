@@ -84,7 +84,7 @@ export class CompletedjobsComponent implements OnInit {
   selectedQuery: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedQuery)
+    
     if (completed == true) {
       this.selectedQuery.push({ ...item, Comments: '', CategoryDesc: '', SelectedRows: [], CommentsToClient: '', SelectedEmployees: [] })
     }
@@ -98,7 +98,6 @@ export class CompletedjobsComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedQuery)
   }
   postdatabulk: any[] = [];
   bulkUpload() {
@@ -106,7 +105,6 @@ export class CompletedjobsComponent implements OnInit {
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
       this.spinnerService.requestEnded();
       this.postdatabulk = data.clientDetails.resultCompletedJobsList;
-      console.log(this.postdatabulk, "postdatabulk");
 
     });
     let bulkuploaddata = {
@@ -181,7 +179,6 @@ export class CompletedjobsComponent implements OnInit {
   }
   onChange(tab) {
     tab = this.getCompletedJobData();
-    console.log(tab, "changetab");
 
   }
 

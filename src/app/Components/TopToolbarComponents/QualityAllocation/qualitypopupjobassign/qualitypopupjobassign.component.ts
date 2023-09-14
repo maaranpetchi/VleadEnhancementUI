@@ -57,7 +57,6 @@ export class QualitypopupjobassignComponent implements OnInit {
     private http: HttpClient,
     private loginservice: LoginService
   ) {
-    console.log(data, "data");
   }
   displayedJobColumns: string[] = [
     'movedFrom',
@@ -188,7 +187,6 @@ export class QualitypopupjobassignComponent implements OnInit {
     }
   }
   processMovement() {
-    console.log("submit");
     
     const apiUrl = environment.apiURL + `Allocation/processMovement`;
 
@@ -249,7 +247,6 @@ export class QualitypopupjobassignComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    console.log(saveData, 'savedata');
     this.http.post<any>(apiUrl, saveData).subscribe((response) => {
       if (response.success === true) {
         Swal.fire('Done!', response.message, 'success');
@@ -320,7 +317,6 @@ export class QualitypopupjobassignComponent implements OnInit {
 
   // workFiles(id:number){
   //   const folder = this.data.find(f => f.id === id);
-  //   console.log(this.data, 'download');
 
 
   //   if (folder) {
@@ -332,11 +328,9 @@ export class QualitypopupjobassignComponent implements OnInit {
   //         downloadLink.download = fileName;
   //         downloadLink.click();
   //       } else {
-  //         console.log('File type not supported for download:', fileName);
   //       }
   //     });
   //   } else {
-  //     console.log('Folder not found with ID:', id);
   //   }
   // }
 
@@ -404,7 +398,6 @@ export class QualitypopupjobassignComponent implements OnInit {
   //////////////Popupsubmit////
 
   getQueryDetailList() {
-    console.log(this.jobCommonDetails.jobCommonDetails.jid, "jobcommondetails");
 
     this.http.get<any>(environment.apiURL + `Allocation/GetQuerySPDetailsForQA/${this.jobCommonDetails.jobCommonDetails.jid}`).subscribe(result => {
       this.QueryDetailsList = result;

@@ -97,7 +97,6 @@ export class ProofreadingComponent implements OnInit {
   getCount() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginService.getUsername()}/${this.loginService.getProcessId()}/1/0`).subscribe(getcount => {
-      console.log(getcount.freshJobsCount, "freshjobscount");
       this.spinnerService.requestEnded();
       this.freshJobsCount = getcount.freshJobsCount,
         this.revisionJobsCount = getcount.revisionJobsCount,

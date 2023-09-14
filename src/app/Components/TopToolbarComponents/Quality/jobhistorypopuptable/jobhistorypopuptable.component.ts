@@ -24,7 +24,7 @@ export class JobhistorypopuptableComponent implements OnInit {
 
   dataSource: MatTableDataSource<any>;  
 
-  constructor(private dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any,private http: HttpClient,public dialogRef: MatDialogRef<JobhistorypopuptableComponent>) {console.log(data,"qULAUTYDATA");
+  constructor(private dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any,private http: HttpClient,public dialogRef: MatDialogRef<JobhistorypopuptableComponent>) {
   }
 
   ngOnInit(): void {
@@ -34,8 +34,7 @@ export class JobhistorypopuptableComponent implements OnInit {
   
 getData(){
   this.http.post<any>(environment.apiURL+`JobOrder/getJobHistory`,this.data.jid).subscribe(response =>{
-    console.log(response.jobHistory,"NORMAL");
-    console.log(response.jobHistory[0],"ARRAY");
+  
     
     this.dataSource = new MatTableDataSource(response.jobHistory)  });
 }

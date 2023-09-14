@@ -70,7 +70,6 @@ export class SewOutTableComponent implements OnInit {
   selectedQuery: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedQuery)
     if (completed == true) {
       this.selectedQuery.push(item)
     }
@@ -84,7 +83,6 @@ export class SewOutTableComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedQuery)
   }
 
   benchChecked: boolean = false;
@@ -142,7 +140,6 @@ export class SewOutTableComponent implements OnInit {
 
   freshJobs() {
     this.sewOutService.getTabValue1().subscribe(freshJobs => {
-      console.log(freshJobs,"freshJOBSSEWOUT");
       
       this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
@@ -207,7 +204,6 @@ export class SewOutTableComponent implements OnInit {
   }
 
   getTabValue() {
-    console.log("Inside table", this.SewOutComponent1.getCurrentTab());
     return this.SewOutComponent1.getCurrentTab();
   }
   workFlowConversion() {

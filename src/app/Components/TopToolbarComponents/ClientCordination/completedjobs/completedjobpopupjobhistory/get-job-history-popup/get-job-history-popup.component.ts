@@ -18,7 +18,7 @@ export class GetJobHistoryPopupComponent implements OnInit {
   selectedJobs: { DepartmentId: any; TranMasterId: any; JId: any; CustomerId: any; JobId: string; Remarks: string; Comments: string; TimeStamp: string; CategoryDesc: string; SelectedRows: never[]; FileInwardType: string; CommentsToClient: string; SelectedEmployees: never[]; }[];
   scopedescription: any;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private cookieService: CookieService,private loginservice: LoginService, private spinnerservice: SpinnerService) { console.log(this.data,"InjectedData");
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private cookieService: CookieService,private loginservice: LoginService, private spinnerservice: SpinnerService) {
   }
 
   displayedJobColumns: string[] = ['movedFrom', 'movedTo', 'movedDate', 'movedBy', 'MovedTo', 'remarks'];
@@ -38,7 +38,6 @@ export class GetJobHistoryPopupComponent implements OnInit {
     this.http.post<any>(environment.apiURL + 'JobOrder/getJobHistory', this.data.jid).subscribe(data => {
       this.dataJobSource = data.jobHistory;
       this.scopedescription = data.jobCommonDetails.description
-      console.log(data, "JobDetails");
 
     });
   }
@@ -118,7 +117,6 @@ export class GetJobHistoryPopupComponent implements OnInit {
 
   jobMovement(processMovement) {
     this.http.post<any>(environment.apiURL + `Allocation/processMovement`, processMovement).subscribe(result => {
-     console.log(result,"JobMovementResults");
      
        
         this.fileUpload(result)

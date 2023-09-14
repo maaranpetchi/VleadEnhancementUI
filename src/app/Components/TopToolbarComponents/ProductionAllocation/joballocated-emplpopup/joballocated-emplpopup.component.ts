@@ -79,7 +79,6 @@ export class JoballocatedEmplpopupComponent implements OnInit {
       )
       .subscribe(
         (response:any) => {
-          console.log(response);
           this.dataSource = new MatTableDataSource(response.assignedEmployees);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;

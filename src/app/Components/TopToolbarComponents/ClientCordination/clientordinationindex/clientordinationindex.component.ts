@@ -32,7 +32,7 @@ export class ClientordinationindexComponent implements OnInit {
     // Update the REST API based on the selected tab
     
     this.SetIndex = event.index ?  event.index:0
-    console.log(this.SetIndex,"SetIndex");
+   
     
     
     this._empService.setData({ data: this.SetIndex ? this.SetIndex:0 });
@@ -99,7 +99,7 @@ export class ClientordinationindexComponent implements OnInit {
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
       
       this.NewJobCount = responsedata1.count;
-      console.log(this.NewJobCount);
+
   
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
       

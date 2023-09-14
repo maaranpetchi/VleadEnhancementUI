@@ -103,7 +103,6 @@ export class QueryToClientComponent implements OnInit {
   selectedQuery: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log('before', this.selectedQuery);
     if (completed == true) {
       this.selectedQuery.push(item);
     } else {
@@ -115,7 +114,6 @@ export class QueryToClientComponent implements OnInit {
         });
       }
     }
-    console.log('after', this.selectedQuery);
   }
 
   convertedDate:string;

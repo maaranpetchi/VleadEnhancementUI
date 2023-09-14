@@ -85,7 +85,6 @@ export class QualityWorkflowComponent implements OnInit {
   constructor(private location:Location,private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService,
   ) {
     this.data = this.workflowservice.getData();
-    console.log(this.data,"Injected Data");
     
     
   }

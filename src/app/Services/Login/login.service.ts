@@ -18,7 +18,6 @@ export class LoginService {
 
   isLoggedIn(): boolean {
     let loginCheck = this.cookieService.check('token') && this.cookieService.check('username');
-    console.log(loginCheck,"logincheck");
     
     return loginCheck;
   }

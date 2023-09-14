@@ -18,7 +18,7 @@ export class ClientorderviewComponent {
 
 
   constructor(private router: Router, private location: Location, @Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<ClientorderviewComponent>, private http: HttpClient) {
-    console.log(data, "InjectedData");
+
     this.getOrderList();
   }
 

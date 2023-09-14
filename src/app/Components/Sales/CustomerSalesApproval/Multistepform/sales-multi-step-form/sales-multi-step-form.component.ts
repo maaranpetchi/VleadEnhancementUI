@@ -374,8 +374,7 @@ export class SalesMultiStepFormComponent implements OnInit {
 
         this.selectedScopeID = selectedDeptId;
         this.selectedDeptDescription = selectedDeptDescription;
-        console.log('Selected ID:', this.selectedScopeID);
-        console.log('Selected Description:', this.selectedDeptDescription);
+       
         // Do whatever you need with the selectedDeptId and selectedDeptDescription here
       }
     }
@@ -445,13 +444,11 @@ export class SalesMultiStepFormComponent implements OnInit {
   addcustat: boolean = true;
   openEditForm() {
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
-      console.log(results, "Tatavaluefromapi");
       this.jobStatusdisplay = true;
       this.jobstatusdropdown = false;
       this.addcustat = false;
       this.uptcustat = true;
       this.tatValue = results[0].tat;
-      console.log(results[0].tat, "tatvalue");
 
     });
 

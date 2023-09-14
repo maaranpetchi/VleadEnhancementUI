@@ -26,7 +26,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
   JobCommonDetailsJob: any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService) {
-    console.log(this.data, "Injected data");
     this.JobCommonDetailsJob = this.data.jobStatusDescription;
 
     this.gettingindex = this._empService.getData() ?? 0;
@@ -35,8 +34,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
     if (this.gettingindex == 0 || this.gettingindex.data == 0 || this.gettingindex.data == 3) {
       this.popupStatus = true;
     }
-    console.log(this.gettingindex, "GettingIndex");
-    console.log(this.JobCommonDetailsJob, "JobCommonDetailsJob");
+
 
   }
 
@@ -64,8 +62,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.dataQuerySource = jobdata.jobQueryHistory;
       this.JobCommonDetails = jobdata.jobCommonDetails;
 
-      console.log(jobdata, "JobDetails");
-      console.log(this.JobCommonDetails, " JobCommonDetails");
     });
   }
 
@@ -139,7 +135,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
         this.spinnerService.requestEnded();
 
         this.QueryDetailsList = result;
-        console.log(result, "GetAmountbutton");
 
 
         if (this.QueryDetailsList == undefined) {
@@ -202,9 +197,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
                 result.message
               )
             }
-            console.log(result, "postresult");
           });
-          console.log(result, "QueryDetailsList");
 
         }
       });
@@ -270,7 +263,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
 
 
   submitpostQueryData(data) {
-    console.log(this.QueryDetailsList, "QueryDetailsList");
 
     this.selectedJobs = [{
       DepartmentId: this.data.departmentId,
@@ -380,7 +372,6 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.spinnerService.requestStarted();
       this.http.get<any>(environment.apiURL + `ClientOrderService/QueryDetails?WFTId=${this.data.tranId}&WFMId=${this.data.tranMasterId}`).subscribe(results => {
         this.spinnerService.requestEnded();
-        console.log(results, "Resultsquery");
         this.QueryDetailsList = results;
         this.QueryEstimatedTime = results.estimatedTime;
         this.QueryEstimatedScope = results.scope?.description;

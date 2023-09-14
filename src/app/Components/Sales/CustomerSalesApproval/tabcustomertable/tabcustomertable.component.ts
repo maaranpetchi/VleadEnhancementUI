@@ -79,11 +79,8 @@ export class TabcustomertableComponent implements OnInit {
 
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    console.log('Filter:', filterValue);
    this.dataSource.filter = filterValue.trim().toLowerCase();
    
-    console.log('Filtered Data:', this.dataSource.filteredData);
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

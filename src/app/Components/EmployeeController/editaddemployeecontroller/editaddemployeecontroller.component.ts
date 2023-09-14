@@ -30,7 +30,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     let data: any[] = [];
     if (this._empservice.shouldFetchData) {
       const data = this._empservice.getData();
-      console.log(data, "Data 1");
       this.apiResponseData = data.data;
 
       this.fetchUpdateData();

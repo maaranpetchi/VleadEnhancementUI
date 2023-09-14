@@ -45,7 +45,6 @@ getDivisionAPi(){
 
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
-    console.log("first", event);
 
     switch (event.index) {
       case 0: // Fresh Jobs tab
@@ -110,7 +109,6 @@ getDivisionAPi(){
     this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
       this.spinnerService.requestEnded();
       this.QuoteJobCount = responsedata2.count;
-      console.log(this.NewJobCount + this.QuoteJobCount, "completedcountvalues");
     });
   }
 

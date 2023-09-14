@@ -32,7 +32,6 @@ export class ClientdetailspopupComponent implements OnInit {
     this.http.get<any>(environment.apiURL+`ClientOrderService/GetJobOrderByJobId?JobId=${id}`).subscribe(data => {
     a.push(data);  
     this.dataSource = a;
-      console.log(a,'details')
     });
   }
 

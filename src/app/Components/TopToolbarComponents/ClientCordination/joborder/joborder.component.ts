@@ -138,7 +138,6 @@ export class JoborderComponent implements OnInit {
   getcustomername() {
     this.http.get<any>(environment.apiURL+`ClientOrderService/CCByCusId?custId=${this.selectedClientName.id}`).subscribe(CustomerContactName => {
       this.CustomerContactName = CustomerContactName;
-      console.log(this.CustomerContactName = CustomerContactName, "GetCustomer")
     });
   }
 
@@ -148,8 +147,7 @@ export class JoborderComponent implements OnInit {
     if (selectedContact) {
       const contactId = selectedContact.contactId;
       const contactName = selectedContact.contactName;
-      console.log('Selected Contact ID:', contactId);
-      console.log('Selected Contact Name:', contactName);
+   
       // Perform any additional actions with the selected contact ID and name
     }
   }

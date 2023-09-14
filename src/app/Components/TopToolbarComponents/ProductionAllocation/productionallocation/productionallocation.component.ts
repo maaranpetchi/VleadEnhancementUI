@@ -37,7 +37,6 @@ export class ProductionallocationComponent implements OnInit {
 
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
-    console.log('first', event);
     switch (event.index) {
       case 0: // Fresh Jobs tab
         // Call your REST API for Fresh Jobs

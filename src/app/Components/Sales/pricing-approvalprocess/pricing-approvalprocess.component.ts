@@ -33,7 +33,6 @@ export class PricingApprovalprocessComponent implements OnInit {
     this.http.get(environment.apiURL + 'Pricing/CustomerListinPrice').subscribe(
       (response: any) => {
         this.dropdownValues = response.customers;
-        console.log(response, 'dropDownValues');
       },
       (error) => {
         console.log('Error loading dropdown values:', error);
@@ -49,7 +48,6 @@ export class PricingApprovalprocessComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          console.log(response);
           this.customers = response;
           this.spinner.requestEnded();
         },

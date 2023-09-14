@@ -33,13 +33,10 @@ export class JobhistoryDetailsComponent implements OnInit {
 
   getJobHistoryDetails(data:any){
     this.http.post<any>(environment.apiURL+'JobOrder/getJobHistory',this.data.jId).subscribe(data => {
-      console.log(data,"data");
-      
       this.dataJobSource = data.jobHistory; 
   })
   }
   downloadExcell(path: any): void {
-    // console.log(this.jobHistory.fileUploadPath,"upload");
     
     // let path= this.jobHistory.fileUploadPath
     path = path.replace(/\\/g, '_');

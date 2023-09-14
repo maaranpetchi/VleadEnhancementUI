@@ -92,12 +92,9 @@ export class LoginComponent implements OnInit {
   //   path = path.replace(/\\/g, '_');
      
   //         this.http.get(environment.apiURL+'Allocation/DownloadZipFile?path='+`${path}`).subscribe((response:any) => {
-  //           console.log("test")
             
   //           // const data = new Blob([response], { type: 'application/octet-stream' });
-  //           // console.log(data)
   //           // const url = window.URL.createObjectURL(data);
-  //           // console.log(url)
   //           // const a = document.createElement('a');
   //           // a.href = url;
   //           // a.download = 'file-name.zip';

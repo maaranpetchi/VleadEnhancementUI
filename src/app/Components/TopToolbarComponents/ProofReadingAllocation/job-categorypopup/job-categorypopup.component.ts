@@ -293,7 +293,6 @@ export class JobCategorypopupComponent implements OnInit {
     };
     this.http.post<any>(environment.apiURL+'Allocation/changeEstimatedTime', estTimeData).subscribe(
       (response) => {
-        console.log(response);
         
         // Handle the API response
       },

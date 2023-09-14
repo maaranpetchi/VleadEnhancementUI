@@ -70,7 +70,6 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
   RbnError: any = null;;
   errorId: null;
   constructor(private dialog:MatDialog,private checklistService: ProofReadingService, private http: HttpClient, private loginService: LoginService, @Inject(MAT_DIALOG_DATA) public data: any) {
-    console.log(data, "processdata");
   }
 
   onFileSelected(event: any) {
@@ -90,7 +89,6 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
     // // Fetch data from the REST API
     this.http.get<any>(environment.apiURL + `Allocation/getCustomerScopeValues/1/${this.data.clientId}`).subscribe(data => {
       this.scopeApiValues = data.scopeDetails[0];
-      console.log(data.scopeDetails[0], "getscopevalues");
     });
   }
   onScopeChange() {
@@ -315,7 +313,6 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
           fd.append('data', JSON.stringify(processTransaction));
 
           this.http.post<any>(environment.apiURL + `Workflow/ChangeWorkflow/${this.data.wftid}`, fd).subscribe(ChangeWorkflowResult => {
-            console.log(ChangeWorkflowResult, "ChangeWorkflowResult");
 
             this.BindWorkDetails();
             this.confirmationMessage = ChangeWorkflowResult;
@@ -324,7 +321,6 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
         } else {
           fd.append('data', JSON.stringify(processTransaction));
           this.http.post<any>(environment.apiURL + `Workflow/ChangeWorkflow/${this.data.wftid}`, fd).subscribe(ChangeWorkflowResult => {
-            console.log(ChangeWorkflowResult, "ChangeWorkflowResult");
             this.BindWorkDetails();
             this.confirmationMessage = ChangeWorkflowResult;
             // this.showPopup();
@@ -333,7 +329,6 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
       } else {
         fd.append('data', JSON.stringify(processTransaction));
         this.http.post<any>(environment.apiURL + `Workflow/ChangeWorkflow/${this.data.wftid}`, fd).subscribe(ChangeWorkflowResult => {
-          console.log(ChangeWorkflowResult, "ChangeWorkflowResult");
           this.BindWorkDetails();
           this.confirmationMessage = ChangeWorkflowResult;
           // this.showPopup();
@@ -385,13 +380,11 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
       ]
     }
     this.http.post<any>(environment.apiURL + "Workflow/GetProductionWorkList", processTransaction).subscribe((result) => {
-      console.log(result.summary.summaryHistory,"Normal");
-      console.log(result.summary.summaryHistory[0],"Normal");
+
       
       this.jobWorkDetails = result.jobHistory; // to display the details in table
       let History = result.summary.summaryHistory;
-      console.log(result.summary.summaryHistory, "Normal summary history");
-      console.log(result.summary.summaryHistory[0], "Array summary history");
+     
 
       this.TotalTimeWorked = result.summary.summaryHistory[0].totalTime;
       this.Break = result.summary.summaryHistory[0].break;

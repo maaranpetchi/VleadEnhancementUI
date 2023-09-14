@@ -12,7 +12,6 @@ export class AppComponent {
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: Event) {
     this.currentUrl = window.location.href;
-    console.log('Current URL:', this.currentUrl);
     return this.currentUrl;
     // You can store or handle the current URL here as needed.
   }

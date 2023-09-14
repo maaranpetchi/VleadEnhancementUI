@@ -57,7 +57,6 @@ export class CustomervsdivisionindexComponent implements OnInit {
   fetchtableData() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `CustomerVsDivision/GetCustomerVsDivision`).subscribe(res => {
-      console.log(res, "fetchtable");
 
       this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(res.gCvDList);

@@ -102,8 +102,7 @@ export class QualityallocationtableComponent implements OnInit {
   selectedEmployee: any[] = [];
 
   setAllJobs(item: any) {
-    console.log('item: ' + item);
-    console.log('before', this.selectedQuery);
+
     // if (completed == true) {
     if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
     if (item.employeeId == null) item.employeeId = 0;
@@ -125,13 +124,11 @@ export class QualityallocationtableComponent implements OnInit {
     //       }
     //     });
     //   }
-    console.log('after', this.selectedQuery);
     // }
   }
 
   setEmployeeAll(completed: boolean, item: any) {
-    console.log('before', this.selectedEmployee);
-    console.log('item', item);
+
     if (completed == true) {
       if (item.jId != null)
         this.selectedEmployee.push({
@@ -170,7 +167,6 @@ export class QualityallocationtableComponent implements OnInit {
         });
       }
     }
-    console.log('after', this.selectedEmployee);
   }
 
   exchangeHeader: number;
@@ -220,7 +216,6 @@ export class QualityallocationtableComponent implements OnInit {
           this.dataEmployeeSource = new MatTableDataSource(freshJobs.employees);
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
-          console.log('freshJobs');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -246,7 +241,6 @@ export class QualityallocationtableComponent implements OnInit {
           );
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('revisionJobs');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -273,7 +267,6 @@ export class QualityallocationtableComponent implements OnInit {
           );
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('reworkJobs');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -301,7 +294,6 @@ export class QualityallocationtableComponent implements OnInit {
           );
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('allocaetdJobs');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -325,7 +317,6 @@ export class QualityallocationtableComponent implements OnInit {
           this.dataEmployeeSource = new MatTableDataSource(queries.employees);
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('queries');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -353,7 +344,6 @@ export class QualityallocationtableComponent implements OnInit {
           );
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('queryResposne');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -377,7 +367,6 @@ export class QualityallocationtableComponent implements OnInit {
           this.dataEmployeeSource = new MatTableDataSource(errorJobs.employees);
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('errorJobs');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -405,7 +394,6 @@ export class QualityallocationtableComponent implements OnInit {
           );
           this.dataSource.paginator = this.paginator1;
           this.dataSource.sort = this.sort;
-          console.log('quotationJobs');
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -417,7 +405,6 @@ export class QualityallocationtableComponent implements OnInit {
   estTimeinput: any[] = [];
 
   afterCellEdit(rowEntity: any) {
-    console.log('editfield', rowEntity);
     if (parseInt(this.loginservice.getProcessId()) == 2) {
       var colls = this.estTimeinput;
       var Esttime1 = colls[0].estimatedTime;
@@ -469,8 +456,7 @@ export class QualityallocationtableComponent implements OnInit {
   }
   data: any;
   onSubmit(data: any) {
-    console.log(data, 'submit');
-    console.log('setall', this.selection);
+ 
     this.selection.selected.forEach((x) => this.setAllJobs(x));
 
     if (this.selectedQuery.length > 0) {
@@ -478,7 +464,6 @@ export class QualityallocationtableComponent implements OnInit {
     }
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployee.length;
-    console.log(selectedJobCount, 'JOB COUNT');
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
@@ -581,7 +566,6 @@ export class QualityallocationtableComponent implements OnInit {
       isJobFilesNotTransfer: true,
     };
 
-    console.log(data, 'post Jobs');
 
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
@@ -670,7 +654,6 @@ export class QualityallocationtableComponent implements OnInit {
   }
 
   onSubmits(type: any, data: any) {
-    console.log(data, 'submited');
 
     var confirmationMessage: any;
 
@@ -745,7 +728,6 @@ export class QualityallocationtableComponent implements OnInit {
   }
 
   masterToggle() {
-    console.log('record 5', this.selection);
     if (this.isAllSelected()) {
       this.selection.clear();
     } else if (this.filterValue) {
@@ -754,6 +736,5 @@ export class QualityallocationtableComponent implements OnInit {
     } else {
       this.dataSource.data.forEach((row) => this.selection.select(row));
     }
-    console.log('record 6', this.selection.selected);
   }
 }

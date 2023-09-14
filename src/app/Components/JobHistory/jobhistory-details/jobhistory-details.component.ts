@@ -38,14 +38,11 @@ export class JobhistoryDetailsComponent implements OnInit {
       this.dataJobSource = data.jobHistory; 
   })
   }
-  downloadExcell(id: number): void {
-    console.log(this.jobHistory.fileUploadPath,"upload");
+  downloadExcell(path: any): void {
+    // console.log(this.jobHistory.fileUploadPath,"upload");
     
-    let path= this.jobHistory.fileUploadPath
+    // let path= this.jobHistory.fileUploadPath
     path = path.replace(/\\/g, '_');
-
-   
-    
     this.http
       .get(
         environment.apiURL +

@@ -100,7 +100,7 @@
               </ng-container>
               <ng-container matColumnDef="files">
                 <th mat-header-cell *matHeaderCellDef>Files</th>
-                <td mat-cell *matCellDef="let element"> <a class=text-primary (click)="downloadExcell(data.id)">Download</a></td>
+                <td mat-cell *matCellDef="let element"> <a class=text-primary (click)="downloadExcell(element.fileUploadPath)">Download</a></td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedJobColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedJobColumns;"></tr>
@@ -147,7 +147,7 @@
               </ng-container>
               <ng-container matColumnDef="files">
                 <th mat-header-cell *matHeaderCellDef>Files</th>
-                <td mat-cell *matCellDef="let element"> <a class=text-primary (click)="downloadExcell(data.id)">Download</a></td>
+                <td mat-cell *matCellDef="let element"> <a class=text-primary (click)="downloadExcell(element.fileUploadPath)">Download</a></td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedJobColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedJobColumns;"></tr>

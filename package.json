@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
+    "jszip": "^3.10.1",
     "ngx-cookie-service": "^15.0.0",
     "ngx-spinner": "^16.0.2",
     "rxjs": "~7.5.0",

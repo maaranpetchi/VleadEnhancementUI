@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { environment } from 'src/Environments/environment';
 import * as XLSX from 'xlsx';
+import JSZip from 'jszip';
 
 @Component({
   selector: 'app-clientorderview',
@@ -74,18 +75,30 @@ export class ClientorderviewComponent {
   ///zip download
   
   enableZipDownloadBtn = false;
+  zipcheck(): void {
 
-  zipDownload(folderPath: string, fileName: string): void {
-    this.enableZipDownloadBtn = true;
-    folderPath = folderPath.replace(/\\/g, '_');
-    this.http.get(environment.apiURL+"Home/DownloadZipFile", {
-      responseType: 'arraybuffer',
-      params: { path: folderPath }
-    }).subscribe((response: ArrayBuffer) => {
-      const blob = new Blob([response], { type: "application/octet-stream" });
-      saveAs(blob, fileName + ".zip");
-    }, () => { }, () => {
-      this.enableZipDownloadBtn = false;
+    let path = this.OrderDetails;
+    path = path.replace(/\\/g, '_');
+    const fileUrl =environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
+    // Use HttpClient to make a GET request to fetch the zip file
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.saveFile(response);
     });
+  }
+
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${this.data.filename}.zip`; // Replace with the desired file name
+    document.body.appendChild(a);
+    // Trigger the click event to start the download
+    a.click();
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
   }
 }

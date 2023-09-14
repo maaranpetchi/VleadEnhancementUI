@@ -15,7 +15,8 @@
     <div class="main-body">
         <div class="container">
             <div class="productionmain">
-                <h1 style="font-family:'Times New Roman', Times, serif;display:flex;justify-content:center;color:#13cbe3">
+                <h1
+                    style="font-family:'Times New Roman', Times, serif;display:flex;justify-content:center;color:#13cbe3">
                     Client Order Details</h1>
 
                 <div class="row">
@@ -76,9 +77,14 @@
                         <p> Input File Folder</p>
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary" (click)="downloadFiles(this.OrderDetails)" [disabled]="this.OrderDetails === null"><i class="fa fa-download"
-                                style="font-size:24px"></i>Download</button> &nbsp;<button class="btn btn-primary" (click)="zipDownload(this.OrderDetails,data.fileName)" [disabled]="this.OrderDetails === null"><i
-                                class="fa fa-folder-open-o" style="font-size:24px"></i>Zip</button>
+                        <button class="btn btn-primary" (click)="downloadFiles(this.OrderDetails)"
+                            [disabled]="this.OrderDetails === null"><i class="fa fa-download"
+                                style="font-size:24px"></i>Download</button> &nbsp;<button class="btn btn-primary"
+                            (click)="zipcheck()"
+                            [disabled]="this.OrderDetails === null">
+                            <i class="fa fa-folder-open-o" style="font-size:24px"></i> Zip
+                        </button>
+
                     </div>
                 </div>
             </div>

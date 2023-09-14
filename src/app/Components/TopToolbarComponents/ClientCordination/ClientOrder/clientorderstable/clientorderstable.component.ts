@@ -131,6 +131,15 @@ export class ClientorderstableComponent implements OnInit {
 
   }
 
+  
+  employeeFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  
   fetchdivision() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/nGetDivisionForJO').subscribe(data => {
@@ -163,7 +172,8 @@ export class ClientorderstableComponent implements OnInit {
   bindingjobs() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe(binddata => {
-      this.dataSource = binddata.data;
+      this.dataSource = new MatTableDataSource(binddata.data);
+      this.dataSource.paginator = this.paginator;
       this.spinnerService.requestEnded();
       this.displayedColumnsvisibility.filecount = true;
       this.displayedColumnsvisibility.actionicon = true;
@@ -173,7 +183,6 @@ export class ClientorderstableComponent implements OnInit {
       this.displayedColumnsvisibility.transactiontype = true;
       this.displayedColumnsvisibility.action = true;
       this.displayedColumnsvisibility.jobid = false;
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       console.log(this.dataSource);
 
@@ -183,8 +192,11 @@ export class ClientorderstableComponent implements OnInit {
       });
   }
   quotationjobs() {
+        this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/2').subscribe(quotation => {
       this.dataSource = new MatTableDataSource(quotation.data),
+      this.dataSource.paginator = this.paginator;
+      this.spinnerService.requestEnded();
         this.displayedColumnsvisibility.jobid = false;
       this.displayedColumnsvisibility.transactionType = true;
       this.displayedColumnsvisibility.filecount = false;
@@ -194,7 +206,6 @@ export class ClientorderstableComponent implements OnInit {
       this.displayedColumnsvisibility.actionicon = true;
       this.displayedColumnsvisibility.transactiontype = true;
       this.displayedColumnsvisibility.fileInwardMode = false;
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     },
       error => {
@@ -202,8 +213,11 @@ export class ClientorderstableComponent implements OnInit {
       });
   }
   convertedjobs() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/3').subscribe(converted => {
       this.dataSource = new MatTableDataSource(converted.data);
+      this.spinnerService.requestEnded();
+
       this.displayedColumnsvisibility.actionicon = false;
       this.displayedColumnsvisibility.transactionType = true;
       this.displayedColumnsvisibility.jobid = false;
@@ -221,8 +235,10 @@ export class ClientorderstableComponent implements OnInit {
       });
   }
   deletedjobs() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/4').subscribe(deleted => {
-      this.dataSource = new MatTableDataSource(deleted.data)
+      this.dataSource = new MatTableDataSource(deleted.data);
+      this.spinnerService.requestEnded();
       this.displayedColumnsvisibility.filecount = false;
       this.displayedColumnsvisibility.transactionType = true;
       this.displayedColumnsvisibility.jobid = false;
@@ -240,23 +256,34 @@ export class ClientorderstableComponent implements OnInit {
       });
   }
   quotenotapprovaljobs() {
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/5').subscribe(quotenotapproval => {
+      this.dataSource = new MatTableDataSource(quotenotapproval.data)
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.spinnerService.requestEnded();
+
       this.displayedColumnsvisibility.filecount = false;
       this.displayedColumnsvisibility.transactionType = true;
       this.displayedColumnsvisibility.jobid = false;
       this.displayedColumnsvisibility.fileInwardMode = false;
       this.displayedColumnsvisibility.action = true;
       this.displayedColumnsvisibility.actionicon = false;
-      this.dataSource = new MatTableDataSource(quotenotapproval.data)
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+
     },
       error => {
         this.spinnerService.resetSpinner();
       });
   }
   queryforsp() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'CustomerQuery/GetNotApprovedQueryForSPJobsToCC').subscribe(queryforsp => {
+      this.dataSource = new MatTableDataSource(queryforsp.data)
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.spinnerService.requestEnded();
+
       this.displayedColumnsvisibility.filecount = false;
       this.displayedColumnsvisibility.jobid = true;
       this.displayedColumnsvisibility.quoteparentid = false;
@@ -264,9 +291,7 @@ export class ClientorderstableComponent implements OnInit {
       this.displayedColumnsvisibility.action = false;
       this.displayedColumnsvisibility.transactionType = false;
       this.displayedColumnsvisibility.fileInwardMode = true;
-      this.dataSource = new MatTableDataSource(queryforsp.data)
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      
     },
       error => {
         this.spinnerService.resetSpinner();

@@ -142,7 +142,6 @@ export class NonbillablejobsComponent implements OnInit {
   selectedInvoices: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
     if (completed == true) {
       this.selectedInvoices.push({ id: item.id })
     }
@@ -156,7 +155,6 @@ export class NonbillablejobsComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
   }
   shownonbillable: boolean = false;
 

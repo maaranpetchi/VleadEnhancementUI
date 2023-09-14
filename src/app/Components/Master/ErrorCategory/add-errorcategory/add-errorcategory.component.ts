@@ -38,7 +38,6 @@ export class AddErrorcategoryComponent implements OnInit {
   errorCategoryList(){
     this._service.getErrorCategoryList().subscribe((data) => {
       this.errorCategory = data;
-      console.log(data, 'Departments');
     });
   }
 
@@ -295,7 +294,6 @@ export class AddErrorcategoryComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this._coreService.openSnackBar('Scope detail added!');
-          console.log(response);
         },
         error: (err: any) => {
           throw new Error('API Error', err);

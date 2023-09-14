@@ -139,7 +139,7 @@ export class ClientorderstableComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  
+
   fetchdivision() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'ClientOrderService/nGetDivisionForJO').subscribe(data => {
@@ -152,7 +152,6 @@ export class ClientorderstableComponent implements OnInit {
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
 
-    console.log("before", this.selectedproduction)
     if (completed == true) {
       this.selectedproduction.push(item)
     }

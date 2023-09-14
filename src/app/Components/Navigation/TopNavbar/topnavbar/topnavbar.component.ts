@@ -165,35 +165,7 @@ export class TopnavbarComponent implements OnInit {
 
 
   //////////////////////SideNavbar////////////////////////////
-  // checkIsAdmin() {
-  //   // this.loader = true;
-  //   this.spinnerService.requestStarted();
-  //   this.http.get<any>(environment.apiURL + `Account/checkIsAdmin/${this.loginservice.getUsername()}`).subscribe(
-  //     (data) => {
-  //       this.spinnerService.requestEnded();
-  //       this.isAdmin = data.success;
-  //       this.menus = data.menu;
-
-  //       if (this.menus != null && this.menus.length > 0) {
-  //         this.menus = this.menus.split(',');
-  //         this.menus.forEach((menu) => {
-  //           menu = menu.replace('|', '_').replace('|', '_');
-  //           this.showingMenu = menu;
-  //           console.log(this.showingMenu,"ShowingMenu");
-  //           this[menu] = true;
-  //         });
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error checking admin status:', error);
-  //     },
-  //     () => {
-  //       this.spinnerService.resetSpinner();
-  //     }
-  //   );
-  // }
-  // Online Javascript Editor for free
-  // Write, Edit and Run your Javascript code using JS Online Compiler
+  
   permission: any[] = []
   checkIsAdmin() {
     // this.loader = true;
@@ -219,7 +191,6 @@ export class TopnavbarComponent implements OnInit {
       val = val.replaceAll('|', '');
       const b = val.split(',');
       const c = b.map(x => parseInt(x))
-      console.log(c);
       return c;
     }
     return [];

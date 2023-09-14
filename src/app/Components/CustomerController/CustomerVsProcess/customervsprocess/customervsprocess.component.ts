@@ -89,7 +89,6 @@ export class CustomervsprocessComponent implements OnInit {
 
     this.http.get<any>(environment.apiURL + 'CustomerVsProcess/GetAllddlList').subscribe(data => {
       this.data = data;
-      console.log(data);
 
     });
 
@@ -101,8 +100,7 @@ export class CustomervsprocessComponent implements OnInit {
   }
 
   onOptionSelected(event: any, myForm: FormGroup) {
-    console.log(event);
-    console.log(myForm.value);
+  
     if (myForm.value.customerscopestatus.length > 0) {
       this._empService.changeapi({
         "customerId": myForm.value.customer == '' ? 0 : myForm.value.customer,
@@ -110,7 +108,6 @@ export class CustomervsprocessComponent implements OnInit {
         "customerJobType": myForm.value.customerscopestatus,
       }).subscribe(data => {
         this.scopeList = data.getScopeList;
-        console.log("scopelist" + JSON.stringify(this.scopeList));
       })
     }
     else {
@@ -129,7 +126,6 @@ export class CustomervsprocessComponent implements OnInit {
 
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-        console.log(res);
 
       },
       error: console.log,
@@ -198,8 +194,6 @@ export class CustomervsprocessComponent implements OnInit {
 
   onSubmit() {
     this.spinnerService.requestStarted();
-
-    console.log(this.myForm);
     this.submitted = true;
     this.http.post<any>(environment.apiURL + 'CustomerVsProcess/AddProcessworkflow', {
       "selectedScopes": this.myForm.value.scopeName,

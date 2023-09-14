@@ -22,7 +22,7 @@ export class DetailsComponent implements OnInit {
   formData: any = {};
 
   constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private spinnerService: SpinnerService, @Inject(MAT_DIALOG_DATA)
-  public data1: any,) { console.log(data1, "InjectedData"); }
+  public data1: any,) {  }
   ngOnInit(): void {
 
     this.formData.clientName = this.data1.clientName;
@@ -67,8 +67,7 @@ this.http.post<any>(environment.apiURL +`Invoice/Getselectedinvoicediscount`,pay
   txtcountchange() {
     this.displayLastInvoice = true;
     this.displayFirstInvoice = false;
-console.log(this.selectedOption,"selectedOption");
-console.log(this.txtdiscount,"txtdiscount");
+
 
     if (this.selectedOption != null) {
       if (this.selectedOption == 0 && this.txtdiscount >= 0 && this.txtdiscount <= 100) {
@@ -77,7 +76,6 @@ console.log(this.txtdiscount,"txtdiscount");
         this.amount = this.data1.invoiceValue - this.discountamount;
       }
       else if (this.selectedOption == 0 && this.txtdiscount < 0 || this.txtdiscount > 100) {
-        console.log(this.txtdiscount,"txtdiscount");
         
         Swal.fire(
           'Alert!',

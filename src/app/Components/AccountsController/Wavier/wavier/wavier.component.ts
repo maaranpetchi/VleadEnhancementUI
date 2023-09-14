@@ -53,7 +53,6 @@ export class WavierComponent {
   }
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
     if (completed == true) {
       this.selectedInvoices.push({id:item.id})
     }
@@ -67,7 +66,6 @@ export class WavierComponent {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
   }
 
   
@@ -227,7 +225,6 @@ this.spinnerservice.requestStarted();
         this.dataSource.sort = this.sort;
         // Paginate dataSource based on MatPaginator
         this.dataSource.paginator = this.paginator;
-        console.log(response.waiverJobList);
       },
       error: (err) => {
         this.spinnerservice.resetSpinner(); // Reset spinner on error
@@ -253,7 +250,6 @@ this.spinnerservice.requestStarted();
      this.onGoButtonClick();
     this.message=data.message;
       $('#myModal1').appendTo("body").modal('show');
-      console.log(data,"savechanges");
     });
   }
 }

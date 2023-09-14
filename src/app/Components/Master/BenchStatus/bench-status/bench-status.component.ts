@@ -30,7 +30,6 @@ export class BenchStatusComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.viewBenchStatus();
-    console.log(history.state.data, 'responseData');
     this.responseData = history.state.data;
   }
 
@@ -38,7 +37,6 @@ export class BenchStatusComponent implements OnInit {
     this._service.viewBenchStatusDescription().subscribe({
       next: (data) => {
         this.dataSource = new MatTableDataSource(data);
-        console.log(data, 'benchStatus');
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
@@ -50,7 +48,6 @@ export class BenchStatusComponent implements OnInit {
 id:any;
   openEditForm(row: any) {
     this._service.editBenchStatus(row).subscribe((response: any) => {
-      console.log(response);
       this.editDescription = response.description;
       this.id=response.id;
     });
@@ -86,7 +83,6 @@ id:any;
       next:(response)=>{
         if(response.message === "Updated Bench Status Successfully....!"){
           this._coreService.openSnackBar('Updated Bench Status Successfully....!');
-          console.log(response);
           this.viewBenchStatus();
           // window.location.reload();
         }

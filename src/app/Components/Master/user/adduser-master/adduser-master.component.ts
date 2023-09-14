@@ -111,7 +111,6 @@ export class AdduserMasterComponent implements OnInit {
     this.dialogRef.close();
   }
   getEmployeeId(data: any) {
-    console.log(data, "emplUsers");
     this._empService.getEmployeeCodeByEmployId(parseInt(data)).subscribe(
       (data: any) => {
         this.userRegistrationForm.get('employeeUsers')?.patchValue(data.employeeCode);
@@ -126,7 +125,6 @@ export class AdduserMasterComponent implements OnInit {
     this._empService.getMenu().subscribe(
       (data: any) => {
         this.menus = data;
-        console.log(this.data);
       },
       (error: any) => {}
     );
@@ -160,7 +158,6 @@ export class AdduserMasterComponent implements OnInit {
   selectedMenu: any[] = [];
   selectedMenuArray: any[] = [];
   onMenuSelection = (event: any, id) => {
-    console.log(id)
     var idx = this.selectedMenuArray.indexOf(id);
     if (idx > -1) {
       this.selectedMenuArray.splice(idx, 1);
@@ -195,11 +192,9 @@ export class AdduserMasterComponent implements OnInit {
               customer: null,
               employee: null
             }
-        console.log(saveUserData, 'data saved successfully');
        this.http.post(environment.apiURL+'User/SaveUser?actionType=1',saveUserData).subscribe({
           next: (val: any) => {
             this._coreService.openSnackBar('User detail added!');
-            console.log(val);
           },
           error: (err: any) => {
             throw new Error('API Error', err);

@@ -109,8 +109,6 @@ export class AddEditSkillsetComponent implements OnInit {
   addItem() {
 
     if (this.selectedScope && this.selectedProficiency) {
-      console.log("AddCondition");
-
       this.tableDisplay = true;
       const skillsetId = this.selectedScope
       const skill = this.scopeOptions.find(scope => scope.id === this.selectedScope)?.description || '';
@@ -128,8 +126,6 @@ export class AddEditSkillsetComponent implements OnInit {
 
 
   onSubmit() {
-
-    console.log(this.getSelectedProficiency, "selectedProficiency");
 
     let payload = {
       "employeeId": this.selectedEmployeeCode.employeeId,

@@ -28,7 +28,6 @@ export class EditErrorcategoryComponent implements OnInit {
   scopeID: any;
   ngOnInit(): void {
     this.listScopeDropdown();
-    console.log(history.state.data, 'responseData');
     this.responseData = history.state.data;
     this.userRegistrationForm
       .get('departmentName')
@@ -46,7 +45,6 @@ export class EditErrorcategoryComponent implements OnInit {
   listScopeDropdown() {
     this._scopeService.listScopes().subscribe((data) => {
       this.departments = data.departmentList;
-      console.log(data.departmentList, 'Departments');
     });
   }
   onFormSubmit() {

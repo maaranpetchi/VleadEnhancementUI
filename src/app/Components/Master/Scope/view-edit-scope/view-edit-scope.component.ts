@@ -32,7 +32,6 @@ export class ViewEditScopeComponent implements OnInit {
   ngOnInit(): void {
     this.listScope();
 
-    console.log(history.state.data, 'responseData');
     this.responseData = history.state.data;
     // this.scopeID = this.responseData.department.id;
     this.userRegistrationForm
@@ -54,12 +53,10 @@ export class ViewEditScopeComponent implements OnInit {
   listScope() {
     this._scopeService.listScopes().subscribe((data) => {
       this.departments = data.departmentList;
-      console.log(data.departmentList, 'Departments');
     });
   }
 
   onFormSubmit() {
-    console.log(this.userRegistrationForm.value.description, 'description');
 
     let saveData = {
       id:  this.responseData.id,
@@ -88,7 +85,6 @@ export class ViewEditScopeComponent implements OnInit {
       next: (response: any) => {
         if (this.data) {
           this._coreService.openSnackBar('Scope detail updated!');
-          console.log(response);
         } else {
           return;
         }

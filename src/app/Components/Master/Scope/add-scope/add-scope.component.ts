@@ -55,7 +55,6 @@ export class AddScopeComponent implements OnInit {
         next: (response: any) => {
           // const departmentId = response.department?.departmentId;
           this._coreService.openSnackBar('Scope detail added!');
-          console.log(response);
         },
         error: (err: any) => {
           throw new Error('API Error', err);

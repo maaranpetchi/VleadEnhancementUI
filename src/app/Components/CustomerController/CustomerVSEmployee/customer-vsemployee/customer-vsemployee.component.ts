@@ -88,7 +88,6 @@ export class CustomerVSEmployeeComponent implements OnInit {
       }
     });
   }
-  // this._empService.getEmployeeList().then((res)=>{console.log(res)}).catch(err=> console.log(err));
 
 
   employeeFilter(event: Event): void {
@@ -131,15 +130,12 @@ export class CustomerVSEmployeeComponent implements OnInit {
 
 
   openEditForm(data: any) {
-    console.log("datavalue" + data);
 
     const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
       // height: '40vh',
       width: '50vw',
       data
     });
-
-    console.log(dialogRef);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {

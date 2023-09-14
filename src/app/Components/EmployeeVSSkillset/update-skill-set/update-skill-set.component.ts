@@ -19,9 +19,7 @@ export class UpdateSkillSetComponent implements OnInit {
     let data: any[] = [];
     if (this._empservice.shouldFetchData) {
       const data = this._empservice.getViewData();
-      console.log(data, "Data 1");
       this.apiResponseData = data.data;
-      console.log(this.apiResponseData, "apiresponsedata");
 
       this.fetchUpdateData();
       this._empservice.shouldFetchData = false;

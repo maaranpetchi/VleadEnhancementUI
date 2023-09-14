@@ -43,10 +43,7 @@ export class AddItassetsComponent implements OnInit {
 
     if (this.sharedDataService.shouldFetchData) {
       const data = this.sharedDataService.getData();
-      console.log(data, "Data 1");
       this.apiResponseData = data.data;
-      console.log(this.apiResponseData, "apiresponsedata");
-
       this.fetchUpdateData();
       this.sharedDataService.shouldFetchData = false;
     }
@@ -87,14 +84,12 @@ export class AddItassetsComponent implements OnInit {
   }
 
   fetchUpdateData() {
-    console.log(this.apiResponseData.itheDetailList.id, "getting ID");
 
     let payload = {
       "id": this.apiResponseData.itheDetailList.id
     }
     this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`, payload).subscribe(results => {
 
-      console.log(results, "fetchUpdateData");
       this.BayNo = results.itheDetailList.bayNumber,
         this.Location = results.itheDetailList.location,
         this.PcName = results.itheDetailList.pcName,
@@ -236,7 +231,6 @@ export class AddItassetsComponent implements OnInit {
   }
 
   firstAdd() {
-    console.log(this.Location,"location");
     let payloadupload = {
       "id": 0,
       "employeeId": this.loginservice.getUsername(),
@@ -275,18 +269,15 @@ export class AddItassetsComponent implements OnInit {
 
     }
     this.http.post<any>(environment.apiURL + `ITAsset/nSetITHData`, payloadupload).subscribe(results => {
-      console.log(results, "Firstnextc")
       this._coreService.openSnackBar("Data Added successfully!");
       this.id = results.ithDetailList.id;
     });
-    console.log(payloadupload, "payloadinfirstpage");
   }
 
 
   secondadd(){
   
 
-  console.log(this.apiResponseData.itheDetailList.id,"itassetsid")
     ///////////////////////////////////////////// PAYLAOD///////////////////////////////////////////////////
 
     let demoPayload = {
@@ -332,11 +323,9 @@ export class AddItassetsComponent implements OnInit {
     }
     
     this.http.post<any>(environment.apiURL + `ITAsset/nUpdateITHData`, demoPayload).subscribe(results => {
-      console.log(results, "updatedResults")
       this._coreService.openSnackBar("Data updated successfully!");
       this.id = results.ithDetailList.id;
     });
-    console.log(demoPayload, "payloadinfirstpage");
   }
 
 
@@ -383,7 +372,6 @@ export class AddItassetsComponent implements OnInit {
       "softwareId": this.SoftwareId,
       "softwareStatusId": this.SoftwareStatus
     }
-    console.log(AddPayload, "AddPayload");
 
     this.http.post<any>(environment.apiURL + `ITAsset/nSetITSData`, AddPayload).subscribe(results => {
       this._coreService.openSnackBar(results.itsDetailList);
@@ -439,7 +427,6 @@ export class AddItassetsComponent implements OnInit {
         "softwareId": this.SoftwareId,
         "softwareStatusId": this.SoftwareStatus
       }
-      console.log(AddPayload, "AddPayload");
 
       this.http.post<any>(environment.apiURL + `ITAsset/nSetITSData`, AddPayload).subscribe(results => {
         this._coreService.openSnackBar(results.itsDetailList);

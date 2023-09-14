@@ -132,7 +132,6 @@ export class ScopechangeComponent implements OnInit {
   selectedInvoices: any[] = [];
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
     if (completed == true) {
       this.selectedInvoices.push(item)
     }
@@ -146,7 +145,6 @@ export class ScopechangeComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
   }
 
   ngOnInit(): void {

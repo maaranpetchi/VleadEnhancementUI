@@ -87,8 +87,7 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
 
   setAll(item: any) {
-    console.log('item: ' + JSON.stringify(item));
-    console.log('before', this.selectedQuery);
+   
       if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
       if (item.employeeId == null) item.employeeId = 0;
       if (item.estimatedTime == null) item.estimatedTime = 0;
@@ -106,8 +105,6 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
 
   setEmployeeAll( item: any) {
-    console.log('before', this.selectedEmployee);
-    console.log('item', item);
         this.selectedEmployee.push({
           ...item,
           // CategoryDesc: '',
@@ -136,14 +133,12 @@ export class CustomerSalesmappingComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.spinner.requestEnded();
-          console.log(response);
           this.dataSource = new MatTableDataSource(response);
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
           this.employeeDaSource = new MatTableDataSource(response);
           this.employeeDaSource.sort = this.sort;
           this.employeeDaSource.paginator = this.paginator1;
-          console.log(response);
           this.GetAllddlList();
         },
         error: (err) => {
@@ -160,11 +155,9 @@ export class CustomerSalesmappingComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.spinner.requestEnded();
-          console.log(response);
           this.employeeDaSource = new MatTableDataSource(response.employeeList);
           this.employeeDaSource.sort = this.sort;
           this.employeeDaSource.paginator = this.paginator1;
-          console.log(response);
         },
         error(err) {
           console.log(err);
@@ -173,7 +166,6 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
   onSubmit() {
     this.spinner.requestStarted();
-    console.log("setall",this.selection);
     this.selection.selected.forEach(x=>this.setAll(x));
     this.selection1.selected.forEach(x=>this.setEmployeeAll(x));
     if (this.selectedQuery.length > 0) {
@@ -270,7 +262,6 @@ isAllSelected() {
 }
 
 masterToggle() {
-  console.log("record 5",this.selection)
   if (this.isAllSelected()) {
     this.selection.clear();
   }
@@ -280,7 +271,6 @@ masterToggle() {
   } else {
     this.dataSource.data.forEach(row => this.selection.select(row));
   }
-  console.log("record 6",this.selection.selected)
 
 }
 isEmplSelected() {
@@ -290,7 +280,6 @@ isEmplSelected() {
 }
 
 emplMasterToggle() {
-  console.log("record 5",this.selection1)
   if (this.isEmplSelected()) {
     this.selection1.clear();
   }
@@ -300,7 +289,6 @@ emplMasterToggle() {
   } else {
     this.employeeDaSource.data.forEach(row => this.selection1.select(row));
   }
-  console.log("record 6",this.selection1.selected)
 
 }
 }

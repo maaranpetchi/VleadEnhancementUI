@@ -93,7 +93,6 @@ export class CreditnoteindexComponent {
 
 
   openEditForm(data: any) {
-    console.log(data, "openeditform");
     const dialogRef = this._dialog.open(AddCreditnoteComponent, {
       data,
     });

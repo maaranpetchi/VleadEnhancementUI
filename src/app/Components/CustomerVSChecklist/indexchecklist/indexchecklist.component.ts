@@ -32,7 +32,6 @@ export class IndexchecklistComponent implements OnInit {
 
   fetchtableData() {
     this.checklistservice.getEmployeeList().subscribe(data => {
-      console.log(data,"indexpage");
       
       this.dataSource = new MatTableDataSource(data.gCvCList);
       this.dataSource.paginator = this.paginator;

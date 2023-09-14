@@ -84,7 +84,6 @@ export class AttendanceIndexComponent implements OnInit {
 
 
   SaveAttendanceData() {
-    console.log("Log1");
 
     if (this.selectedFile.length == 0) {
 

@@ -215,14 +215,11 @@ export class SewOutTableComponent implements OnInit {
       const apiUrl = environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/${this.getTabValue()}/0`;
       this.http.get(apiUrl).subscribe(
         (response: any) => {
-          console.log(response, "getworkflow");
 
           // Handle success response here
           let timeStamp = response.getWorkflowDetails[0].timeStamp;
           let customerId = response.getWorkflowDetails[0].customerId
-          console.log(timeStamp, "TimeStamp");
-          console.log(customerId, "customerId");
-          console.log("Data retrieved successfully", response);
+ 
           let existingSelectedRows = {
             // Existing selectedRows array
             // Add your existing selectedRows elements here
@@ -310,12 +307,10 @@ export class SewOutTableComponent implements OnInit {
           // Make the POST request with the updated payload
           this.sewOutService.getprocessmovement(payload).subscribe(
             (response: any) => {
-              console.log('WFTID', response.wftId);
-              console.log('WFMID', response.wfmid);
+             
               localStorage.setItem('WFTID', response.wftId);
               localStorage.setItem('WFMID', response.wfmid);
               localStorage.setItem('JID', response.jid);
-              console.log("Data posted successfully", response);
               if (response.success == true) {
                 this._coreService.openSnackBar("Workflow converted successfully");
               }

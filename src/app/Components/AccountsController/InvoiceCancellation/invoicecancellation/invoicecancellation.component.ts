@@ -43,7 +43,6 @@ export class InvoicecancellationComponent {
     });
   
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The popup form was closed');
     });
     this.invoiceNumberSelected.emit(invoiceNo);
   }
@@ -60,7 +59,6 @@ export class InvoicecancellationComponent {
     }
   }
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
     if (completed == true) {
       this.selectedInvoices.push(item)
     }
@@ -74,7 +72,6 @@ export class InvoicecancellationComponent {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
   }
 
 
@@ -83,13 +80,11 @@ export class InvoicecancellationComponent {
     //client dropdown
     this.http.get<any>(environment.apiURL+'invoice/getdropclientforinvoicecancel').subscribe(data => {
       this.clientdata = data;
-      console.log(data);
     });
 
     //invoicenumber dropdown
     this.http.get<any>(environment.apiURL+'invoice/getallinvoicemasterdetails').subscribe(invoicedata => {
       this.invoicenumberdata = invoicedata;
-      console.log(invoicedata);
     });
   }
 
@@ -112,14 +107,12 @@ export class InvoicecancellationComponent {
   storinginvoicevalue: any[] = [];
 
   onOptionSelected(event: any, myform: FormGroup) {
-    console.log(myform.value);
     const apiUrl = environment.apiURL+"Invoice/GetDropInvoiceforCancel"; // replace with your actual API URL
     const requestData = {
       id: myform.value.ClientId
     };
 
     this.http.post<any>(apiUrl, requestData).subscribe(response => {
-      console.log(response.clientList); // handle the API response here
       this.storinginvoicevalue = response.clientList;
     });
   }
@@ -145,7 +138,6 @@ export class InvoicecancellationComponent {
   }
 
   cancelInvoice(){
-    console.log(this.myForm.value.invoicenumber,"InvoiceNumber2");
     let payload={
       "id": 0,
       "customerID": 0,
@@ -154,7 +146,6 @@ export class InvoicecancellationComponent {
       "invoicesc": [ ]
     }
     this.http.post<any>(environment.apiURL+`Invoice/GetUpdateMasterforSalesCancel`,payload).subscribe(data=>{
-      console.log(data,"Cancelledbutton");
       
       Swal.fire({
         title: 'Are you sure wanting to cancel this Invoice?',

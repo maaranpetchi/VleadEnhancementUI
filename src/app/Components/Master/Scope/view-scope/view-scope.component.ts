@@ -15,7 +15,6 @@ export class ViewScopeComponent  implements OnInit {
   ngOnInit(): void {
     const data = history.state.data;
     
-    console.log( history.state,"responseData");
     this.responseData = history.state.data;
 
   }

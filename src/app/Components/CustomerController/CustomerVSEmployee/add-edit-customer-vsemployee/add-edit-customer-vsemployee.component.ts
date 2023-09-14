@@ -53,7 +53,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
 
     public data1: any,
 
-  ) { this.customervalue.push(data1?.customerId); console.log("passing val" + data1); }
+  ) { this.customervalue.push(data1?.customerId);  }
 
 
   ngOnInit(): void {
@@ -62,7 +62,6 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
     this.http.get<any>(environment.apiURL + 'CustomerVsEmployee/GetAllddlList').subscribe(data => {
       this.spinnerService.requestEnded();
       this.data = data;
-      console.log(data);
 
     });
   }
@@ -102,7 +101,6 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
           );
         }
       })
-      // console.log(this.myForm.value)
     } else {
       this.spinnerService.requestStarted();
       this.http.post(environment.apiURL + 'CustomerVsEmployee/CreateCustomerVsEmployee', {
@@ -143,7 +141,6 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
     }
 
 
-    // console.log(this.myForm.value)
   }
 
 

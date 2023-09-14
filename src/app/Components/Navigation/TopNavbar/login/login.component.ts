@@ -58,7 +58,6 @@ export class LoginComponent implements OnInit {
     this.loginservice.login(this.username, this.password).subscribe({
       next: (result) => {
         this.spinnerService.requestEnded();
-        console.log(result,"Result");
         
         if (result.success== true) {
           this.cookieService.set('token', result.user.employeeName);

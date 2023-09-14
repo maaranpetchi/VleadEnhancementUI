@@ -112,7 +112,6 @@ export class UserMasterComponent implements OnInit {
       next: (res) => {
         this._coreService.openSnackBar('Employee deleted!', 'done');
         this.getMasterUsers();
-        console.log(res);
 
       },
       error: console.log,

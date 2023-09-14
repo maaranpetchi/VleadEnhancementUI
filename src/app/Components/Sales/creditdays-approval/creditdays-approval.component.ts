@@ -72,7 +72,6 @@ export class CreditdaysApprovalComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource(response.approvalDetails);
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
-          console.log(response, 'getAllaprovals');
         },
         error: (err) => {
           this.spinner.resetSpinner();

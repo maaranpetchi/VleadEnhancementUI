@@ -23,10 +23,6 @@ export class SewoutworkflowComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
-    // const data = history.state.data;
-    // // Use the retrieved data as needed
-    // console.log(data, "datapassed"),
-    //   this.responseData = data;
 
     this.fetchJobHistory();
     this.getscopevalues();
@@ -185,7 +181,7 @@ export class SewoutworkflowComponent {
   onFileSelected(event: any) {
     const selectedFile = event.target.files[0];
     // Do something with the selected file
-    console.log(selectedFile);
+   
   }
   scopeApiValues: any[] = []; // Holds the values from the REST API
   selectedScopeValue: any; // Holds the selected value

@@ -44,7 +44,6 @@ export class ProcessComponent implements OnInit{
     this._service.getProcessList().subscribe({
       next: (data) => {
         this.dataSource = new MatTableDataSource(data);
-        console.log(data);
         
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -87,7 +86,6 @@ export class ProcessComponent implements OnInit{
         this._coreService.openSnackBar('Failed!', 'done');
         }
         this.getListProcess();
-        console.log(response);
       },
       error: console.log,
     })

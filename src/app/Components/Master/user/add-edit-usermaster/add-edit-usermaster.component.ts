@@ -39,7 +39,7 @@ export class AddEditUsermasterComponent implements OnInit {
 
     public dialogRef: MatDialogRef<AddEditUsermasterComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-   ) {console.log(this.data,"data"); 
+   ) {
       this.employeeName= this.data.userTypeDesc;
   }
 
@@ -54,7 +54,6 @@ export class AddEditUsermasterComponent implements OnInit {
 
 
   getAllUsersById(data:any){
-    console.log(data);
     this._service.getUserByEmployeeId(data).subscribe(
       (data: any) => {
         this.employees = data;
@@ -97,7 +96,6 @@ export class AddEditUsermasterComponent implements OnInit {
     this._empService.getMenu().subscribe(
     (data: any) => {
       this.menus = data;
-    console.log(this.data);
    },
   (error: any) => {
   }

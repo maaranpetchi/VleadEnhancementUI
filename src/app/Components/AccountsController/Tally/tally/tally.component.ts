@@ -61,7 +61,6 @@ export class TallyComponent implements OnInit {
       }
     }
 
-    console.log(this.selectedInvoices, "selectedInvoices")
 
   }
 
@@ -85,10 +84,8 @@ export class TallyComponent implements OnInit {
       }
     });
 
-    console.log(temparray, "Temparray");
 
     this.dataSource.data = temparray;
-    console.log(this.dataSource.data, "datasource");
 
   }
 

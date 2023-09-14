@@ -63,14 +63,10 @@ export class OneTimemasterComponent implements OnInit {
       )
       .subscribe((CustomerContactName) => {
         this.CustomerContactName = CustomerContactName;
-        console.log(
-          (this.CustomerContactName = CustomerContactName),
-          'GetCustomer'
-        );
+       
       });
   }
   getTimematerId(data: any) {
-    console.log(data, 'mster');
     this.userRegistrationForm
       .get('editvalueInput')?.patchValue(
         this.CustomerContactName.find((x) => x.id === data).description
@@ -81,7 +77,6 @@ export class OneTimemasterComponent implements OnInit {
 
   getOneTimeTable(id: any) {
     this._service.getTableValue(id).subscribe((data) => {
-      console.log(data);
     });
   }
 
@@ -104,7 +99,6 @@ export class OneTimemasterComponent implements OnInit {
         this.coreservice.openSnackBar('One Timemaster added!');
         if (response.message === true) {
           this.coreservice.openSnackBar('One Timemaster added!');
-          console.log(response);
         } else {
           return;
         }
@@ -115,8 +109,7 @@ export class OneTimemasterComponent implements OnInit {
       },
     });
     // Add logic to handle adding the selected option and input value
-    console.log('Selected Option:', this.userRegistrationForm.value.chooseRole);
-    console.log('Input Value:', this.valueInput);
+  
   }
 
   updateSelection(){
@@ -138,7 +131,6 @@ export class OneTimemasterComponent implements OnInit {
         this.coreservice.openSnackBar('OneTime Master Updated!');
         if (response.message === true) {
           this.coreservice.openSnackBar('OneTime Master Updated!');
-          console.log(response);
         } else {
           return;
         }
@@ -169,7 +161,6 @@ export class OneTimemasterComponent implements OnInit {
       this.userRegistrationForm.reset();
       if (response.message === true) {
         this.coreservice.openSnackBar('User detail Updated!');
-        console.log(response);
       } else {
         return;
       }

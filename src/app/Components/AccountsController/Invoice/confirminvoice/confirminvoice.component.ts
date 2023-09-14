@@ -66,7 +66,6 @@ export class ConfirminvoiceComponent implements OnInit {
   }
 
   setAll(completed: boolean, item: any) {
-    console.log("before", this.selectedInvoices)
     if (completed == true) {
       this.selectedInvoices.push(item)
     }
@@ -80,7 +79,6 @@ export class ConfirminvoiceComponent implements OnInit {
         })
       }
     }
-    console.log("after", this.selectedInvoices)
   }
 
 
@@ -95,7 +93,6 @@ export class ConfirminvoiceComponent implements OnInit {
     //clientdropdown
     this.http.get<any>(environment.apiURL+'Invoice/GetClient').subscribe(clientdropdowndata => {
       this.clientdata = clientdropdowndata;
-      console.log(clientdropdowndata);
     });
   }
 
@@ -128,7 +125,6 @@ export class ConfirminvoiceComponent implements OnInit {
       this.dataSource.data = results.getInvoice;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-      console.log(results, "results")
     }
     )
   }

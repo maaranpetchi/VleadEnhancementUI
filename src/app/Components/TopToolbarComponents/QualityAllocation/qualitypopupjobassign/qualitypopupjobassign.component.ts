@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import saveAs from 'file-saver';
 import { error } from 'jquery';
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
@@ -340,35 +341,65 @@ export class QualitypopupjobassignComponent implements OnInit {
   // }
 
 
-  // workFiles(id: number): void {
-  //   this.http.get(`https://localhost:7208/api/Allocation/getFileNames/${id}`, { responseType: 'blob' }).subscribe((data: any) => {
+  zipFiles(): void {
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
 
-  //     const url = window.URL.createObjectURL(data);
+    const fileUrl =
+      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
 
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = 'file.txt'; 
-  //     link.click();
-  //     window.URL.revokeObjectURL(url);
-  //   });
-  // }
-  workFiles(id: number): void {
-    this.http.get(environment.apiURL + `Allocation/getFileNames/PRAS_01-17-2022_AllocErrorBugFixing%203-VLA-Fr-0117-221_Quality%20Allocation_Pending-1`).subscribe((response: any) => {
-      const fileUrls: string[] = response.files;
-      fileUrls.forEach(url => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = this.getFileNameFromPath(url);
-        link.click();
-      });
+    // Use HttpClient to make a GET request to fetch the zip file
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.saveFile(response);
     });
   }
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
 
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.data.fileName; // Replace with the desired file name
+    document.body.appendChild(a);
+
+    // Trigger the click event to start the download
+    a.click();
+
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
+  workFiles(id: number): void {
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
+
+    this.http
+      .get(environment.apiURL + `Allocation/getFileNames/${path}`)
+      .subscribe((response: any) => {
+        const fileUrls: string[] = response.files;
+        fileUrls.forEach((url) => {
+          this.http
+            .get(
+              environment.apiURL +
+                'Allocation/downloadFilesTest/' +
+                `${path}/` +
+                url
+            )
+            .subscribe((response: any) => {
+              saveAs(
+                new Blob([response.data], { type: 'application/octet-stream' }),
+                url
+              );
+            });
+        });
+      });
+  }
   getFileNameFromPath(filePath: string): string {
     const pathParts = filePath.split('/');
     return pathParts[pathParts.length - 1];
   }
-
 
   //////////////Popupsubmit////
 

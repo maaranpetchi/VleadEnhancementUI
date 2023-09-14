@@ -183,8 +183,9 @@ export class JobHistoryComponent implements OnInit {
 
   getJobHistory(data) {
     this.dialog.open(JobhistoryDetailsComponent, {
-      // width:'80vw',
-      data
+      height:'80vh',
+      width:'80vw',
+      data:data
     })
   }
 

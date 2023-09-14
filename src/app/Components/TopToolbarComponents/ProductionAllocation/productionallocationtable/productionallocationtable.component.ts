@@ -192,7 +192,6 @@ export class ProductionallocationtableComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataEmployeeSource.filter = filterValue.trim().toLowerCase();

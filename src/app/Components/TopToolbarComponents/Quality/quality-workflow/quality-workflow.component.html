@@ -92,27 +92,17 @@
       <div class="form-group" ng-show="showFiles">
         <div class="row">
           <div class="col">
-            <p>Work File Folder:
-              <!-- (click)="downloadFiles(ProcessTransaction.TranFileUploadPath)"
-                  [disabled]="!ProcessTransaction.TranFileUploadPath" -->
-
-              <!-- (click)="zipDownload(ProcessTransaction.TranFileUploadPath, ProcessTransaction.FileName)"
-                [disabled]="!ProcessTransaction.TranFileUploadPath" -->
-              <button type="button" class="btn btn-primary">WorkFiles</button>&nbsp; <button type="button"
-                class="btn btn-primary">Zip</button>
+            <p>Work File Folder: &nbsp;&nbsp;&nbsp;
+              <button (click)="workFiles(data.id)" class="btn btn-primary">WorkFiles</button>
+              <button (click)="zipFiles()" class="btn btn-primary">Zip</button>
             </p>
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <p>Input File Folder:&nbsp;&nbsp;
-              <!-- (click)="downloadFiles(ProcessTransaction.JOFileUploadPath)"
-                  [disabled]="!ProcessTransaction.JOFileUploadPath" -->
-
-              <!-- (click)="zipDownload(ProcessTransaction.JOFileUploadPath, ProcessTransaction.FileName)"
-                [disabled]="!ProcessTransaction.JOFileUploadPath" -->
-              <button type="button" class="btn btn-primary">InputFiles</button>&nbsp; <button type="button"
-                class="btn btn-primary">Zip</button>
+            <p>Input File Folder : &nbsp;&nbsp;&nbsp;
+              <button (click)="workFiles(data.id)" class="btn btn-primary">WorkFiles</button>
+              <button (click)="zipFiles()" class="btn btn-primary">Zip</button>
             </p>
           </div>
         </div>

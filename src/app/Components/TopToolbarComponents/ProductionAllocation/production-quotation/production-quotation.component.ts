@@ -10,6 +10,7 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { QuotationPopupComponent } from '../quotation-popup/quotation-popup.component';
+import saveAs from 'file-saver';
 @Component({
   selector: 'app-production-quotation',
   templateUrl: './production-quotation.component.html',
@@ -150,19 +151,58 @@ export class ProductionQuotationComponent implements OnInit{
       }
     );
   }
+  // zipFiles(id: number){
+  //   let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
+  //   path = path.replace(/\\/g, '_');
+     
+  //         this.http.get(environment.apiURL+'Allocation/DownloadZipFile?path='+`${path}`).subscribe((response:any) => {
+  //           saveAs(new Blob([response.data], { type: "application/octet-stream" }), "test");
+  //         })
+     
+  // }
+  zipFiles(): void {
+    let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
+     
+    const fileUrl = environment.apiURL+'Allocation/DownloadZipFile?path='+`${path}`; // Replace with the actual URL of your zip file
+
+    // Use HttpClient to make a GET request to fetch the zip file
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe(response => {
+      this.saveFile(response);
+    });
+  }
+    private saveFile(blob: Blob) {
+      // Create a blob URL for the file
+      const url = window.URL.createObjectURL(blob);
+  
+      // Create a link element to trigger the download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download =this.data.fileName; // Replace with the desired file name
+      document.body.appendChild(a);
+  
+      // Trigger the click event to start the download
+      a.click();
+  
+      // Clean up the blob URL and the link element
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
   workFiles(id: number): void {
+    let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
+    path = path.replace(/\\/g, '_');
+
     this.http
       .get(
         environment.apiURL +
-        `Allocation/getFileNames/PRAS_01-17-2022_AllocErrorBugFixing%203-VLA-Fr-0117-221_Quality%20Allocation_Pending-1`
+          `Allocation/getFileNames/${path}`
       )
       .subscribe((response: any) => {
         const fileUrls: string[] = response.files;
         fileUrls.forEach((url) => {
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = this.getFileNameFromPath(url);
-          link.click();
+          this.http.get(environment.apiURL+'Allocation/downloadFilesTest/'+`${path}/`+url).subscribe((response:any) => {
+            saveAs(new Blob([response.data], { type: "application/octet-stream" }), url);
+          })
         });
       });
   }

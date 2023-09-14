@@ -525,7 +525,7 @@ export class ClientorderstableComponent implements OnInit {
         customerName: "string",
         temp: "string",
         style: "string",
-        projectCode: GetAllvalues.projectCode,
+        projectCode: GetAllvalues.projectCode?GetAllvalues.projectCode:'',
         teamCode: "string",
         schoolName: "string",
         ground: "string",

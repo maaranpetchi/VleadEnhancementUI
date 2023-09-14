@@ -8,6 +8,7 @@ import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { ProofReadingService } from 'src/app/Services/proof-reading.service';
 import { JobhistorypopuptableComponent } from '../../Quality/jobhistorypopuptable/jobhistorypopuptable.component';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-proofjobdetailpopup',
@@ -91,6 +92,65 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
       this.scopeApiValues = data.scopeDetails[0];
       console.log(data.scopeDetails[0], "getscopevalues");
     });
+  }
+  zipFiles(): void {
+    let path = this.data.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
+
+    const fileUrl =
+      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
+
+    // Use HttpClient to make a GET request to fetch the zip file
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.saveFile(response);
+    });
+  }
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.data.fileName; // Replace with the desired file name
+    document.body.appendChild(a);
+
+    // Trigger the click event to start the download
+    a.click();
+
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
+  workFiles(id: number): void {
+    let path = this.data.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
+
+    this.http
+      .get(environment.apiURL + `Allocation/getFileNames/${path}`)
+      .subscribe((response: any) => {
+        const fileUrls: string[] = response.files;
+        fileUrls.forEach((url) => {
+          this.http
+            .get(
+              environment.apiURL +
+                'Allocation/downloadFilesTest/' +
+                `${path}/` +
+                url
+            )
+            .subscribe((response: any) => {
+              saveAs(
+                new Blob([response.data], { type: 'application/octet-stream' }),
+                url
+              );
+            });
+        });
+      });
+  }
+  getFileNameFromPath(filePath: string): string {
+    const pathParts = filePath.split('/');
+    return pathParts[pathParts.length - 1];
   }
   onScopeChange() {
     if (this.selectedStatus === 'Completed') {

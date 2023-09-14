@@ -40,19 +40,9 @@
   .clickable-link {
     cursor: pointer;
   }
-  // #custom-table {
-  //   height: 30vh; /* Set the table height to 50% of its container */
-  //   width: 75%; /* Set the table width to 75% of its container */
-  //   margin: 0 auto; /* Center the table horizontally */
-  //   border-collapse: collapse; /* Optional: Collapse borders between table cells */
-  //   overflow-x: auto; /* Enable horizontal scrolling on small screens if necessary */
-  // }
   .table-container {
     height: 50vh; /* Set a fixed height of 50% of the viewport height */
-    overflow-y: auto; /* Enable vertical scrolling if content overflows */
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
+    overflow-y: auto;
     
   }
 

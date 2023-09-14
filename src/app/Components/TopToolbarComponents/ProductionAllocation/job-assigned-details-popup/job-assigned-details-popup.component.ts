@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 import { environment } from 'src/Environments/environment';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
@@ -127,7 +128,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : 0).subscribe(
       (response: any) => {
         this.jobCommonDetails = response;
-
+        console.log(this.jobCommonDetails);
         this.dataJobSource = response;
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
         this.dataJobSource.paginator = this.paginator;
@@ -173,19 +174,58 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
       }
     );
   }
+
+  zipFiles(): void {
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
+    const fileUrl =
+      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; 
+      // Replace with the actual URL of your zip file
+    // Use HttpClient to make a GET request to fetch the zip file
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.saveFile(response);
+    });
+  }
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.data.fileName; // Replace with the desired file name
+    document.body.appendChild(a);
+
+    // Trigger the click event to start the download
+    a.click();
+
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
   workFiles(id: number): void {
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    path = path.replace(/\\/g, '_');
+
     this.http
-      .get(
-        environment.apiURL +
-          `Allocation/getFileNames/PRAS_01-17-2022_AllocErrorBugFixing%203-VLA-Fr-0117-221_Quality%20Allocation_Pending-1`
-      )
+      .get(environment.apiURL + `Allocation/getFileNames/${path}`)
       .subscribe((response: any) => {
         const fileUrls: string[] = response.files;
         fileUrls.forEach((url) => {
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = this.getFileNameFromPath(url);
-          link.click();
+          this.http
+            .get(
+              environment.apiURL +
+                'Allocation/downloadFilesTest/' +
+                `${path}/` +
+                url
+            )
+            .subscribe((response: any) => {
+              saveAs(
+                new Blob([response.data], { type: 'application/octet-stream' }),
+                url
+              );
+            });
         });
       });
   }
@@ -194,7 +234,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     return pathParts[pathParts.length - 1];
   }
   onSubmit() {
-    console.log(this.selectedQureryStatus, 'stATUS');
+    console.log(this.selectedQureryStatus, 'status');
     if (this.selectedQureryStatus == 6) {
       this.processMovement();
     } else if (this.selectedQureryStatus == 8) {
@@ -343,8 +383,8 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
             ).then((result) => {
               if (result.isConfirmed) {
                 this.dialogRef.close();
-            }
-            })
+              }
+            });
           } else if (response.success === false) {
             Swal.fire('Done!', 'Job Sent As Query', 'error');
           }

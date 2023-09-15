@@ -123,6 +123,7 @@ import { AddCustomerNormsComponent } from 'src/app/Components/CustomerNorms/add-
 import { UpdateCustomerNormsComponent } from 'src/app/Components/CustomerNorms/update-customer-norms/update-customer-norms.component';
 import { AttendanceIndexComponent } from 'src/app/Components/Attendance/attendance-index/attendance-index.component';
 
+//Routing to components
 const routes: Routes = [
 
   { path: "", component: LoginComponent},

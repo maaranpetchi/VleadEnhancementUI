@@ -74,6 +74,11 @@ export class ProductionallocationtableComponent implements OnInit {
   queryResponseJobsCount: number;
   errorJobsCount: number;
   quotationJobCount: number;
+  employeeCount: any;
+  QueryJobDate: any;
+  CustomerJobType: any;
+  StatusId: any;
+  JobStatusId: any;
 
   constructor(
     private http: HttpClient,
@@ -316,6 +321,12 @@ export class ProductionallocationtableComponent implements OnInit {
           );
           this.dataEmployeeSource.paginator = this.paginator2;
           this.dataEmployeeSource.sort = this.sort;
+
+          this.employeeCount = freshJobs.allocationJobs.employeeCount;
+          this.QueryJobDate = freshJobs.allocationJobs.queryJobDate;
+          this.CustomerJobType = freshJobs.allocationJobs.customerJobType;
+          this.StatusId = freshJobs.allocationJobs.statusId;
+          this.JobStatusId = freshJobs.allocationJobs.jobStatusId;
          
         },
         error: (err) => {
@@ -610,10 +621,13 @@ export class ProductionallocationtableComponent implements OnInit {
   }
 
   getProductionJob(data: any) {
+    
+
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
       height: '450px',
       data: data,
+      
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -971,5 +985,22 @@ export class ProductionallocationtableComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
       });
+  }
+
+
+  //textcolor
+  getCellClass(data) {
+    console.log(data,"Job");
+    
+    return {
+      'text-color-green':data.employeeCount === 1,
+      'text-color-brown': data.queryJobDate !== null,
+      'text-color-blue': data.employeeCount > 1,
+      'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
+      'text-color-yellow': data.statusId === 10,
+      'text-color-red': data.statusId === 11,
+      'SuperRush': data.jobStatusId === 1 || data.jobStatusId === 3 || data.jobStatusId === 7,
+      'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
+    };
   }
 }

@@ -38,7 +38,7 @@
                 </div>
               </div>
             </th>
-            <td mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
                 (click)="getProductionJob(job)"> {{ job.jobId }}
               </a> </td>
           </ng-container>
@@ -52,7 +52,7 @@
                 </div>
               </div>
             </th>
-            <td mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
                 (click)="getAllocatedJobId(job)"> {{ job.jobId }}
               </a> </td>
           </ng-container>
@@ -65,7 +65,7 @@
                 </div>
               </div>
             </th>
-            <td mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
                 (click)="getQuatationJobId(job)"> {{ job.jobId }}
               </a> </td>
           </ng-container>
@@ -78,7 +78,7 @@
                 </div>
               </div>
             </th>
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.jobDate }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.jobDate }} </td>
           </ng-container>
           <ng-container matColumnDef="employee">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -90,7 +90,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef>  </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary clickable-link"
                 (click)="getemployeeName(job)"> {{ job.employeeName }} </a></td>
           </ng-container>
           <ng-container matColumnDef="client">
@@ -103,7 +103,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Client </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.shortName }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.shortName }} </td>
           </ng-container>
           <ng-container matColumnDef="customerSatisfaction">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -115,7 +115,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Customer Satisfaction </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.customerClassification }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.customerClassification }} </td>
           </ng-container>
           <ng-container matColumnDef="fileName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -127,7 +127,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> File Name </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.fileName }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.fileName }} </td>
           </ng-container>
           <ng-container matColumnDef="fileInwardMode">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -139,7 +139,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> File Inward Mode </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.fileInwardType }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.fileInwardType }} </td>
           </ng-container>
           <ng-container matColumnDef="jobstatus">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -151,7 +151,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Job Staus </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.jobstatus }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.jobstatus }} </td>
           </ng-container>
           <ng-container matColumnDef="projectcode">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -163,7 +163,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> ProjectCode </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.projectCode }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.projectCode }} </td>
           </ng-container>
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -175,7 +175,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Status </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.jobStatusDescription }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.jobStatusDescription }} </td>
           </ng-container>
           <ng-container matColumnDef="scope">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -187,7 +187,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Scope </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.scopeDesc }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.scopeDesc }} </td>
           </ng-container>
           <ng-container matColumnDef="esttime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -200,7 +200,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> EstTime </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.allocatedEstimatedTime }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.allocatedEstimatedTime }} </td>
           </ng-container>
           <ng-container matColumnDef="deliverydate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -212,7 +212,7 @@
               </div>
             </th>
             <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> DeliveryDate </th> -->
-            <td mat-cell *matCellDef="let job" class="text-center"> {{ job.dateofDelivery }} </td>
+            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.dateofDelivery }} </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="visibility()"></tr>
           <tr mat-row *matRowDef="let job; columns: visibility();"></tr>

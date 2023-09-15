@@ -23,8 +23,8 @@
             "allowedCommonJsDependencies": [
               "jquery",
               "lodash",
-              "opentelemetry"
-
+              "opentelemetry",
+              "file-saver"
             ],
             "polyfills": [
               "zone.js"
@@ -40,7 +40,9 @@
               "src/styles.scss",
               "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
-            "scripts": ["node_modules/jquery/dist/jquery.min.js"]
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -104,7 +106,9 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": ["node_modules/jquery/dist/jquery.min.js"]
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js"
+            ]
           }
         }
       }

@@ -634,9 +634,13 @@ export class PricingComponent implements OnInit {
         else{
           Swal.fire(
             'Done!',
-            'Updated Data Failed!',
-            'error'
-          )
+            response.stringList,
+            'success'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+          }
+          })
         }
       });
   }

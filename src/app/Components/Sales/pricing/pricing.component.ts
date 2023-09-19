@@ -616,9 +616,11 @@ export class PricingComponent implements OnInit {
         addCountDatas: [],
       };
     }
+    this.spinner.requestStarted();
     this.http
       .post(environment.apiURL + `Pricing/AddPricingWithScope`, datas)
       .subscribe((response:any) => {
+        this.spinner.requestEnded();
         this.jobStatusFormControl = response;
         if(response && response.stringList ==="Pricing Added Successfully"){
           Swal.fire(
@@ -633,9 +635,9 @@ export class PricingComponent implements OnInit {
         }
         else{
           Swal.fire(
-            'Done!',
+            'Error!',
             response.stringList,
-            'success'
+            'error'
           ).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();

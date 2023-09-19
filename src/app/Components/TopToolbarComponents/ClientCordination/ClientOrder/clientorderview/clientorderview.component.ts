@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { environment } from 'src/Environments/environment';
 import * as XLSX from 'xlsx';
-import JSZip from 'jszip';
 
 @Component({
   selector: 'app-clientorderview',

@@ -97,7 +97,8 @@ export class JobHistoryComponent implements OnInit {
 
 
       this.http.get<any[]>(environment.apiURL + 'Customer/GetCustomers').subscribe(clientdata => {
-        this.clients = clientdata;
+       
+        this.clients = clientdata.sort();
       });
 
     }

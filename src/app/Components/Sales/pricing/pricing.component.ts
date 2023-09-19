@@ -623,7 +623,7 @@ export class PricingComponent implements OnInit {
         if(response && response.stringList ==="Pricing Added Successfully"){
           Swal.fire(
             'Done!',
-            'Updated Data Successfully!',
+            response.stringList,
             'success'
           ).then((result) => {
             if (result.isConfirmed) {

@@ -17,7 +17,7 @@
           <p>Employee Name</p>
         </div>
         <div class="col">
-          {{this.apiResponseData.emp.addressDetail.employeeName}}
+          {{this.apiResponseData.emp.addressDetail.employeeName }}
         </div>
       </div>
       <div class="personal">
@@ -49,7 +49,7 @@
           </div>
           <div class="col-6">
             <mat-form-field>
-              <mat-label>Date of Birth</mat-label>
+              <mat-label>Date of Birth<span style="color: red;">*</span></mat-label>
               <input matInput [matDatepicker]="picker" [(ngModel)]="dob" placeholder="mm/DD/yyyy">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -60,7 +60,7 @@
         <div class="row">
           <div class="col-6">
             <mat-form-field>
-              <mat-label>Date of Joining</mat-label>
+              <mat-label>Date of Joining<span style="color: red;">*</span></mat-label>
               <input matInput [matDatepicker]="picker1" [(ngModel)]="doj" placeholder="mm/DD/yyyy">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
@@ -69,7 +69,7 @@
           </div>
           <div class="col-6">
             <mat-form-field>
-              <mat-label>Martial Status</mat-label>
+              <mat-label>Martial Status<span style="color: red;">*</span></mat-label>
               <mat-select [(ngModel)]="martialStatus" name="martialStatus">
                 <mat-option value="single">Single</mat-option>
                 <mat-option value="married">Married</mat-option>
@@ -104,7 +104,7 @@
         <div class="row">
           <div class="col-6">
             <mat-form-field>
-              <mat-label>Gender</mat-label>
+              <mat-label>Gender<span style="color: red;">*</span></mat-label>
               <mat-select [(ngModel)]="gender" name="gender">
                 <mat-option value="male">Male</mat-option>
                 <mat-option value="Female">Female</mat-option>
@@ -125,7 +125,7 @@
         <div class="row">
           <div class="col-6">
             <mat-form-field appearance="fill">
-              <mat-label>Blood Group</mat-label>
+              <mat-label>Blood Group<span style="color: red;">*</span></mat-label>
               <mat-select name="ddlbloodgp" [(ngModel)]="BloodGroup">
                 <mat-option value="">--Select--</mat-option>
                 <mat-option value="O-">O-</mat-option>
@@ -151,7 +151,7 @@
         <div class="row">
           <div class="col-6">
             <mat-form-field>
-              <mat-label>Is Internet Available</mat-label>
+              <mat-label>Is Internet Available<span style="color: red;">*</span></mat-label>
               <mat-select [(ngModel)]="internetAvailable" name="internetAvailable">
                 <mat-option value="yes">Yes</mat-option>
                 <mat-option value="No">No</mat-option>
@@ -191,7 +191,7 @@
         <div class="row">
           <div class="col-6">
             <mat-form-field appearance="fill">
-              <mat-label>System/Laptop </mat-label>
+              <mat-label>System/Laptop <span style="color: red;">*</span></mat-label>
               <mat-select name="providertype" [(ngModel)]="systemlaptop">
                 <mat-option value="">---select--</mat-option>
                 <mat-option value="Yes">Yes</mat-option>
@@ -233,7 +233,7 @@
         <div class="row">
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Reporting Manager 1<span style="color: red;">*</span></mat-label>
+              <mat-label>Reporting Manager 1</mat-label>
               <mat-select [(ngModel)]="reportingManager1" name="destination">
                 <mat-option *ngFor="let rm1option of rm1options" [value]="rm1option.employeeId">
                   {{ rm1option.employeeName }}
@@ -243,7 +243,7 @@
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Reporting Manager 2<span style="color: red;">*</span></mat-label>
+              <mat-label>Reporting Manager 2</mat-label>
               <mat-select [(ngModel)]="reportingManager2" name="destination">
                 <mat-option *ngFor="let rm2option of rm2options" [value]="rm2option.employeeId">
                   {{ rm2option.employeeName }}
@@ -255,7 +255,7 @@
         <div class="row">
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Reporting Leader 1<span style="color: red;">*</span></mat-label>
+              <mat-label>Reporting Leader 1</mat-label>
               <mat-select [(ngModel)]="reportingLeader1" name="destination">
                 <mat-option *ngFor="let rl1option of rl1options" [value]="rl1option.employeeId">
                   {{ rl1option.employeeName }}
@@ -265,7 +265,7 @@
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Reporting Leader 2<span style="color: red;">*</span></mat-label>
+              <mat-label>Reporting Leader 2</mat-label>
               <mat-select [(ngModel)]="reportingLeader2" name="destination">
                 <mat-option *ngFor="let rl2option of rl2options" [value]="rl2option.employeeId">
                   {{ rl2option.employeeName }}
@@ -287,7 +287,7 @@
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label> EmployeeHierarchy<span style="color: red;">*</span></mat-label>
+              <mat-label> EmployeeHierarchy</mat-label>
               <mat-select [(ngModel)]="employeehierarchy" name="employeehierarchy" multiple>
                 <mat-option *ngFor="let employeehierarchyoption of EmployeeHierarchyOptions"
                   [value]="employeehierarchyoption">
@@ -329,7 +329,7 @@
         <div class="row">
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Address1</mat-label>
+              <mat-label>Address1<span style="color: red;">*</span></mat-label>
               <input type="text" matInput placeholder="Address1" [(ngModel)]="presentAddress1" name="presentAddress1">
             </mat-form-field>
           </div>
@@ -387,7 +387,7 @@
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>MobileNumber</mat-label>
+              <mat-label>MobileNumber<span style="color: red;">*</span></mat-label>
               <input matInput placeholder="mob no" type="number" [(ngModel)]="mobileNumber" name="mobileNumber">
             </mat-form-field>
           </div>
@@ -397,14 +397,14 @@
         <div class="row">
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Emergency Contact Name</mat-label>
+              <mat-label>Emergency Contact Name<span style="color: red;">*</span></mat-label>
               <input matInput placeholder="Emergency contact Name" [(ngModel)]="emergencyContactName"
                 name="emergencyContactName">
             </mat-form-field>
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Emergency Mobile number</mat-label>
+              <mat-label>Emergency Mobile number<span style="color: red;">*</span></mat-label>
               <input matInput placeholder="mob no" [(ngModel)]="emergencyMobilenumber" name="emergencyMobilenumber">
             </mat-form-field>
           </div>
@@ -460,7 +460,7 @@
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Personal Email Address</mat-label>
+              <mat-label>Personal Email Address<span style="color: red;">*</span></mat-label>
               <input matInput placeholder="email" [(ngModel)]="personalEmail">
             </mat-form-field>
           </div>

@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/Environments/environment';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-bench-options',
   templateUrl: './bench-options.component.html',
@@ -28,7 +29,10 @@ export class BenchOptionsComponent implements OnInit {
   GetStatuslist: any[] = [];
   getStatus() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `BenchOption/GetStatus?EmployeeId=${this.loginservice.getUsername()}`).subscribe({next:(results) => {
+    this.http.get<any>(environment.apiURL + `BenchOption/GetStatus?EmployeeId=${this.loginservice.getUsername()}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({next:(results) => {
       this.spinnerService.requestEnded();
 
       this.GetStatuslist = results.data;
@@ -52,7 +56,10 @@ export class BenchOptionsComponent implements OnInit {
         Status:''
       }
       this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Start`, Startbench).subscribe({next:(result) => {
+      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Start`, Startbench).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({next:(result) => {
         this.spinnerService.requestEnded();
         this.list = result;
         if (result.data == true) {
@@ -83,7 +90,10 @@ export class BenchOptionsComponent implements OnInit {
 
       this.spinnerService.requestStarted();
 
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Break`, Startbench).subscribe({next:(result) => {
+      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=Break`, Startbench).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({next:(result) => {
         this.spinnerService.requestEnded();
         this.list = result;
         if (result.data == true) {
@@ -111,7 +121,10 @@ export class BenchOptionsComponent implements OnInit {
         Remarks: this.Remarks,
       }
       this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=End`, Startbench).subscribe({next:(result) => {
+      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=End`, Startbench).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({next:(result) => {
         this.spinnerService.requestEnded();
 
         this.list = result;

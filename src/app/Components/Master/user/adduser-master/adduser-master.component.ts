@@ -2,10 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { UserMasterService } from 'src/app/Services/Master/user-master.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
 @Component({
   selector: 'app-adduser-master',
@@ -38,17 +41,18 @@ export class AdduserMasterComponent implements OnInit {
     private _empService: UserMasterService,
     public dialogRef: MatDialogRef<AdduserMasterComponent>,
     private http: HttpClient,
-    private loginservice:LoginService,
+    private loginservice: LoginService,
     private _coreService: CoreService,
+    private spinnerService: SpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.getEmployee();
     this.getMenuDetails();
     this.getCustomers();
   }
   userRegistrationForm = this.builder.group({
-    chooseRole:['', Validators.required],
+    chooseRole: ['', Validators.required],
     accessName: ['', Validators.required],
     employeeName: [null, Validators.required],
     employeeUsers: { value: '', disabled: false },
@@ -56,12 +60,15 @@ export class AdduserMasterComponent implements OnInit {
     employeePassword: ['', Validators.required],
     customerPassword: '',
     adminRole: ['', Validators.required],
-    customer: ['',Validators.required],
+    customer: ['', Validators.required],
     employeeEmail: '',
   });
 
   getEmployee() {
-    this._empService.getEmployees().subscribe({
+    this._empService.getEmployees().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (response) => {
         this.employees = response;
       },
@@ -72,8 +79,13 @@ export class AdduserMasterComponent implements OnInit {
   }
 
   getCustomers() {
-    this._empService.getAllCustomers().subscribe({
+    this.spinnerService.requestStarted();
+    this._empService.getAllCustomers().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (response) => {
+        this.spinnerService.requestEnded();
         this.customers = response;
       },
       error: (err) => {
@@ -91,7 +103,6 @@ export class AdduserMasterComponent implements OnInit {
   showCustomerData() {
     this.isEmployee = false;
     this.isCustomer = true;
-    // this.userRegistrationForm.get('employeeName')?.setErrors(null);
   }
 
   showAdminData() {
@@ -110,12 +121,15 @@ export class AdduserMasterComponent implements OnInit {
   onCancel() {
     this.dialogRef.close();
   }
+
   getEmployeeId(data: any) {
-    this._empService.getEmployeeCodeByEmployId(parseInt(data)).subscribe(
+    this._empService.getEmployeeCodeByEmployId(parseInt(data)).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(
       (data: any) => {
         this.userRegistrationForm.get('employeeUsers')?.patchValue(data.employeeCode);
-      },
-      (error: any) => {}
+      }
     );
   }
 
@@ -126,7 +140,7 @@ export class AdduserMasterComponent implements OnInit {
       (data: any) => {
         this.menus = data;
       },
-      (error: any) => {}
+      (error: any) => { }
     );
   }
 
@@ -171,36 +185,43 @@ export class AdduserMasterComponent implements OnInit {
     this.formVisible = false;
   }
 
-  
-  onFormSubmit(){
-        let str:string = this.selectedMenu.reduce((str,item)=>{
-          return str+"|" + item+"|,";
-        },"")
-        let saveUserData = {
-            menuAccess: str.substring(0,str.length-1),
-              id: 0,
-              username: this.userRegistrationForm.value.employeeUsers,
-              password: this.userRegistrationForm.value.employeePassword,
-              domain: '',
-              roles: this.userRegistrationForm.value.adminRole,
-              userType: this.userRegistrationForm.value.chooseRole,
-              employeeId: this.userRegistrationForm.value.employeeName,
-              customerId: '',
-              isDeleted: false,
-              createdBy: this.loginservice.getUsername(),
-              createdDate: new Date().toISOString(),
-              customer: null,
-              employee: null
-            }
-       this.http.post(environment.apiURL+'User/SaveUser?actionType=1',saveUserData).subscribe({
-          next: (val: any) => {
-            this._coreService.openSnackBar('User detail added!');
-          },
-          error: (err: any) => {
-            throw new Error('API Error', err);
-          },
+
+  onFormSubmit() {
+    let str: string = this.selectedMenu.reduce((str, item) => {
+      return str + "|" + item + "|,";
+    }, "")
+    let saveUserData = {
+      menuAccess: str.substring(0, str.length - 1),
+      id: 0,
+      username: this.userRegistrationForm.value.employeeUsers,
+      password: this.userRegistrationForm.value.employeePassword,
+      domain: '',
+      roles: this.userRegistrationForm.value.adminRole,
+      userType: this.userRegistrationForm.value.chooseRole,
+      employeeId: this.userRegistrationForm.value.employeeName,
+      customerId: '',
+      isDeleted: false,
+      createdBy: this.loginservice.getUsername(),
+      createdDate: new Date().toISOString(),
+      customer: null,
+      employee: null
+    }
+    this.http.post(environment.apiURL + 'User/SaveUser?actionType=1', saveUserData).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (val: any) => {
+        Swal.fire('Done!', 'User Detail Added', 'success').then((result)=>{
+          if(result.isConfirmed){
+            this.dialogRef.close();
+          }
         });
-    
+      },
+      error: (err: any) => {
+        throw new Error('API Error', err);
+      },
+    });
+
   }
 
 }

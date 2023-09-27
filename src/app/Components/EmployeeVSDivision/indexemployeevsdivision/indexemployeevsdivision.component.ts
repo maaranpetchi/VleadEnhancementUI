@@ -9,7 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CoreService } from 'src/app/Services/EmployeeVSDivision/Core/core.service'; 
 import { AddeditemployeevsdivisionComponent } from '../addeditemployeevsdivision/addeditemployeevsdivision.component';
 import { SpinnerService } from '../../Spinner/spinner.service';
-
+import { catchError } from 'rxjs';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-indexemployeevsdivision',
   templateUrl: './indexemployeevsdivision.component.html',
@@ -55,7 +56,13 @@ export class indexemployeevsdivisionComponent implements OnInit {
   getEmployeeList() {
     this.spinnerService.requestStarted();
 
-    this._empService.getEmployeeList().subscribe({
+    this._empService.getEmployeeList().pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      })
+    ).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
 
@@ -76,7 +83,13 @@ export class indexemployeevsdivisionComponent implements OnInit {
 
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
-    this._empService.deleteEmployee(id).subscribe({
+    this._empService.deleteEmployee(id).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      })
+    ).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
 

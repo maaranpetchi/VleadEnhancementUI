@@ -10,7 +10,9 @@ import { JobHistoryService } from 'src/app/Services/JobHistory/job-history.servi
 import { JobhistoryDetailsComponent } from '../jobhistory-details/jobhistory-details.component';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import { environment } from 'src/Environments/environment';
-
+import { catchError } from 'rxjs';
+import { error } from 'jquery';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-job-history',
   templateUrl: './job-history.component.html',
@@ -95,9 +97,12 @@ export class JobHistoryComponent implements OnInit {
       this.fromDate = '';
       this.toDate = '';
 
-
-      this.http.get<any[]>(environment.apiURL + 'Customer/GetCustomers').subscribe(clientdata => {
-       
+      this.spinnerService.requestStarted();
+      this.http.get<any>(environment.apiURL + 'Customer/GetCustomers').pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe(clientdata => {
+        this.spinnerService.requestEnded();
         this.clients = clientdata.sort();
       });
 
@@ -143,18 +148,16 @@ export class JobHistoryComponent implements OnInit {
         "fileName": this.selectedFileName
       };
       this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + 'Allocation/getJobMovementJobsWithclientIdfileName', jobOrder).subscribe({
-        next: (response) => {
+      this.http.post<any>(environment.apiURL + 'Allocation/getJobMovementJobsWithclientIdfileName', jobOrder).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe(response => {
           this.spinnerService.requestEnded();
           this.dataSource.data = response.jobMovement;
           this.recordCount = response.jobMovement.length;
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
-        },
-        error: (err) => {
-          console.log(err);
-          this.spinnerService.resetSpinner();
-        }
+       
       })
     }
   };
@@ -184,9 +187,9 @@ export class JobHistoryComponent implements OnInit {
 
   getJobHistory(data) {
     this.dialog.open(JobhistoryDetailsComponent, {
-      height:'80vh',
-      width:'80vw',
-      data:data
+      height: '80vh',
+      width: '80vw',
+      data: data
     })
   }
 

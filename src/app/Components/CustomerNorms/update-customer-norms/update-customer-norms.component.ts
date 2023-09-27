@@ -6,6 +6,7 @@ import { CustomerNormsService } from 'src/app/Services/CustomerNorms/customer-no
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-update-customer-norms',
   templateUrl: './update-customer-norms.component.html',
@@ -66,7 +67,10 @@ export class UpdateCustomerNormsComponent implements OnInit {
       "updatedUtc": "2023-08-28T09:05:51.829Z"
     }
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `CustomerVsEmployee/EditCustomerNorms`, payload).subscribe({
+    this.http.post<any>(environment.apiURL + `CustomerVsEmployee/EditCustomerNorms`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(results) => {
       this.spinnerService.requestEnded();
 

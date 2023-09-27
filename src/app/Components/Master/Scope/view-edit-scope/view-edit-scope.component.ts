@@ -6,6 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
+
 @Component({
   selector: 'app-view-edit-scope',
   templateUrl: './view-edit-scope.component.html',
@@ -26,6 +30,7 @@ export class ViewEditScopeComponent implements OnInit {
     private router: Router,
     private _coreService: CoreService,
     private loginservice: LoginService,
+    private spinnerService: SpinnerService,
     private http: HttpClient
   ) {}
   scopeID: any;
@@ -51,7 +56,14 @@ export class ViewEditScopeComponent implements OnInit {
   });
 
   listScope() {
-    this._scopeService.listScopes().subscribe((data) => {
+    this.spinnerService.requestStarted();
+
+    this._scopeService.listScopes().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((data) => {
+      this.spinnerService.requestEnded();
+
       this.departments = data.departmentList;
     });
   }
@@ -81,10 +93,15 @@ export class ViewEditScopeComponent implements OnInit {
         updatedBy: this.loginservice.getUsername(),
       },
     };
-    this._scopeService.updateScope(saveData).subscribe({
+    this.spinnerService.requestStarted();
+    this._scopeService.updateScope(saveData).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (response: any) => {
+        this.spinnerService.requestEnded();
         if (this.data) {
-          this._coreService.openSnackBar('Scope detail updated!');
+          Swal.fire('Done!', 'Scope updated successfully', 'succcess');
         } else {
           return;
         }

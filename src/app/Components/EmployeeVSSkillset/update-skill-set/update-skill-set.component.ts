@@ -7,6 +7,7 @@ import { TransitionCheckState } from '@angular/material/checkbox';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-update-skill-set',
@@ -44,7 +45,7 @@ export class UpdateSkillSetComponent implements OnInit {
       "divisionId": this.apiResponseData.divisionId,
       "workingStatus": this.apiResponseData.workingStatus,
       "skillsetId": this.apiResponseData.skillSetId,
-      "proficiencyLevel": this.apiResponseData.proficiencyLevel,
+      "proficiencyLevel": this.selectedProficiency ?  this.selectedProficiency : this.apiResponseData.proficiencyLevel ,
       "isDeleted": true,
       "createdBy": this.loginservice.getUsername(),
       "createdUtc": new Date().toISOString,
@@ -61,10 +62,13 @@ export class UpdateSkillSetComponent implements OnInit {
       }
     }
 this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL+`EmployeeVsSkillset/UpdateEmployeeSkill`,payload).subscribe({
+    this.http.post<any>(environment.apiURL+`EmployeeVsSkillset/UpdateEmployeeSkill`,payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(response) =>{
         this.spinnerService.requestEnded();
-
+     if(response.message == true){
       Swal.fire(
         'Done!',
         'Updated Data Successfully!',
@@ -73,7 +77,17 @@ this.spinnerService.requestStarted();
         if (result.isConfirmed) {
           this.router.navigate(['/topnavbar/indexskillset']);
       }
+  
       })
+     }
+     else{
+      Swal.fire(
+        'Alert',
+        'Data not updated successfully',
+        'error'
+      )
+    }
+    
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error

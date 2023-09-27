@@ -8,6 +8,7 @@ import { environment } from 'src/Environments/environment';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { EmployeevsskillsetService } from 'src/app/Services/EmployeeVsSkillset/employeevsskillset.service';
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-index-skillset',
   templateUrl: './index-skillset.component.html',
@@ -57,7 +58,10 @@ export class IndexSkillsetComponent implements OnInit {
   //aCTIONS
   openEditForm(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).subscribe({
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (results) => {
         this.spinnerService.requestEnded();
         this._empService.setData({ type: 'EDIT', data: results });
@@ -78,7 +82,10 @@ export class IndexSkillsetComponent implements OnInit {
   }
   viewEmployee(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).subscribe({
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (results) => {
         this.spinnerService.requestEnded();
 
@@ -99,7 +106,10 @@ export class IndexSkillsetComponent implements OnInit {
   }
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/Delete-Skill?id=${id}`).subscribe({
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/Delete-Skill?id=${id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
 
@@ -107,8 +117,11 @@ export class IndexSkillsetComponent implements OnInit {
           'Deleted!',
           'Data deleted successfully!',
           'success'
-        )
-        this.getFetchTables();
+        ).then((response) => {
+          if (response.isConfirmed) {
+            this.getFetchTables();
+          }
+        })
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error

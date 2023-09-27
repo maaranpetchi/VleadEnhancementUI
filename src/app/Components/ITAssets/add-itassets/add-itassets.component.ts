@@ -11,7 +11,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { environment } from 'src/Environments/environment';
 import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 
 //Interface for servertype
 interface GETSTD {
@@ -68,7 +69,10 @@ export class AddItassetsComponent implements OnInit {
       "id": id
     }
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `ITAsset/nDeleteITSAsset`, payload).subscribe({
+    this.http.post<any>(environment.apiURL + `ITAsset/nDeleteITSAsset`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
 
@@ -88,7 +92,10 @@ export class AddItassetsComponent implements OnInit {
     let payload = {
       "id": this.apiResponseData.itheDetailList.id
     }
-    this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`, payload).subscribe(results => {
+    this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
 
       this.BayNo = results.itheDetailList.bayNumber,
         this.Location = results.itheDetailList.location,
@@ -194,20 +201,29 @@ export class AddItassetsComponent implements OnInit {
 
   //method to get the pctype dropdown
   getPcType() {
-    this.http.get<any>(environment.apiURL + `ITAsset/nGetHardwareSoftware`).subscribe(results => {
+    this.http.get<any>(environment.apiURL + `ITAsset/nGetHardwareSoftware`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.HardwareData = results.hardwareData;
     });
   }
 
   getSoftwareData() {
-    this.http.get<any>(environment.apiURL + `ITAsset/nGetHardwareSoftware`).subscribe(results => {
+    this.http.get<any>(environment.apiURL + `ITAsset/nGetHardwareSoftware`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.SoftwareData = results.softwareData;
     });
   }
 
 
   getTableData() {
-    this.http.get<any>(environment.apiURL + `ITAsset/nGetTableITSAsset`).subscribe(results => {
+    this.http.get<any>(environment.apiURL + `ITAsset/nGetTableITSAsset`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.dataSource = results.titsDetailList;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -268,8 +284,10 @@ export class AddItassetsComponent implements OnInit {
       "workingStatus": "",
 
     }
-    this.http.post<any>(environment.apiURL + `ITAsset/nSetITHData`, payloadupload).subscribe(results => {
-      this._coreService.openSnackBar("Data Added successfully!");
+    this.http.post<any>(environment.apiURL + `ITAsset/nSetITHData`, payloadupload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.id = results.ithDetailList.id;
     });
   }
@@ -385,7 +403,10 @@ export class AddItassetsComponent implements OnInit {
     let payload = {
       "id": this.apiResponseData.itheDetailList.id
     }
-    this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`, payload).subscribe(results => {
+    this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       let AddPayload = {
         "id": 0,
         "employeeId": this.loginservice.getUsername(),
@@ -428,8 +449,10 @@ export class AddItassetsComponent implements OnInit {
         "softwareStatusId": this.SoftwareStatus
       }
 
-      this.http.post<any>(environment.apiURL + `ITAsset/nSetITSData`, AddPayload).subscribe(results => {
-        this._coreService.openSnackBar(results.itsDetailList);
+      this.http.post<any>(environment.apiURL + `ITAsset/nSetITSData`, AddPayload).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe(results => {
         this.getTableData();
 
       })
@@ -441,6 +464,6 @@ export class AddItassetsComponent implements OnInit {
 
 
   softwareSubmitclick() {
-    this._coreService.openSnackBar("Record Added Successfully!")
+Swal.fire('Done','Record added successfully','success')
   }
 }

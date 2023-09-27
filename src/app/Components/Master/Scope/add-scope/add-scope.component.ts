@@ -2,9 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
+
 
 @Component({
   selector: 'app-add-scope',
@@ -18,7 +22,8 @@ export class AddScopeComponent implements OnInit {
     private http: HttpClient,
     private loginservice: LoginService,
     private _coreService: CoreService,
-    private router :Router
+    private router :Router,
+    private spinnerService:SpinnerService
   ) {}
 
   ngOnInit(): void {}
@@ -49,13 +54,19 @@ export class AddScopeComponent implements OnInit {
       //   updatedBy:0,
       // },
     };
+    this.spinnerService.requestStarted();
     this.http
-      .post(environment.apiURL+'Scope/CreateScope', SaveScope)
-      .subscribe({
+      .post(environment.apiURL+'Scope/CreateScope', SaveScope).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
         next: (response: any) => {
+          this.spinnerService.requestEnded();
+
           // const departmentId = response.department?.departmentId;
-          this._coreService.openSnackBar('Scope detail added!');
-        },
+          Swal.fire('Done!', 'Scope added successfully!', 'success').then((response)=>{
+            this.router.navigate(['/topnavbar/master-scope']);
+          });        },
         error: (err: any) => {
           throw new Error('API Error', err);
         },

@@ -8,6 +8,9 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { VendorService } from 'src/app/Services/Vendor/vendor.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { SpinnerService } from '../../Spinner/spinner.service';
+import { catchError } from 'rxjs';
+import { Router } from '@angular/router';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-updatevendor',
@@ -25,6 +28,7 @@ export class UpdatevendorComponent implements OnInit {
     private spinnerService: SpinnerService,
     public sharedService: VendorService,
     private http: HttpClient,
+    private router: Router,
     private _dialogRef: MatDialogRef<UpdatevendorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _coreService: CoreService
@@ -62,8 +66,12 @@ export class UpdatevendorComponent implements OnInit {
 
   onFormSubmit() {
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `ITAsset/nSetVendorDetails`, this.empForm.value).subscribe({
+    this.http.post<any>(environment.apiURL + `ITAsset/nSetVendorDetails`, this.empForm.value).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (data) => {
+        this.spinnerService.requestEnded();
         Swal.fire(
           'Done!',
           'Employee added successfully',
@@ -92,8 +100,12 @@ export class UpdatevendorComponent implements OnInit {
         const Para = {
           Id: this.id
         };
-        this.http.post<any>(environment.apiURL + 'ITAsset/nGetVendorEditDetail', Para).subscribe(results => {
-
+        this.spinnerService.requestStarted();
+        this.http.post<any>(environment.apiURL + 'ITAsset/nGetVendorEditDetail', Para).pipe(catchError((error) => {
+          this.spinnerService.requestEnded();
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+        })).subscribe(results => {
+          this.spinnerService.requestEnded();
           const GetVED = results.getVEDetailList;
           const newAmtPaid = GetVED.amountPaid + this.empForm.value.amountsToBePaid;
           const newPendingAmount = this.empForm.value.invoiceValue - newAmtPaid;
@@ -119,7 +131,7 @@ export class UpdatevendorComponent implements OnInit {
       this.empForm.value.amtPaid.value = 0;
     }
   }
-  amtPaid:any;
+  amtPaid: any;
   onSubmitDetails() {
     let payload = {
       "id": this.data.data.id,
@@ -132,14 +144,34 @@ export class UpdatevendorComponent implements OnInit {
       "amountbePaid": 0,
       "employeeId": this.loginservice.getUserId(),
     }
-    this.http.post<any>(environment.apiURL + `ITAsset/nUpdateVendorDetails`, payload).subscribe(result => {
+    this.spinnerService.requestStarted();
+    this.http.post<any>(environment.apiURL + `ITAsset/nUpdateVendorDetails`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(result => {
+      this.spinnerService.requestEnded();
 
       Swal.fire(
         'Done!',
         result.updateVDetailList,
         'success'
-      )
-      window.location.reload()
+      ).then((response) => {
+        if (response.isConfirmed) {
+          this._dialogRef.close();
+          window.location.reload();
+        }
+      },(error)=>{
+        Swal.fire(
+          'Alert!',
+          'Error Occured',
+          'error'
+        ).then((response)=>{
+          if (response.isConfirmed) {
+            this._dialogRef.close();
+            window.location.reload();
+          }
+        })
+      })
     });
   }
 

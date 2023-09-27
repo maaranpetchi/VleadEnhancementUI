@@ -24,7 +24,7 @@ export class ScopeService {
   }
   //  Delete the Scope.
   deleteScope(id:number):Observable<any>{
-    return this._http.get(environment.apiURL+`Delete-Scope?Id=${id}`)
+    return this._http.get(environment.apiURL+`Scope/Delete-Scope?Id=${id}`)
   }
   getScopeData() {
     return this.content.asObservable(); 

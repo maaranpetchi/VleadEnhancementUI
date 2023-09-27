@@ -8,6 +8,7 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { environment } from 'src/Environments/environment';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { error } from 'jquery';
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-job-files-location-master-index',
   templateUrl: './job-files-location-master-index.component.html',
@@ -42,29 +43,33 @@ export class JobFilesLocationMasterIndexComponent implements OnInit {
     this.AddVisible = false;
     this.UpdateVisible = true;
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Customer/CustomerJobLocUpdate?id=${id}`).subscribe(results => {
+    this.http.get<any>(environment.apiURL + `Customer/CustomerJobLocUpdate?id=${id}`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (results) => {
+        this.spinnerService.requestEnded();
 
-      this.selectedClientId = results.jobslist.clientId;
-      this.payloadId = results.jobslist.id;
-      this.processId = results.jobslist.processId;
-      this.selectedDepartmentId = results.jobslist.departmentId;
-      this.FTPFilePath = results.jobslist.ftpfilePath;
-      this.SelectedProcessName = results.jobslist.processName;
-    },(error)=>{
-      this.spinnerService.resetSpinner();
+        this.selectedClientId = results.jobslist.clientId;
+        this.payloadId = results.jobslist.id;
+        this.processId = results.jobslist.processId;
+        this.selectedDepartmentId = results.jobslist.departmentId;
+        this.FTPFilePath = results.jobslist.ftpfilePath;
+        this.SelectedProcessName = results.jobslist.processName;
+      }
     })
   }
 
   getFetchTables() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Report/GetLocationForJobOut`).subscribe(employees => {
+    this.http.get<any>(environment.apiURL + `Report/GetLocationForJobOut`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(employees => {
       this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(employees.jobslist);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    },(error)=>{
-      this.spinnerService.resetSpinner();
     });
   }
 
@@ -86,29 +91,29 @@ export class JobFilesLocationMasterIndexComponent implements OnInit {
   //Mrthod
   loadCustomers(): void {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Dropdown/GetCustomers`).subscribe(
+    this.http.get<any>(environment.apiURL + `Dropdown/GetCustomers`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(
 
       (customers) => {
         this.spinnerService.requestEnded();
 
         this.customers = customers;
-      },
-      (error) => {
-        this.spinnerService.resetSpinner();
       }
     );
   }
   getprocess(): void {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Report/GetProcess`).subscribe(
+    this.http.get<any>(environment.apiURL + `Report/GetProcess`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(
 
       (departments) => {
         this.spinnerService.requestEnded();
 
         this.Departments = departments.departmentList;
-      },
-      (error) => {
-        this.spinnerService.resetSpinner();
       }
     );
   }
@@ -202,18 +207,19 @@ export class JobFilesLocationMasterIndexComponent implements OnInit {
     }
     this.spinnerService.requestStarted();
 
-    this.http.post<any>(environment.apiURL + `Customer/createJobFilesLocationMaster`, payload).subscribe(results => {
+    this.http.post<any>(environment.apiURL + `Customer/createJobFilesLocationMaster`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.spinnerService.requestEnded();
 
       Swal.fire(
         results.message,
       ).then((result) => {
         if (result.isConfirmed) {
-        this.getFetchTables();
-      }
+          this.getFetchTables();
+        }
       })
-    },(error)=>{
-      this.spinnerService.resetSpinner();
     })
   }
 
@@ -305,22 +311,22 @@ export class JobFilesLocationMasterIndexComponent implements OnInit {
     }
     this.spinnerService.requestStarted();
 
-    this.http.post<any>(environment.apiURL + `Customer/UpdateJobLocationInfo`, payload).subscribe(results => {
+    this.http.post<any>(environment.apiURL + `Customer/UpdateJobLocationInfo`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.spinnerService.requestEnded();
 
-   
+
       Swal.fire(
         'Done!',
         'Updated Data Successfully!',
         'success'
       ).then((result) => {
         if (result.isConfirmed) {
-        this.getFetchTables();
-      }
+          this.getFetchTables();
+        }
       })
-    },error => {
-      this.spinnerService.resetSpinner();
-
     })
   }
 

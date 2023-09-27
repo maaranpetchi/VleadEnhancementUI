@@ -5,9 +5,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { ScopeService } from 'src/app/Services/Scope/scope.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
 @Component({
   selector: 'app-scope',
@@ -17,23 +20,24 @@ import { ScopeService } from 'src/app/Services/Scope/scope.service';
 export class ScopeComponent {
 
   //  Table view heading
-  displayedColumns:string[] = [
+  displayedColumns: string[] = [
     'DepartmentName',
     'Description',
     'action',
   ]
 
-  dataSource!:MatTableDataSource<any>;
+  dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  
+
   constructor(
     private _scopeService: ScopeService,
-    private builder:  FormBuilder,
+    private builder: FormBuilder,
     private router: Router,
     private _coreService: CoreService,
-    private http: HttpClient
-  ){}
+    private http: HttpClient,
+    private spinnerService: SpinnerService
+  ) { }
   scopeRegistrationForm = this.builder.group({
 
   });
@@ -42,33 +46,47 @@ export class ScopeComponent {
     this.listScope()
   }
 
-  listScope(){
-    this._scopeService.getListScope().subscribe({
+  listScope() {
+    this.spinnerService.requestStarted();
+    this._scopeService.getListScope().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (data) => {
+        this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(data);
-        
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
         console.log(err);
       }
-    })  
+    })
   }
 
-  addItem(){
+  addItem() {
     this.router.navigate(['/topnavbar/master-scopeAdd']);
   }
-  
-  openViewForm(data:any){
-    this.http.get(environment.apiURL+`Scope/GetScopeDetails?Id=${data.id}`).subscribe((response:any) =>{
-    this.router.navigate(['/topnavbar/master-scope/view'], {state:{data:response}});
-  })
+
+  openViewForm(data: any) {
+    this.spinnerService.requestStarted();
+    this.http.get(environment.apiURL + `Scope/GetScopeDetails?Id=${data.id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response: any) => {
+      this.spinnerService.requestEnded();
+      this.router.navigate(['/topnavbar/master-scope/view'], { state: { data: response } });
+    })
   }
-  
-  openEditForm(id:any){
-      this.http.get(environment.apiURL+`Scope/GetScopeDetails?Id=${id}`).subscribe((response:any) =>{
-        this.router.navigate(["topnavbar/master-scope/edit"], {state:{data:response}});
+
+  openEditForm(id: any) {
+    this.spinnerService.requestStarted();
+    this.http.get(environment.apiURL + `Scope/GetScopeDetails?Id=${id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response: any) => {
+      this.spinnerService.requestEnded();
+      this.router.navigate(["topnavbar/master-scope/edit"], { state: { data: response } });
     })
     //  Below method is used to get data from serice using behaviour subject
     // this.dataSource.filteredData.forEach((data:any)=>{
@@ -79,11 +97,19 @@ export class ScopeComponent {
   }
 
 
-  deleteScopeUser(id:number){
-    this._scopeService.deleteScope(id).subscribe({
+  deleteScopeUser(id: number) {
+    this.spinnerService.requestStarted();
+    this._scopeService.deleteScope(id).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (res) => {
-        this._coreService.openSnackBar('Employee deleted!', 'done');
-        this.listScope();
+        this.spinnerService.requestEnded();
+        Swal.fire('Done!', 'Employee Deleted', 'success').then((response) => {
+          if (response.isConfirmed) {
+            this.listScope();
+          }
+        });
       },
       error: console.log,
     })

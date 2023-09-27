@@ -9,6 +9,8 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { EmployeeService } from 'src/app/Services/EmployeeController/employee.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { SpinnerService } from '../../Spinner/spinner.service';
+import { catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-editaddemployeecontroller',
   templateUrl: './editaddemployeecontroller.component.html',
@@ -90,10 +92,10 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     this.employeeProcess = this.apiViewResponseData.emp.code
     this.personalEmail = this.apiViewResponseData.emp.addressDetail.personalEmail
   }
-  constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService) {
+  constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService, private spinnerservice: SpinnerService) {
 
   }
-  updateButton:boolean = false;
+  updateButton: boolean = false;
   submitButton: boolean = true;
   EmployeeEditName: boolean = false;
   fetchUpdateData() {
@@ -137,7 +139,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.employeeRoles = this.apiResponseData.emp.role
     this.employeeProcess = this.apiResponseData.emp.code
     this.personalEmail = this.apiResponseData.emp.addressDetail.personalEmail
-    if(this.data.type === "view"){
+    if (this.data.type === "view") {
       this.homeButton = true;
     }
   }
@@ -197,10 +199,10 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   systemconfiguration: string = "";
 
   //2.PRODUCT
-  reportingManager1:any;
+  reportingManager1: any;
   reportingManager2: any;
   reporting: String = ''
-  reportingLeader1:any;
+  reportingLeader1: any;
   reportingLeader2: any;
   employeehierarchy: any[] = [];
   proficiency: string = ''
@@ -295,18 +297,27 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "updatedUtc": new Date().toISOString,
       "isActive": true
     }
-    this.http.post<any>(environment.apiURL + 'Employee/AddEmpNewRoles', payload).subscribe(data => {
+    this.spinnerservice.requestStarted();
+    this.http.post<any>(environment.apiURL + 'Employee/AddEmpNewRoles', payload).pipe(catchError((error) => {
+      this.spinnerservice.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((data) => {
       // Show a success message to the user
-      
+      this.spinnerservice.requestEnded();
+
       Swal.fire(
         'Done!',
         data.message,
         'success'
-      )
-      this.getRole();
-      // Close the form
-      this.hideForm();
-    },error=>{
+      ).then((respone) => {
+        if (respone.isConfirmed) {
+          this.getRole();
+          // Close the form
+          this.hideForm();
+        }
+      })
+
+    }, error => {
       Swal.fire(
         'Error!',
         'Error occured ',
@@ -349,75 +360,79 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "employeeCode": this.employeeCode,
       "employeeName": this.employeeName,
       "departmentId": this.selectedDepartment,
-      "designationId": this.selectedDestination ? this.selectedDestination:'',
+      "designationId": this.selectedDestination ? this.selectedDestination : '',
       "dateOfJoining": this.doj,
       "dateOfBirth": this.dob,
-      "bloodGroup": this.BloodGroup ? this.BloodGroup:'',
-      "gender": this.gender ? this.gender :'',
-      "maritalStatus": this.martialStatus ? this.martialStatus:'',
+      "bloodGroup": this.BloodGroup ? this.BloodGroup : '',
+      "gender": this.gender ? this.gender : '',
+      "maritalStatus": this.martialStatus ? this.martialStatus : '',
       "companyId": 0,
       "profiencyId": this.proficiency,
       "emergencyContactName": this.emergencyContactName,
       "emergencyContactNo": this.emergencyMobilenumber,
-      "email": this.officialemailaddress ? this.officialemailaddress:'',
+      "email": this.officialemailaddress ? this.officialemailaddress : '',
       "personalEmail": this.personalEmail,
       "createdUTC": new Date().toISOString,
       "createdBy": this.loginservice.getUsername(),
       "updatedUTC": new Date().toISOString,
       "updatedBy": 0,
-      "reportingManager1": this.reportingManager1 ? this.reportingManager1:'',
-      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1:'',
-      "reportingManager2": this.reportingManager2 ? this.reportingManager2:'',
-      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2:'',
-      "address1": this.presentAddress1 ? this.presentAddress1:'',
-      "address2": this.presentAddress2 ? this.presentAddress2:'',
-      "address3": this.presentaddress3 ? this.presentaddress3:'',
-      "address11": this.permanentAddress1 ? this.permanentAddress1:'',
-      "address22": this.permanentAddress2 ? this.permanentAddress2:'',
-      "address33": this.permanentaddress3 ? this.permanentaddress3:'',
+      "reportingManager1": this.reportingManager1 ? this.reportingManager1 : '',
+      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1 : '',
+      "reportingManager2": this.reportingManager2 ? this.reportingManager2 : '',
+      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2 : '',
+      "address1": this.presentAddress1 ? this.presentAddress1 : '',
+      "address2": this.presentAddress2 ? this.presentAddress2 : '',
+      "address3": this.presentaddress3 ? this.presentaddress3 : '',
+      "address11": this.permanentAddress1 ? this.permanentAddress1 : '',
+      "address22": this.permanentAddress2 ? this.permanentAddress2 : '',
+      "address33": this.permanentaddress3 ? this.permanentaddress3 : '',
       "locationId": 0,
       "locationId1": 0,
       "addressType": "",
       "mobileNo": this.mobileNumber,
-      "phoneNo": this.phonenum ? this.phonenum:'',
+      "phoneNo": this.phonenum ? this.phonenum : '',
       "resignReasons": 0,
       "dateOfResignation": this.dor,
       "processCode":
-        this.employeeProcess ? this.employeeProcess:'', 
-      "result": this.outsource ? this.outsource:'',
+        this.employeeProcess ? this.employeeProcess : '',
+      "result": this.outsource ? this.outsource : '',
       "roleDescription": "",
       "isOutsource": true,
       "empRolesList": [
         {
-          "roleDescription": this.roleDescription ? this.roleDescription:'',
-          "roleId": this.roleId ,
-          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername():'',
+          "roleDescription": this.roleDescription ? this.roleDescription : '',
+          "roleId": this.roleId,
+          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
           "updatedBy": 0
         }
       ],
       "empHierarchyList": [
         {
-          "subEmpId": this.subEmpId ? this.subEmpId:'',
-          "subEmpName": this.subEmpName ? this.subEmpName:'',
-          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername():'',
+          "subEmpId": this.subEmpId ? this.subEmpId : '',
+          "subEmpName": this.subEmpName ? this.subEmpName : '',
+          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
         }
       ],
       "isInternetConnection": this.internetAvailable,
       "isSystem": this.systemlaptop,
-      "netWorkType": this.internetType ? this.internetType:'',
-      "serviceProvider": this.ServiceProvider ? this.ServiceProvider:'',
-      "systemConfig": this.systemconfiguration ? this.systemconfiguration:'',
+      "netWorkType": this.internetType ? this.internetType : '',
+      "serviceProvider": this.ServiceProvider ? this.ServiceProvider : '',
+      "systemConfig": this.systemconfiguration ? this.systemconfiguration : '',
     }
-    this.http.post<any>(environment.apiURL + `Employee/AddEmployee`, payload).subscribe({
+    this.spinnerservice.requestStarted();
+    this.http.post<any>(environment.apiURL + `Employee/AddEmployee`, payload).pipe(catchError((error) => {
+      this.spinnerservice.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (val: any) => {
-        // this.spinnerService.requestStarted();
+        this.spinnerservice.requestEnded();
 
         Swal.fire(
           'Done!',
           'Employee Added Succesfully',
           'success'
-        ).then((respone)=>{
-          if(respone.isConfirmed){
+        ).then((respone) => {
+          if (respone.isConfirmed) {
             this.router.navigate(['/topnavbar/Emp-Empcontroller']);
           }
         })
@@ -427,7 +442,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           'Error!',
           'Error Occured',
           'error'
-        )   
+        )
         console.error(err);
       },
     });
@@ -484,7 +499,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "resignReasons": this.resignReason,
       "dateOfResignation": this.dor,
       "processCode": this.employeeProcess,
-      "result": this.outsource ? this.outsource:'',
+      "result": this.outsource ? this.outsource : '',
       "roleDescription": "",
       "isOutsource": true,
       "empRolesList": [
@@ -508,15 +523,22 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "serviceProvider": this.ServiceProvider,
       "systemConfig": this.systemconfiguration,
     }
-    this.http.post<any>(environment.apiURL + `Employee/EditEmployee`, payload).subscribe({
+    this.spinnerservice.requestStarted();
+    this.http.post<any>(environment.apiURL + `Employee/EditEmployee`, payload).pipe(
+      catchError((error) => {
+        this.spinnerservice.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })
+
+    ).subscribe({
       next: (val: any) => {
-        // this.spinnerService.requestStarted();
+        this.spinnerservice.requestEnded();
         Swal.fire(
           'Updated!',
           'Employee updated successfully',
           'success'
-        ).then((update)=>{
-          if(update.isConfirmed){
+        ).then((update) => {
+          if (update.isConfirmed) {
             this.router.navigate(['/topnavbar/Emp-Empcontroller'])
           }
         });
@@ -526,7 +548,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           'Error!',
           'Error Occured',
           'error'
-        )   
+        )
         console.error(err);
       },
     });

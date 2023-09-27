@@ -6,7 +6,7 @@ import { environment } from 'src/Environments/environment';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { ErrorCategoryService } from 'src/app/Services/Errorcategory/error-category.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-add-errorcategory',
   templateUrl: './add-errorcategory.component.html',
@@ -293,7 +293,8 @@ export class AddErrorcategoryComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          this._coreService.openSnackBar('Scope detail added!');
+          Swal.fire('Done!', 'Scope Detail Added', 'success');
+          
         },
         error: (err: any) => {
           throw new Error('API Error', err);

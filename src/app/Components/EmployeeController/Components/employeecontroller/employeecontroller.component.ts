@@ -15,6 +15,9 @@ import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { EditaddemployeecontrollerComponent } from '../../editaddemployeecontroller/editaddemployeecontroller.component';
+import { catchError } from 'rxjs';
+import { error } from 'jquery';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-employeecontroller',
   templateUrl: './employeecontroller.component.html',
@@ -50,7 +53,12 @@ export class EmployeecontrollerComponent implements OnInit {
 
 
   openEditForm(id: number) {
-    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).subscribe(results => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+    })).subscribe(results => {
+      this.spinnerService.requestEnded();
       this._empService.setData({ type: 'EDIT', data: results });
       this._empService.shouldFetchData = true;
       this.router.navigate(['/topnavbar/Emp-editaddEmpcontroller']);
@@ -58,7 +66,12 @@ export class EmployeecontrollerComponent implements OnInit {
 
   }
   viewEmployee(id: number) {
-    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).subscribe(results => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+    })).subscribe(results => {
+      this.spinnerService.requestEnded();
       this._empService.setViewData({ type: 'View', data: results });
       this._empService.shouldFetchViewData = true;
       this.router.navigate(['/topnavbar/Emp-addeditEmpcontroller']);
@@ -69,7 +82,10 @@ export class EmployeecontrollerComponent implements OnInit {
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
 
-    this._empService.deleteEmployee(id).subscribe({
+    this._empService.deleteEmployee(id).pipe(catchError((error)=>{
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+    })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
 
@@ -100,7 +116,10 @@ export class EmployeecontrollerComponent implements OnInit {
 
   fetchtableData() {
     this.spinnerService.requestStarted();
-    this._empService.getEmployeeList().subscribe({
+    this._empService.getEmployeeList().pipe(catchError((error)=>{
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+    })).subscribe({
 
       next: (res) => {
         this.spinnerService.requestEnded();
@@ -137,7 +156,10 @@ export class EmployeecontrollerComponent implements OnInit {
     }
     if (this.isDeletedInclude || this.isResignInclude) {
       this.spinnerService.requestStarted();
-      this.http.get<any[]>(environment.apiURL + `Employee/GetEmployeeWithDelete?IsDeleted=${this.isDeletedInclude ? 1 : 0}&IsResigned=${this.isResignInclude ? 1 : 0}`).subscribe(data => {
+      this.http.get<any>(environment.apiURL + `Employee/GetEmployeeWithDelete?IsDeleted=${this.isDeletedInclude ? 1 : 0}&IsResigned=${this.isResignInclude ? 1 : 0}`).pipe(catchError((error)=>{
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      })).subscribe(data => {
         this.spinnerService.requestEnded();
         this.dataSource.data = data;
       });

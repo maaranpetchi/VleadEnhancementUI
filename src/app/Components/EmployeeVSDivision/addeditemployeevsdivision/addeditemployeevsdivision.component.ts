@@ -127,6 +127,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'success'
           ).then((result)=>{
             if(result.isConfirmed){
+              window.location.reload();
             }
           })
         }

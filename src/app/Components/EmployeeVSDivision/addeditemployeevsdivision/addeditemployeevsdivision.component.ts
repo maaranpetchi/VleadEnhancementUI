@@ -24,8 +24,8 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   table1Data: MatTableDataSource<any>;
 
   table2Data: MatTableDataSource<any>;
+  public dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>;
 
-  dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>;
   myForm: FormGroup;
   // table1Data: any;
   // table2Data: any;
@@ -127,7 +127,6 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'success'
           ).then((result)=>{
             if(result.isConfirmed){
-              this.dialogRef.close();
             }
           })
         }
@@ -139,7 +138,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'error'
           ).then((result)=>{
             if(result.isConfirmed){
-              this.dialogRef.close();
+              window.location.reload();
             }
           })
         }

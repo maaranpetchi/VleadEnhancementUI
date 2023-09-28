@@ -16,11 +16,11 @@ export class ScopeService {
   }
   // update Scope .
   updateScope(id:any): Observable<any>{
-   return this._http.post(environment.apiURL+`Update-Scope`, id)
+   return this._http.post(environment.apiURL+`Scope/Update-Scope`, id)
   }
   // list of Scopes.
   listScopes(): Observable<any>{
-    return this._http.get(environment.apiURL+'GetDropDownList')
+    return this._http.get(environment.apiURL+'Scope/GetDropDownList')
   }
   //  Delete the Scope.
   deleteScope(id:number):Observable<any>{

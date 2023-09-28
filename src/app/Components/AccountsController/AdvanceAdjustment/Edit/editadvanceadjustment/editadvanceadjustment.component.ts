@@ -108,8 +108,6 @@ export class EditadvanceadjustmentComponent {
   items: any[] = [];
 
   addItem(itemForm) {
-    
-
     if (!itemForm.valid) {
       return; // prevent adding the item if the form is not valid
     }

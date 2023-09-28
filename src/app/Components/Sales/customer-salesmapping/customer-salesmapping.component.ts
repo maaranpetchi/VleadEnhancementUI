@@ -4,7 +4,7 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -24,14 +24,13 @@ export class CustomerSalesmappingComponent implements OnInit {
     private http: HttpClient,
     private spinner: SpinnerService,
     private loginservice: LoginService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.GetAllddlList();
-    this.onDropdownChange();
   }
   selectedQuery: any[] = [];
-  selectedEmployee: any[]=[];
+  selectedEmployee: any[] = [];
 
   displayedColumns: string[] = [
     'selected',
@@ -53,83 +52,86 @@ export class CustomerSalesmappingComponent implements OnInit {
   employeeDaSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator1!: MatPaginator;
 
-  filterValue:any
-  filterValue1:any
-    applyFilter(event: Event): void {
-      this.filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = this.filterValue.trim().toLowerCase();
-      // this.selection.clear();
-      // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+  filterValue: any
+  filterValue1: any
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
   applyEmployeeFilter(event: Event) {
-      this.filterValue1 = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = this.filterValue1.trim().toLowerCase();
-      // this.selection.clear();
-      // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+    this.filterValue1 = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue1.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
   checkAdmin(): Observable<any> {
     return this.http.get(
       environment.apiURL +
-        `Account/checkIsAdmin/${this.loginservice.getUsername()}`
+      `Account/checkIsAdmin/${this.loginservice.getUsername()}`
     );
   }
   checkUserName(): Observable<any> {
     return this.http.get(
       environment.apiURL +
-        `Account/getEmployeeProcess/${this.loginservice.getUsername()}`
+      `Account/getEmployeeProcess/${this.loginservice.getUsername()}`
     );
   }
 
   setAll(item: any) {
-   
-      if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-      if (item.employeeId == null) item.employeeId = 0;
-      if (item.estimatedTime == null) item.estimatedTime = 0;
-      this.selectedQuery.push({
-        ...item,
-        CategoryDesc: '',
-        Comments: '',
-        CommentsToClient: '',
-        Remarks: '',
-        SelectedEmployees: [],
-        SelectedRows: [],
-        customerId:[item.customerId],
-        CustomerName: item.employeeName,
-      });
+
+    if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
+    if (item.employeeId == null) item.employeeId = 0;
+    if (item.estimatedTime == null) item.estimatedTime = 0;
+    this.selectedQuery.push({
+      ...item,
+      CategoryDesc: '',
+      Comments: '',
+      CommentsToClient: '',
+      Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+      customerId: [item.customerId],
+      CustomerName: item.employeeName,
+    });
   }
 
-  setEmployeeAll( item: any) {
-        this.selectedEmployee.push({
-          ...item,
-          // CategoryDesc: '',
-          // Comments: '',
-          // CommentsToClient: '',
-          // FileInwardType: '',
-          // JobId: 0,
-          // Remarks: '',
-          SelectedEmployees: [],
-          SelectedRows: [],
-          CustomerId:[0],
-          CustomerName:item.employeeName,
-          Description:item.employeeName,
-          Name:item.employeeName,
-          ShortName:item.employeeCode,
-          TimeStamp: '',
-        });
+  setEmployeeAll(item: any) {
+    this.selectedEmployee.push({
+      ...item,
+      // CategoryDesc: '',
+      // Comments: '',
+      // CommentsToClient: '',
+      // FileInwardType: '',
+      // JobId: 0,
+      // Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+      CustomerId: [0],
+      CustomerName: item.employeeName,
+      Description: item.employeeName,
+      Name: item.employeeName,
+      ShortName: item.employeeCode,
+      TimeStamp: '',
+    });
   }
   onDropdownChange(): void {
     this.spinner.requestStarted();
     this.http
       .get<any[]>(
         environment.apiURL +
-          `CustomerMapping/GetAllCustomerEmployee?Id=${this.selectedValue}`
-      )
+        `CustomerMapping/GetAllCustomerEmployee?Id=${this.selectedValue}`
+      ).pipe(catchError((error) => {
+        this.spinner.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      }))
       .subscribe({
         next: (response: any) => {
           this.spinner.requestEnded();
@@ -149,9 +151,12 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
 
   GetAllddlList() {
-    // this.spinner.requestStarted();
+    this.spinner.requestStarted();
     this.http
-      .get(environment.apiURL + 'CustomerMapping/GetAllddlList')
+      .get(environment.apiURL + 'CustomerMapping/GetAllddlList').pipe(catchError((error) => {
+        this.spinner.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      }))
       .subscribe({
         next: (response: any) => {
           this.spinner.requestEnded();
@@ -166,13 +171,13 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
   onSubmit() {
     this.spinner.requestStarted();
-    this.selection.selected.forEach(x=>this.setAll(x));
-    this.selection1.selected.forEach(x=>this.setEmployeeAll(x));
+    this.selection.selected.forEach(x => this.setAll(x));
+    this.selection1.selected.forEach(x => this.setEmployeeAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
-    let selectedCustomerCount =this.selectedQuery.length;
-    let selectedEmployeeCount =this.selectedEmployee.length;
+    let selectedCustomerCount = this.selectedQuery.length;
+    let selectedEmployeeCount = this.selectedEmployee.length;
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -190,105 +195,108 @@ export class CustomerSalesmappingComponent implements OnInit {
         this.http
           .post(
             environment.apiURL +
-              `CustomerMapping/CreateCustomerVsSalesEmployee`,
+            `CustomerMapping/CreateCustomerVsSalesEmployee`,
             savecustomervsSalesemp
-          )
-          .subscribe((response:any) => {
+          ).pipe(catchError((error) => {
+            this.spinner.requestEnded();
+            return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+          }))
+          .subscribe((response: any) => {
             if (response.message === "Salesperson assigned successfully") {
               // alert('added');
-    this.spinner.requestEnded();
+              this.spinner.requestEnded();
 
               Swal.fire(
                 'Done!',
                 'Salesperson assigned successfully!',
                 'success'
               )
-            } else{
+            } else {
               Swal.fire(
                 'Done!',
                 'Salesperson assigned Failed!',
                 'error'
               )
-                this.spinner.resetSpinner()
+              this.spinner.resetSpinner()
             }
           });
-      // }
-    }
+        // }
+      }
     } else {
       alert('Please select Customer and Employee');
     }
   }
-//  CreateCustomerVsSalesEmployee = function () {
-//     var selectedCustomerCount = JSON.stringify(selectedCustomers.length);
-//     var selectedEmployeeCount = JSON.stringify(gridallocateApi.selection.getSelectedRows().length);
-//     if (selectedCustomerCount != 0 && this.selectedEmployeeCount != 0) {
-//         if (selectedEmployeeCount > 1) {
-//           //  alertMessage = 'Please select one Employee!';
-//           //   $('#alertPopup').modal('show');
-//           alert('Please select one Employee!')
-//         }
-//         else {
-//             var savecustomervsSalesemp = {
-//                 selectedCustomers:selectedCustomers,
-//                 SelectedEmployee:selectedEmployee,
-//                 customerId:selectedCustomers.CustomerId,
-//                 createdBy:EmployeeId,
-//             }
-            
-            // CustomerMappingFactory.CreateCustomerVsSalesEmployee('CreateCustomerVsSalesEmployee', savecustomervsSalesemp).$promise.then(function (result) {
-            //     if (result.Success == true) {
-            //        confirmationMessage = result.Message;
-            //         $('#confirmedPopup').modal('show');
-            //     }
-            //     else {
-            //        confirmationMessage = result.Message;
-            //         $('#confirmedPopup').modal('show');
-            //     }
-            // });
-//         }
-//     }
-//     else {
-//        alertMessage = 'Please select Customer and Employee';
-//         $('#alertPopup').modal('show');
-//     }
-// }
-selection = new SelectionModel<Element>(true, []);
-selection1 = new SelectionModel<Element>(true, []);
+  //  CreateCustomerVsSalesEmployee = function () {
+  //     var selectedCustomerCount = JSON.stringify(selectedCustomers.length);
+  //     var selectedEmployeeCount = JSON.stringify(gridallocateApi.selection.getSelectedRows().length);
+  //     if (selectedCustomerCount != 0 && this.selectedEmployeeCount != 0) {
+  //         if (selectedEmployeeCount > 1) {
+  //           //  alertMessage = 'Please select one Employee!';
+  //           //   $('#alertPopup').modal('show');
+  //           alert('Please select one Employee!')
+  //         }
+  //         else {
+  //             var savecustomervsSalesemp = {
+  //                 selectedCustomers:selectedCustomers,
+  //                 SelectedEmployee:selectedEmployee,
+  //                 customerId:selectedCustomers.CustomerId,
+  //                 createdBy:EmployeeId,
+  //             }
 
-isAllSelected() {
-  const numSelected = this.selection.selected.length;
-  const numRows = this.dataSource.data.length;
-  return numSelected === numRows;
-}
+  // CustomerMappingFactory.CreateCustomerVsSalesEmployee('CreateCustomerVsSalesEmployee', savecustomervsSalesemp).$promise.then(function (result) {
+  //     if (result.Success == true) {
+  //        confirmationMessage = result.Message;
+  //         $('#confirmedPopup').modal('show');
+  //     }
+  //     else {
+  //        confirmationMessage = result.Message;
+  //         $('#confirmedPopup').modal('show');
+  //     }
+  // });
+  //         }
+  //     }
+  //     else {
+  //        alertMessage = 'Please select Customer and Employee';
+  //         $('#alertPopup').modal('show');
+  //     }
+  // }
+  selection = new SelectionModel<Element>(true, []);
+  selection1 = new SelectionModel<Element>(true, []);
 
-masterToggle() {
-  if (this.isAllSelected()) {
-    this.selection.clear();
-  }
-  else if(this.filterValue){
-  this.selection.clear();
-    this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-  } else {
-    this.dataSource.data.forEach(row => this.selection.select(row));
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
   }
 
-}
-isEmplSelected() {
-  const numSelected = this.selection1.selected.length;
-  const numRows = this.employeeDaSource.data.length;
-  return numSelected === numRows;
-}
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach(x => this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
 
-emplMasterToggle() {
-  if (this.isEmplSelected()) {
-    this.selection1.clear();
   }
-  else if(this.filterValue1){
-  this.selection1.clear();
-    this.employeeDaSource.filteredData.forEach(x=>this.selection1.select(x));
-  } else {
-    this.employeeDaSource.data.forEach(row => this.selection1.select(row));
+  isEmplSelected() {
+    const numSelected = this.selection1.selected.length;
+    const numRows = this.employeeDaSource.data.length;
+    return numSelected === numRows;
   }
 
-}
+  emplMasterToggle() {
+    if (this.isEmplSelected()) {
+      this.selection1.clear();
+    }
+    else if (this.filterValue1) {
+      this.selection1.clear();
+      this.employeeDaSource.filteredData.forEach(x => this.selection1.select(x));
+    } else {
+      this.employeeDaSource.data.forEach(row => this.selection1.select(row));
+    }
+
+  }
 }

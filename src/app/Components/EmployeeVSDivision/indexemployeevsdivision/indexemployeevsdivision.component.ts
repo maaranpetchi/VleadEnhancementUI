@@ -93,8 +93,11 @@ export class indexemployeevsdivisionComponent implements OnInit {
       next: (res) => {
         this.spinnerService.requestEnded();
 
-        this._coreService.openSnackBar('Employee deleted!', 'done');
-        this.getEmployeeList();
+        Swal.fire('Done!','Employee Deleted','success').then((response)=>{
+          if(response.isConfirmed){
+            this.getEmployeeList();
+          }
+        });
       },
       error: console.log,
     });

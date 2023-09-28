@@ -100,8 +100,12 @@ export class ViewEditScopeComponent implements OnInit {
     })).subscribe({
       next: (response: any) => {
         this.spinnerService.requestEnded();
-        if (this.data) {
-          Swal.fire('Done!', 'Scope updated successfully', 'succcess');
+        if (response.message == true) {
+          Swal.fire('Done!', 'Scope updated successfully', 'success').then((response)=>{
+            if(response.isConfirmed){
+              this.router.navigate(['/topnavbar/master-scope']);
+            }
+          });
         } else {
           return;
         }

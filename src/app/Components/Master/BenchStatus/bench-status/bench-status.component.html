@@ -3,21 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
-<body style="height: 100vh;">
-    <div class="container">
-        <!-- <div class=""> -->
-        <div class="card">
-          <div class="card-body bg-primary">
-            <div class="row">
-              <div class="col-md">
-                <h3 class="text-white">
-                  <span class="scope-text">Process</span>
-                </h3>
+<body style="height:123vh">
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+    </head>
+    
+    <body style="height: 123vh;">
+      <div class="container">
+        <div class="advance">
+          <div class="customerProfile">
+            <div class="backgroundcolor">
+              <div class="panel-heading">
+                <h2 class="panel-title" style="color:#fff;">
+                   Bench Status   </h2>
               </div>
-            </div>
-            <div class="card-body bg-white">
-              <div class="container">
+    
+              <div class="table-container">
+                <div class="description">
                 <div class="row">
                   <div class="col-3">Description  <span class="text-danger">*</span></div>
                   <div class="col-6">
@@ -28,7 +37,6 @@
                   </div>
                 </div>
               </div>
-              <div class="table-container mt-3">
                 <table matSort id="custom-table"
                 class="table table-sm table-responsive table table-bordered text-center" mat-table [dataSource]="dataSource" >
     
@@ -72,10 +80,16 @@
                   </ng-container>
                 </table>
               </div>
-            </div>
+              <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
-        <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
       </div>
+    
+    </div>
+    
+    </body>
+    
+    </html>
+    
 </body>
 </html>

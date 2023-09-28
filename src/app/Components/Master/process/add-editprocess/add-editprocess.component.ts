@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { ProcessService } from 'src/app/Services/Process/process.service';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-add-editprocess',
   templateUrl: './add-editprocess.component.html',
@@ -20,7 +22,8 @@ export class AddEditprocessComponent implements OnInit {
     private _Service: ProcessService,
     private route: Router,
     private _coreService: CoreService,
-    private loginservice: LoginService
+    private loginservice: LoginService,
+    private spinnerService:SpinnerService
   ) {}
 
   ngOnInit() {
@@ -307,6 +310,7 @@ export class AddEditprocessComponent implements OnInit {
         },
       },
     };
+        this.spinnerService.requestStarted();
     this._Service.createProcess(saveData).subscribe({
       next: (response) => {
         if (response === true) {
@@ -558,8 +562,14 @@ export class AddEditprocessComponent implements OnInit {
         },
       },
     };
-    this._Service.createProcess(updateData).subscribe({
+    this.spinnerService.requestStarted();
+    this._Service.createProcess(updateData).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(response)=>{
+        this.spinnerService.requestEnded();
+
         if(response === true){
           this.route.navigate(['/topnavbar/processMaster']);
           this._coreService.openSnackBar('process Updated!');

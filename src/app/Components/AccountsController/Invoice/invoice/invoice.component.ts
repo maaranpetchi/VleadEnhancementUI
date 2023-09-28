@@ -12,6 +12,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { DetailsComponent } from '../details/details.component';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
@@ -225,7 +226,10 @@ export class InvoiceComponent implements OnInit {
       "clientId": this.myForm.value?.ClientId,
       "fromDate": this.myForm.value?.fromDate,
       "toDate": this.myForm.value?.toDate
-    }).subscribe((results: any) => {
+    }).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((results: any) => {
       // Set the search results in the data source
       this.spinnerService.requestEnded();
       this.dataSource.data = results.getInvoice;
@@ -239,7 +243,10 @@ export class InvoiceComponent implements OnInit {
   onInvoiceCalculation(item: any) {
     // Call the API to get the search results
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'Invoice/GenerateInvoice', item).subscribe((results: any) => {
+    this.http.post<any>(environment.apiURL + 'Invoice/GenerateInvoice', item).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((results: any) => {
       // Set the search results in the data source
       this.spinnerService.requestEnded();
 
@@ -261,14 +268,15 @@ export class InvoiceComponent implements OnInit {
   ];
 
   getGeneratedInvoice() {
-
-
     let payload = {
       "clientId": this.ClientGeneratedId
     }
     this.spinnerService.requestStarted();
 
-    this.http.post<any>(environment.apiURL + `Invoice/GetCalculatedPrice`, payload).subscribe(result => {
+    this.http.post<any>(environment.apiURL + `Invoice/GetCalculatedPrice`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(result => {
       this.spinnerService.requestEnded();
       this.GenratedInvoicedataSource.data = result.getInvoice;
       this.GenratedInvoicedataSource.paginator = this.table1Paginator;
@@ -280,7 +288,10 @@ export class InvoiceComponent implements OnInit {
 
   getConfirmInvoiceTable() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Invoice/GetAllInvoiceMasterDetails`).subscribe(results => {
+    this.http.get<any>(environment.apiURL + `Invoice/GetAllInvoiceMasterDetails`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.spinnerService.requestEnded();
       this.ConfirmInvoicedataSource = new MatTableDataSource(results.getInvoice);
       this.ConfirmInvoicedataSource.sort = this.sort;
@@ -355,7 +366,10 @@ export class InvoiceComponent implements OnInit {
         }
         this.spinnerService.requestStarted();
 
-        this.http.post<any>(environment.apiURL + `Invoice/GenerateReCalculateInvoice`, payload).subscribe(results => {
+        this.http.post<any>(environment.apiURL + `Invoice/GenerateReCalculateInvoice`, payload).pipe(catchError((error) => {
+          this.spinnerService.requestEnded();
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+        })).subscribe(results => {
           this.spinnerService.requestEnded();
 
           Swal.fire(
@@ -402,7 +416,10 @@ export class InvoiceComponent implements OnInit {
         "jobStatusId": 0
       }
       this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + `Invoice/GenerateConfirmInvoice`, payload).subscribe(results => {
+      this.http.post<any>(environment.apiURL + `Invoice/GenerateConfirmInvoice`, payload).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe(results => {
         this.spinnerService.requestEnded();
 
         if (results.stringList = "VoucherControl is Missing") {
@@ -419,8 +436,6 @@ export class InvoiceComponent implements OnInit {
             'success'
           )
         }
-
-
       })
     }
   }

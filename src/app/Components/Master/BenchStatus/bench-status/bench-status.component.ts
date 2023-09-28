@@ -3,9 +3,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { BenchStatusService } from 'src/app/Services/Benchstatus/bench-status.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-bench-status',
@@ -26,16 +29,22 @@ export class BenchStatusComponent implements OnInit {
   constructor(
     private loginservice: LoginService,
     private _service: BenchStatusService,
-    private _coreService: CoreService // private modalService: NgbModal
-  ) {}
+    private _coreService: CoreService,// private modalService: NgbModal
+    private spinnerService: SpinnerService
+  ) { }
   ngOnInit(): void {
     this.viewBenchStatus();
     this.responseData = history.state.data;
   }
 
   viewBenchStatus() {
-    this._service.viewBenchStatusDescription().subscribe({
+    this.spinnerService.requestStarted();
+    this._service.viewBenchStatusDescription().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (data) => {
+        this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -45,18 +54,30 @@ export class BenchStatusComponent implements OnInit {
       },
     });
   }
-id:any;
+  id: any;
   openEditForm(row: any) {
-    this._service.editBenchStatus(row).subscribe((response: any) => {
+    this.spinnerService.requestStarted();
+
+    this._service.editBenchStatus(row).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response: any) => {
+      this.spinnerService.requestEnded();
       this.editDescription = response.description;
-      this.id=response.id;
+      this.id = response.id;
     });
   }
 
   deleteBenchStatus(id: any) {
-    this._service.deleteBenchStatusDescription(id).subscribe({
+    this.spinnerService.requestStarted();
+
+    this._service.deleteBenchStatusDescription(id).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (res) => {
-        this._coreService.openSnackBar('Error Category deleted!', 'done');
+        this.spinnerService.requestEnded();
+        Swal.fire('Done!', 'Data deleted Successfully', 'success');
         if (res.status === 'success') {
           this.viewBenchStatus();
         }
@@ -68,9 +89,9 @@ id:any;
     });
   }
   upateChanges() {
-     
+
     let updateData = {
-      id:this.id,
+      id: this.id,
       description: this.editDescription,
       division: 'string',
       createdBy: this.loginservice.getUsername(),
@@ -79,20 +100,30 @@ id:any;
       updatedUtc: null,
       isDeleted: false,
     };
-    this._service.updateBenchStatus(updateData).subscribe({
-      next:(response)=>{
-        if(response.message === "Updated Bench Status Successfully....!"){
-          this._coreService.openSnackBar('Updated Bench Status Successfully....!');
-          this.viewBenchStatus();
+    this.spinnerService.requestStarted();
+
+    this._service.updateBenchStatus(updateData).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (response) => {
+        this.spinnerService.requestEnded();
+
+        if (response.message === "Updated Bench Status Successfully....!") {
+          Swal.fire('Donr!', 'Updated Bench Status Successfully', 'success').then((response) => {
+            if (response.isConfirmed) {
+              this.viewBenchStatus();
+            }
+          });
           // window.location.reload();
         }
-        else{
+        else {
           return
         }
       },
-      error:(err)=>{
+      error: (err) => {
         throw new Error('API Error', err);
-        
+
       }
     })
   }

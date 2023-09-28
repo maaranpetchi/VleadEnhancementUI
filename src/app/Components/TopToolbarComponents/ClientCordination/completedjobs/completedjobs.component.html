@@ -13,7 +13,7 @@
             <h3 style="font-family:'Times New Roman', Times, serif">Completed Jobs ({{CompletedJobsCount ? CompletedJobsCount:0}})</h3>
             <mat-tab-group dynamicHeight (selectedTabChange)="getCompletedJobData()" >
                 <mat-tab  style="width:300px" label="{{ 'Ready To Upload Jobs (' + (CompletedJobsCount ? CompletedJobsCount:0) + ')' }}">
-                    <div class="example-small-box mat-elevation-z8">
+                    <div class="table-container">
                         <!-- <mat-form-field> 
                             <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
                         </mat-form-field> -->

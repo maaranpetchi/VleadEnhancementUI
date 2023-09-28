@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-customervsprocess',
   templateUrl: './customervsprocess.component.html',
@@ -81,26 +82,37 @@ export class CustomervsprocessComponent implements OnInit {
   });
   ngOnInit(): void {
     this.getEmployeeList();
+    this.getDepartmentList();
+    this.getAllDDL();
+    this.getAllCustomers();
+  }
+  getDepartmentList() {
+    this.spinnerService.requestStarted();
     this._empService.getOptions()
       .subscribe(options => {
         this.spinnerService.requestEnded();
         this.departmentList = options;
       });
-
-    this.http.get<any>(environment.apiURL + 'CustomerVsProcess/GetAllddlList').subscribe(data => {
-      this.data = data;
-
-    });
-
-    this.http.get<any[]>(environment.apiURL + 'user/getallcustomers')
-      .subscribe(customers => {
-        this.customers = customers.sort((a, b) => a.name.localeCompare(b.name));
-      });
-
   }
 
+  getAllDDL() {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + 'CustomerVsProcess/GetAllddlList').subscribe(data => {
+      this.spinnerService.requestEnded();
+      this.data = data;
+    });
+  }
+
+  getAllCustomers() {
+    this.spinnerService.requestStarted();
+    this.http.get<any[]>(environment.apiURL + 'user/getallcustomers')
+      .subscribe(customers => {
+        this.spinnerService.requestEnded();
+        this.customers = customers.sort((a, b) => a.name.localeCompare(b.name));
+      });
+  }
   onOptionSelected(event: any, myForm: FormGroup) {
-  
+
     if (myForm.value.customerscopestatus.length > 0) {
       this._empService.changeapi({
         "customerId": myForm.value.customer == '' ? 0 : myForm.value.customer,
@@ -205,7 +217,10 @@ export class CustomervsprocessComponent implements OnInit {
       "nextProcessId": this.myForm.value.NextProcess,
       "statusId": this.myForm.value.status,
       "createdBy": parseInt(this.loginservice.getUsername())
-    }).subscribe({
+    }).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+    })).subscribe({
       next: (response) => {
         // clear form fields
         this.spinnerService.requestEnded();

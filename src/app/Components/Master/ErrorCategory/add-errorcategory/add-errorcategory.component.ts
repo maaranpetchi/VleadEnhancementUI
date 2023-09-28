@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { ErrorCategoryService } from 'src/app/Services/Errorcategory/error-category.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
@@ -24,7 +26,8 @@ export class AddErrorcategoryComponent implements OnInit {
     private _service: ErrorCategoryService,
     private http: HttpClient,
     private _coreService: CoreService,
-    private loginservice: LoginService
+    private loginservice: LoginService,
+    private spinnerService:SpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -290,7 +293,10 @@ export class AddErrorcategoryComponent implements OnInit {
       .post(
         environment.apiURL+'ErrorCategory/CreateErrorCategory',
         saveErrorCategory
-      )
+      ).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+      }))
       .subscribe({
         next: (response: any) => {
           Swal.fire('Done!', 'Scope Detail Added', 'success');

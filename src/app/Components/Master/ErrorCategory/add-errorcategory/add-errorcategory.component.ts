@@ -295,7 +295,7 @@ export class AddErrorcategoryComponent implements OnInit {
         saveErrorCategory
       ).pipe(catchError((error) => {
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       }))
       .subscribe({
         next: (response: any) => {

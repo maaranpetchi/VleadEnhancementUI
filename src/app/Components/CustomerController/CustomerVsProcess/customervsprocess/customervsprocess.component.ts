@@ -219,7 +219,7 @@ export class CustomervsprocessComponent implements OnInit {
       "createdBy": parseInt(this.loginservice.getUsername())
     }).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next: (response) => {
         // clear form fields

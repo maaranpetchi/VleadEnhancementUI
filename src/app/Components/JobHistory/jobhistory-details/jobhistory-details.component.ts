@@ -39,7 +39,7 @@ private spinnerservice:SpinnerService
     this.spinnerservice.requestStarted();
     this.http.post<any>(environment.apiURL+'JobOrder/getJobHistory',this.data.jId).pipe(catchError((error)=>{
       this.spinnerservice.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
 
     })).subscribe(data => {
       this.spinnerservice.requestEnded();
@@ -57,7 +57,7 @@ private spinnerservice:SpinnerService
           `Allocation/getFileNames/${path}`
       ).pipe(catchError((error)=>{
         this.spinnerservice.requestEnded();
-        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       }))
       .subscribe((response: any) => {
         this.spinnerservice.requestEnded();

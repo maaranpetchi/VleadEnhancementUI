@@ -199,7 +199,7 @@ export class CustomerSalesmappingComponent implements OnInit {
             savecustomervsSalesemp
           ).pipe(catchError((error) => {
             this.spinner.requestEnded();
-            return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+            return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
           }))
           .subscribe((response: any) => {
             if (response.message === "Salesperson assigned successfully") {

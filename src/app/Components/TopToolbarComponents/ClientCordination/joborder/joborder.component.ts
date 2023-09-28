@@ -4,7 +4,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { ClientcordinationService } from 'src/app/Services/CoreStructure/ClientCordination/clientcordination.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
@@ -28,7 +31,7 @@ export class JoborderComponent implements OnInit {
     // Prevent Saturday and Sunday from being selected.
     return day !== 0 && day !== 6;
   };
-  constructor(private http: HttpClient, private coreService: CoreService, private _fb: FormBuilder, private loginservice: LoginService, private clientcordinationservice: ClientcordinationService,private router:Router) {
+  constructor(private http: HttpClient, private coreService: CoreService, private _fb: FormBuilder, private loginservice: LoginService, private clientcordinationservice: ClientcordinationService,private router:Router,private spinnerservice:SpinnerService) {
     this.joborder = this._fb.group({
       jobno: [{value:'',disabled:true}],
       jobdate: [{ value: new Date().toLocaleDateString('en-GB'), disabled: true }],
@@ -126,11 +129,23 @@ export class JoborderComponent implements OnInit {
     });
 
   }
+
+  showUploadedFiles:boolean=false;
   selectedFile: File[] = [];
+  fileInfos: { file: File; name: string }[] = [];
 
   onFileSelected(event: any) {
+    this.showUploadedFiles = true;
     this.selectedFile = [event.target.files[0],...this.selectedFile];//store the selected file in selectdfile
+    this.fileInfos = [];
+
+    for (let i = 0; i < this.selectedFile.length; i++) {
+      const file = this.selectedFile[i];
+      this.fileInfos.push({ file, name: file.name });
+    }
+  
   }
+  
 
 
 
@@ -147,8 +162,6 @@ export class JoborderComponent implements OnInit {
     if (selectedContact) {
       const contactId = selectedContact.contactId;
       const contactName = selectedContact.contactName;
-   
-      // Perform any additional actions with the selected contact ID and name
     }
   }
 
@@ -163,7 +176,9 @@ export class JoborderComponent implements OnInit {
   }
 
 
-
+  removeFile(index: number) {
+    this.fileInfos.splice(index, 1);
+  }
 
   onFormSubmit() {
     if (this.selectedFile.length === 0) {
@@ -212,7 +227,7 @@ export class JoborderComponent implements OnInit {
       "dateofUpload": new Date().toISOString,
       "dateofClose": new Date().toISOString,
       "customerJobType": "string",
-      "jobDate": new Date().toISOString,
+      "jobDate": new Date().toISOString  ,
       "clientOrderId": 0,
       "viewDatas": null,
       "createdBy": this.loginservice.getUsername(),
@@ -261,10 +276,10 @@ export class JoborderComponent implements OnInit {
       "imprintColors2": this.joborder.value.imprintcolor2,
       "imprintColors3": this.joborder.value.imprintcolor3,
       "virtualProof": this.joborder.value.virtualproof,
-      "dateofUpload": new Date().toISOString,
-      "dateofClose": new Date().toISOString,
-      "customerJobType": "string",
-      "jobDate":this.joborder.value.referencedate,
+      "dateofUpload": new Date().toISOString(),
+      "dateofClose": new Date().toISOString(),
+      "customerJobType": this.selectedClientStatus,
+      "jobDate":this.getCurrentDate(),
       "clientOrderId": 0,
       "viewDatas": [],
       "createdBy": this.loginservice.getUsername(),
@@ -274,33 +289,57 @@ export class JoborderComponent implements OnInit {
       "dateofDelivery": new Date().toISOString,
       "getAllValues": []
     }
+    this.spinnerservice.requestStarted();
+
+    this.http.post<any>(environment.apiURL + 'JobOrder/InternalOrder', jobordervalues)
+      .pipe(
+        catchError((error) => {
+          this.spinnerservice.requestEnded();
+          console.error('API Error:', error);
    
-    this.http.post<any>(environment.apiURL+`JobOrder/InternalOrder`, jobordervalues).subscribe(data => {
-      if(data.message ==null){
-      const orderId = data.orderId;
-      const processId = data.processId;
-      const statusId = data.statusId;
-   //  if (this.selectedFile?.length > 0) {
-      const fd = new FormData();
-      for (let i = 0; i < this.selectedFile.length; i++) {
-        fd.append('FormCollection[]', this.selectedFile[i]);
-      }
-        this.http.post<any>(environment.apiURL+`File/uploadFiles/${orderId}/0/${processId}/${statusId}/1/${processId}/${statusId}`, fd).subscribe(filedata => {
-          let submitted = false;
-          let orderDetails: any = {};
-          this.selectedFile = [];
-          this.joborder.reset();
-          this.coreService.openSnackBar("");
-          Swal.fire(
-            'Done!',
-            'Job Order added successfully',
-            'success'
-          )
-        });
-      } 
-     
-    //}
-    });
+          return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        })
+      )
+      .subscribe((data) => {
+        if (data.message == null) {
+          const orderId = data.orderId;
+          const processId = data.processId;
+          const statusId = data.statusId;
+          const fd = new FormData();
+          for (let i = 0; i < this.selectedFile.length; i++) {
+            fd.append('FormCollection[]', this.selectedFile[i]);
+          }
+          this.http
+            .post<any>(
+              environment.apiURL +
+                `File/uploadFiles/${orderId}/0/${processId}/${statusId}/1/${processId}/${statusId}`,
+              fd
+            )
+            .subscribe((filedata) => {
+              this.spinnerservice.requestEnded();
+              let submitted = false;
+              let orderDetails: any = {};
+              this.selectedFile = [];
+              if(filedata == true){
+              Swal.fire('Done!', 'Job Order added successfully', 'success').then((response)=>{
+                if(response.isConfirmed){
+                  this.router.navigate(['/topnavbar/clientindex']);
+
+                }
+              });
+            }
+            else{
+              Swal.fire('Alert!', 'Job Order Not added successfully', 'error').then((response)=>{
+                if(response.isConfirmed){
+                  this.router.navigate(['/topnavbar/clientindex']);
+
+                }
+              });
+            }
+            });
+        }
+    //
+  });
         
    
   }

@@ -48,7 +48,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     }
   }
   fetchViewData() {
-
     this.resignShow = true;
     this.submitButton = false;
     this.updateButton = false;
@@ -350,64 +349,64 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "employeeCode": this.employeeCode,
       "employeeName": this.employeeName,
       "departmentId": this.selectedDepartment,
-      "designationId": this.selectedDestination,
+      "designationId": this.selectedDestination ? this.selectedDestination:'',
       "dateOfJoining": this.doj,
       "dateOfBirth": this.dob,
-      "bloodGroup": this.BloodGroup,
-      "gender": this.gender,
-      "maritalStatus": this.martialStatus,
+      "bloodGroup": this.BloodGroup ? this.BloodGroup:'',
+      "gender": this.gender ? this.gender :'',
+      "maritalStatus": this.martialStatus ? this.martialStatus:'',
       "companyId": 0,
       "profiencyId": this.proficiency,
       "emergencyContactName": this.emergencyContactName,
-      "emergencyContactNo": this.emergencyContactName,
-      "email": this.officialemailaddress,
+      "emergencyContactNo": this.emergencyMobilenumber,
+      "email": this.officialemailaddress ? this.officialemailaddress:'',
       "personalEmail": this.personalEmail,
       "createdUTC": new Date().toISOString,
       "createdBy": this.loginservice.getUsername(),
       "updatedUTC": new Date().toISOString,
       "updatedBy": 0,
-      "reportingManager1": this.reportingManager1,
-      "reportLeader1": this.reportingLeader1,
-      "reportingManager2": this.reportingManager2,
-      "reportingLeader2": this.reportingLeader2,
-      "address1": this.presentAddress1,
-      "address2": this.presentAddress2,
-      "address3": this.presentaddress3,
-      "address11": this.permanentAddress1,
-      "address22": this.permanentAddress2,
-      "address33": this.permanentaddress3,
+      "reportingManager1": this.reportingManager1 ? this.reportingManager1:'',
+      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1:'',
+      "reportingManager2": this.reportingManager2 ? this.reportingManager2:'',
+      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2:'',
+      "address1": this.presentAddress1 ? this.presentAddress1:'',
+      "address2": this.presentAddress2 ? this.presentAddress2:'',
+      "address3": this.presentaddress3 ? this.presentaddress3:'',
+      "address11": this.permanentAddress1 ? this.permanentAddress1:'',
+      "address22": this.permanentAddress2 ? this.permanentAddress2:'',
+      "address33": this.permanentaddress3 ? this.permanentaddress3:'',
       "locationId": 0,
       "locationId1": 0,
       "addressType": "",
       "mobileNo": this.mobileNumber,
-      "phoneNo": this.phonenum,
+      "phoneNo": this.phonenum ? this.phonenum:'',
       "resignReasons": 0,
       "dateOfResignation": this.dor,
       "processCode":
-        this.employeeProcess,
-      "result": this.outsource,
+        this.employeeProcess ? this.employeeProcess:'', 
+      "result": this.outsource ? this.outsource:'',
       "roleDescription": "",
       "isOutsource": true,
       "empRolesList": [
         {
-          "roleDescription": this.roleDescription,
-          "roleId": this.roleId,
-          "createdBy": this.loginservice.getUsername(),
+          "roleDescription": this.roleDescription ? this.roleDescription:'',
+          "roleId": this.roleId ,
+          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername():'',
           "updatedBy": 0
         }
       ],
       "empHierarchyList": [
         {
-          "subEmpId": this.subEmpId,
-          "subEmpName": this.subEmpName,
-          "createdBy": this.loginservice.getUsername(),
+          "subEmpId": this.subEmpId ? this.subEmpId:'',
+          "subEmpName": this.subEmpName ? this.subEmpName:'',
+          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername():'',
         }
       ],
       "isInternetConnection": this.internetAvailable,
       "isSystem": this.systemlaptop,
-      "netWorkType": this.internetType,
-      "serviceProvider": this.ServiceProvider,
-      "systemConfig": this.systemconfiguration,
+      "netWorkType": this.internetType ? this.internetType:'',
+      "serviceProvider": this.ServiceProvider ? this.ServiceProvider:'',
+      "systemConfig": this.systemconfiguration ? this.systemconfiguration:'',
     }
     this.http.post<any>(environment.apiURL + `Employee/AddEmployee`, payload).subscribe({
       next: (val: any) => {
@@ -417,8 +416,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           'Done!',
           'Employee Added Succesfully',
           'success'
-        )   ,
-             this.router.navigate(['/topnavbar/Emp-Empcontroller']);
+        ).then((respone)=>{
+          if(respone.isConfirmed){
+            this.router.navigate(['/topnavbar/Emp-Empcontroller']);
+          }
+        })
       },
       error: (err: any) => {
         Swal.fire(
@@ -482,7 +484,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "resignReasons": this.resignReason,
       "dateOfResignation": this.dor,
       "processCode": this.employeeProcess,
-      "result": this.outsource,
+      "result": this.outsource ? this.outsource:'',
       "roleDescription": "",
       "isOutsource": true,
       "empRolesList": [
@@ -513,9 +515,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           'Updated!',
           'Employee updated successfully',
           'success'
-        )   ,
-        this.coreservice.openSnackBar('Employee updated successfully');
-        this.router.navigate(['/topnavbar/Emp-Empcontroller']);
+        ).then((update)=>{
+          if(update.isConfirmed){
+            this.router.navigate(['/topnavbar/Emp-Empcontroller'])
+          }
+        });
       },
       error: (err: any) => {
         Swal.fire(

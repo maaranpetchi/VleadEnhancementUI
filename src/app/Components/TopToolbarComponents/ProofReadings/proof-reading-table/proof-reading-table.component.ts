@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProofjobdetailpopupComponent } from '../proofjobdetailpopup/proofjobdetailpopup.component';
 import { ProofjobhistorypopupComponent } from '../proofjobhistorypopup/proofjobhistorypopup.component';
 import { QualityWorkflowComponent } from '../../Quality/quality-workflow/quality-workflow.component';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2/src/sweetalert2.js';
 import { catchError } from 'rxjs';
 
 

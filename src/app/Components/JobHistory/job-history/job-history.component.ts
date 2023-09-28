@@ -44,13 +44,20 @@ export class JobHistoryComponent implements OnInit {
 
   displayedColumns: string[] = [
     'selected',
+    'id',
     'jobnumber',
-    'jobdate',
+    'estqueryDate',
     'department',
     'client',
+    'clientstatus',
     'jobstatus',
+    'projectCode',
     'filename',
-    'jobdate1',
+    'fileinward',
+    'filereceived',
+    'process',
+    'status',
+    'comments',
 
   ];
 
@@ -145,6 +152,8 @@ export class JobHistoryComponent implements OnInit {
       this.spinnerService.requestStarted();
       this.http.post<any>(environment.apiURL + 'Allocation/getJobMovementJobsWithclientIdfileName', jobOrder).subscribe({
         next: (response) => {
+          console.log(response);
+          
           this.spinnerService.requestEnded();
           this.dataSource.data = response.jobMovement;
           this.recordCount = response.jobMovement.length;

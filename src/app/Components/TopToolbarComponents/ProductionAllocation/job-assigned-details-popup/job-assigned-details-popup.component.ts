@@ -6,7 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { saveAs } from 'file-saver';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
@@ -41,6 +43,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     private loginservice: LoginService,
     private _coreService: CoreService,
     private router: Router,
+    private spinnerService: SpinnerService,
     public dialogRef: MatDialogRef<JobAssignedDetailsPopupComponent>
   ) {
   }
@@ -176,9 +179,10 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
   zipFiles(): void {
     let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
+
     const fileUrl =
-      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; 
-      // Replace with the actual URL of your zip file
+      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
+
     // Use HttpClient to make a GET request to fetch the zip file
     this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
       this.saveFile(response);
@@ -231,6 +235,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     const pathParts = filePath.split('/');
     return pathParts[pathParts.length - 1];
   }
+
   onSubmit() {
     if (this.selectedQureryStatus == 6) {
       this.processMovement();
@@ -243,7 +248,6 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
 
   processMovement() {
     const apiUrl = environment.apiURL + `Allocation/processMovement`;
-
     let saveData = {
       id: 0,
       processId: this.loginservice.getProcessId(),
@@ -301,13 +305,30 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    this.http.post<any>(apiUrl, saveData).subscribe((response) => {
+    this.spinnerService.requestStarted();
+    try {
+    this.http.post<any>(apiUrl, saveData).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe((response) => {
       if (response.success === true) {
         Swal.fire('Done!', response.message, 'success');
       } else if (response.success === false) {
         Swal.fire('Error!', response.message, 'error');
       }
     });
+  }
+  catch (error) {
+    this.spinnerService.resetSpinner();
+    console.error('API Error:', error);
+    Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+  } finally {
+    this.spinnerService.resetSpinner();
+    // Perform any cleanup or finalization here
+  }
   }
 
   changeEstTime() {
@@ -367,8 +388,16 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
+    this.spinnerService.requestStarted();
+    try {
     this.http
-      .post<any>(environment.apiURL + 'Allocation/processMovement', estTimeData)
+      .post<any>(environment.apiURL + 'Allocation/processMovement', estTimeData).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
+      )
       .subscribe(
         (response) => {
           if (response.success === true) {
@@ -384,18 +413,21 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
           } else if (response.success === false) {
             Swal.fire('Done!', 'Job Sent As Query', 'error');
           }
-
-          // Handle the API response
         },
         (error) => {
           Swal.fire('info', error, 'info');
-
-          // Handle the API error
         }
       );
+    }
+    catch (error) {
+      this.spinnerService.resetSpinner();
+      console.error('API Error:', error);
+      Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    } finally {
+      this.spinnerService.resetSpinner();
+    }
   }
 
-  //////////////////Popupsubmit///////////////////
   getQueryDetailList() {
 
     this.http
@@ -546,46 +578,4 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
         );
     }
   }
-
-  ////////////Statuschange//////////
-  // StatusChange() {
-  //   if (this.selectedQureryStatus == 8) {
-  //     if (this.jobCommonDetails.processId == 4) {
-  //       this.EstimatedTime = true;
-  //       this.remarksdata = true;
-  //       this.EmployeData = true;
-  //       this.http.get<any>(environment.apiURL + `Allocation/GetQuerySPDetailsForQA/${this.jobCommonDetails.jobCommonDetails.jid}`).subscribe(result => {
-  //         this.QueryDetailsList = result;
-  //       })
-  //     }
-  //     else if (this.jobCommonDetails.processId == 6) {
-  //       this.EstimatedTime = true;
-  //       this.remarksdata = true;
-  //       this.EmployeData = true;
-  //       this.http.get<any>(environment.apiURL + `Allocation/GetQuerySPDetailsForQA/${this.jobCommonDetails.jobCommonDetails.jid}`).subscribe(result => {
-  //         this.QueryDetailsList = result;
-  //       })
-  //     }
-  //     else {
-  //       var datas = {
-  //         WFTId: this.jobCommonDetails.tranId,
-  //         WFMId: this.jobCommonDetails.tranMasterId,
-  //         JId: this.jobCommonDetails.jId
-  //       }
-  //       this.http.post<any>(environment.apiURL + `ClientOrderService/QueryDetailspost`, datas).subscribe(result => {
-  //         this.QueryDetailsList = result.querylist;
-  //         if (this.QueryDetailsList == null) {
-  //           this.EstimatedTime = true;
-  //           this.remarksdata = true;
-  //           this.EmployeData = true;
-  //         }
-  //         else {
-  //           this.remarksdata = true;
-  //           this.EstimatedTime = false;
-  //           this.EmployeData = false;
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
 }

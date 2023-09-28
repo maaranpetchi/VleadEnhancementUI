@@ -244,7 +244,8 @@
                       </div>
                     </div>
                   </th>
-                  <td mat-cell *matCellDef="let job" class="text-center"> {{ job.employeenameWithCode }} </td>
+                  <td mat-cell *matCellDef="let job" class="text-center"> <a class="text-primary"
+                    (click)="employeeProduction(job)"> {{ job.employeenameWithCode }} </a></td>
                 </ng-container>
                 <ng-container matColumnDef="allocatedEmployee">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>

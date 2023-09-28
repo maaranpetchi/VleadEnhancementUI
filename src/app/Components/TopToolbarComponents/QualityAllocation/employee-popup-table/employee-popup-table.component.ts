@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { error } from 'jquery';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 
 @Component({
@@ -35,7 +36,8 @@ export class EmployeePopupTableComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
-    private loginservice: LoginService
+    private loginservice: LoginService,
+    private spinnerService: SpinnerService,
   ) {}
   ngOnInit(): void {
     this.GetPendingJobsWithEmployeeId();
@@ -110,7 +112,7 @@ export class EmployeePopupTableComponent implements OnInit {
       trayTime: 0,
       balanceTime: 0,
     };
-
+    this.spinnerService.requestStarted();
     this.http
       .post(
         environment.apiURL + 'JobOrder/GetPendingJobsWithEmployeeId',
@@ -118,6 +120,7 @@ export class EmployeePopupTableComponent implements OnInit {
       )
       .subscribe(
         (response:any) => {
+          this.spinnerService.requestEnded();
           this.dataSource = new MatTableDataSource(response.pendingJobsWithEmployeeId);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -135,6 +138,7 @@ export class EmployeePopupTableComponent implements OnInit {
                 
         },
         (error) => {
+          this.spinnerService.resetSpinner();
           console.log(error);
         }
       );

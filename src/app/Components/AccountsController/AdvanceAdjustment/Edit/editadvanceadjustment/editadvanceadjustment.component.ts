@@ -107,34 +107,45 @@ export class EditadvanceadjustmentComponent {
 
   items: any[] = [];
 
-  addItem(itemForm) {
-    
-
+  addItem(itemForm): void {
     if (!itemForm.valid) {
       return; // prevent adding the item if the form is not valid
     }
-
+  
     if (!this.input6) {
-      return Swal.fire(
+      Swal.fire(
         'Alert!',
         'Field is required',
         'info'
-      );// prevent adding the item if the quantity field is empty
+      ); // prevent adding the item if the quantity field is empty
+      return; // exit the function after displaying the alert
     }
-
-    this.items.push({ invoicetype: this.invoicetype, selectedValue: this.selectedValue, invoiceValue: this.invoiceValue, adjustmentAmount: this.adjustmentAmount, input3: this.input3, input4: this.input4, InvoiceAmount: this.InvoiceAmount, input6: this.input6, id: this.InvoiceId });
-    this.InvoiceId = 0,
-      this.invoicetype = '';
-    this.selectedValue;
-    this.invoiceValue,
-      this.adjustmentAmount,
-      this.input3,
-      this.input4,
-      this.InvoiceAmount,
-      this.input6,
-      itemForm.reset();
-
+  
+    this.items.push({
+      invoicetype: this.invoicetype,
+      selectedValue: this.selectedValue,
+      invoiceValue: this.invoiceValue,
+      adjustmentAmount: this.adjustmentAmount,
+      input3: this.input3,
+      input4: this.input4,
+      InvoiceAmount: this.InvoiceAmount,
+      input6: this.input6,
+      id: this.InvoiceId
+    });
+  
+    this.InvoiceId = 0;
+    this.invoicetype = '';
+    this.selectedValue = '';
+    this.invoiceValue = null;
+    this.adjustmentAmount = null;
+    this.input3 = '';
+    this.input4 = '';
+    this.InvoiceAmount = null;
+    this.input6 = null;
+  
+    itemForm.reset();
   }
+  
 
   amountvalidationerror: boolean = true;
 

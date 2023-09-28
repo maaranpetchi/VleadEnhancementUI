@@ -31,15 +31,6 @@ export class BuddyProofComponent {
     this.getCount();
     this.freshJobs();
   }
-
-  // fetchData(): void {
-  //   this.http.get<any>('YOUR_API_URL').subscribe(data => {
-  //     this.dataSource = new MatTableDataSource(data);
-  //     this.dataSource.paginator = this.paginator;
-  //     this.dataSource.sort = this.sort;
-  //   });
-  // }
-  //to save the checkbox values
   selectedproduction: any[] = [];
   setAll(completed: boolean, item: any) {
     

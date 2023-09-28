@@ -14,6 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProofjobdetailpopupComponent } from '../proofjobdetailpopup/proofjobdetailpopup.component';
 import { ProofjobhistorypopupComponent } from '../proofjobhistorypopup/proofjobhistorypopup.component';
 import { QualityWorkflowComponent } from '../../Quality/quality-workflow/quality-workflow.component';
+import Swal from 'sweetalert2';
+import { catchError } from 'rxjs';
 
 
 @Component({
@@ -204,7 +206,13 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/${this.selectedValue}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/${this.selectedValue}`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe({
       next: (freshJobs) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
@@ -214,6 +222,8 @@ export class ProofReadingTableComponent implements OnInit {
       error: (err) => {
         this.spinnerService.resetSpinner();
         console.log(err);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
       }
     });
   }
@@ -224,7 +234,13 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/${this.selectedValue}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/${this.selectedValue}`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe({
       next: (revisionJobs) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(revisionJobs.getWorkflowDetails);
@@ -234,6 +250,7 @@ export class ProofReadingTableComponent implements OnInit {
       error: (err) => {
         this.spinnerService.resetSpinner();
         console.log(err);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       }
     });
   }
@@ -242,7 +259,13 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = false;
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/${this.selectedValue}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/${this.selectedValue}`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe({
       next: (reworkJobs) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(reworkJobs.getWorkflowDetails);
@@ -252,6 +275,7 @@ export class ProofReadingTableComponent implements OnInit {
       error: (err) => {
         this.spinnerService.resetSpinner();
         console.log(err);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       }
     });
   }
@@ -260,7 +284,13 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = false;
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/4/${this.selectedValue}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/4/${this.selectedValue}`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe({
       next: (quoteJobs) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(quoteJobs.getWorkflowDetails);
@@ -270,6 +300,7 @@ export class ProofReadingTableComponent implements OnInit {
       error: (err) => {
         this.spinnerService.resetSpinner();
         console.log(err);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       }
     });
   }
@@ -283,7 +314,13 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = true;
     this.displayedColumnsVisibility.end = true;
     this.displayedColumnsVisibility.bulkupload = true;
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/${this.selectedValue}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/${this.selectedValue}`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe({
       next: (bulkJobs) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(bulkJobs.getWorkflowDetails);
@@ -292,6 +329,7 @@ export class ProofReadingTableComponent implements OnInit {
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
         console.log(err);
       }
     });
@@ -301,7 +339,13 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = false;
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/${this.selectedValue}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/${this.selectedValue}`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe({
       next: (bulkUploadJobs) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(bulkUploadJobs.getWorkflowDetails);
@@ -309,8 +353,10 @@ export class ProofReadingTableComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
-        this.spinnerService.resetSpinner();
         console.log(err);
+        this.spinnerService.resetSpinner();
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
       }
     });
   }

@@ -16,6 +16,8 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { data } from 'jquery';
 import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-qualitytable',
   templateUrl: './qualitytable.component.html',
@@ -119,8 +121,23 @@ export class QualitytableComponent {
   }
 
   freshJobs() {
+    try{
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(freshdata => {
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).pipe(
+
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        // return Swal.fire({
+        //   icon: 'error', // Use 'error' icon
+        //   title: 'Alert!',
+        //   text: 'An error occurred while processing your request',
+        // });
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(freshdata => {
       this.spinnerService.requestEnded();
       
       
@@ -128,43 +145,146 @@ export class QualitytableComponent {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }catch (error) {
+    console.error('Synchronous error:', error);
+    this.spinnerService.resetSpinner();
+  }
   }
   revisionJobs() {
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/0`).subscribe(freshdata => {
+    try{
+      this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/0`).pipe(
+
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        // return Swal.fire({
+        //   icon: 'error', // Use 'error' icon
+        //   title: 'Alert!',
+        //   text: 'An error occurred while processing your request',
+        // });
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(freshdata => {
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }catch (error) {
+    console.error('Synchronous error:', error);
+    this.spinnerService.resetSpinner();
+  }
   }
   reworkJobs() {
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/0`).subscribe(freshdata => {
+    try{
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/0`).pipe(
+
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        // return Swal.fire({
+        //   icon: 'error', // Use 'error' icon
+        //   title: 'Alert!',
+        //   text: 'An error occurred while processing your request',
+        // });
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(freshdata => {
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }catch (error) {
+    console.error('Synchronous error:', error);
+    this.spinnerService.resetSpinner();
+  }
   }
   quoteJobs() {
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/4/0`).subscribe(freshdata => {
+    try{
+      this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/4/0`).pipe(
+
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        // return Swal.fire({
+        //   icon: 'error', // Use 'error' icon
+        //   title: 'Alert!',
+        //   text: 'An error occurred while processing your request',
+        // });
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(freshdata => {
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }catch (error) {
+    console.error('Synchronous error:', error);
+    this.spinnerService.resetSpinner();
+  }
   }
   scopeDisplay: boolean = false; // display a scope dropdown div
   bulkJobs() {
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/0`).subscribe(freshdata => {
+    try{
+      this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/0`).pipe(
+
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        // return Swal.fire({
+        //   icon: 'error', // Use 'error' icon
+        //   title: 'Alert!',
+        //   text: 'An error occurred while processing your request',
+        // });
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(freshdata => {
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.scopeDisplay = true;
     });
+    }catch (error) {
+    console.error('Synchronous error:', error);
+    this.spinnerService.resetSpinner();
+  }
   }
   bulkUploadJobs() {
-    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/0`).subscribe(freshdata => {
+    try{
+      this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/0`).pipe(
+
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        // return Swal.fire({
+        //   icon: 'error', // Use 'error' icon
+        //   title: 'Alert!',
+        //   text: 'An error occurred while processing your request',
+        // });
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(freshdata => {
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
+    })
+  }catch (error) {
+    console.error('Synchronous error:', error);
+    this.spinnerService.resetSpinner();
+  }
   }
 
 

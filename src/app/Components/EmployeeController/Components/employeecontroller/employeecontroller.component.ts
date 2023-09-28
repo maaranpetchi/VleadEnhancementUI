@@ -56,7 +56,7 @@ export class EmployeecontrollerComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
     })).subscribe(results => {
       this.spinnerService.requestEnded();
       this._empService.setData({ type: 'EDIT', data: results });
@@ -69,7 +69,7 @@ export class EmployeecontrollerComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
     })).subscribe(results => {
       this.spinnerService.requestEnded();
       this._empService.setViewData({ type: 'View', data: results });
@@ -84,7 +84,7 @@ export class EmployeecontrollerComponent implements OnInit {
 
     this._empService.deleteEmployee(id).pipe(catchError((error)=>{
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
     })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
@@ -118,7 +118,7 @@ export class EmployeecontrollerComponent implements OnInit {
     this.spinnerService.requestStarted();
     this._empService.getEmployeeList().pipe(catchError((error)=>{
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
     })).subscribe({
 
       next: (res) => {
@@ -158,7 +158,7 @@ export class EmployeecontrollerComponent implements OnInit {
       this.spinnerService.requestStarted();
       this.http.get<any>(environment.apiURL + `Employee/GetEmployeeWithDelete?IsDeleted=${this.isDeletedInclude ? 1 : 0}&IsResigned=${this.isResignInclude ? 1 : 0}`).pipe(catchError((error)=>{
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       })).subscribe(data => {
         this.spinnerService.requestEnded();
         this.dataSource.data = data;

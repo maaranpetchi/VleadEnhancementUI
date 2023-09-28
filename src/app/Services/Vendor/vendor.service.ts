@@ -21,7 +21,7 @@ export class VendorService {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `ITAsset/nGetVendorData`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next:(data) => {
         this.spinnerService.requestEnded();

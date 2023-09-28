@@ -61,7 +61,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
       catchError((error) => {
         this.spinnerService.requestEnded();
         console.error('API Error:', error);
-        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(data => {
       // this.table1Data =data.eEvDList ;
@@ -81,7 +81,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
       catchError((error) => {
         this.spinnerService.requestEnded();
         console.error('API Error:', error);
-        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(data => {
       this.table2Data = new MatTableDataSource(data.dEvDList);
@@ -110,7 +110,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','Error');
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
         })
       ).subscribe(response => {
         this.spinnerService.requestEnded();

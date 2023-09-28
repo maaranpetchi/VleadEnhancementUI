@@ -67,7 +67,7 @@ export class OneTimemasterComponent implements OnInit {
         environment.apiURL + `SingleEntry/getTableValue?tableName=${this.selectedOption}`
       ).pipe(catchError((error) => {
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       }))
       .subscribe((CustomerContactName) => {
         this.spinnerService.requestEnded();
@@ -105,7 +105,7 @@ export class OneTimemasterComponent implements OnInit {
     };
     this._service.oneTimemasterService(saveData).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next: (response) => {
         this.spinnerService.requestEnded();
@@ -176,7 +176,7 @@ export class OneTimemasterComponent implements OnInit {
     this.spinnerService.requestStarted();
     this._service.oneTimemasterService(deleteData).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'Error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next: (response: any) => {
         this.spinnerService.requestEnded();

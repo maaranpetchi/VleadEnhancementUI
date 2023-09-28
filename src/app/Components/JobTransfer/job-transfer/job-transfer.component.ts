@@ -135,7 +135,7 @@ export class JobTransferComponent implements OnInit {
       this.spinnerService.requestStarted();
       this._service.jobOrderDetails(jobOrder).pipe(catchError((error)=>{
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
       })).subscribe({
         next: (response) => {
           this.spinnerService.requestEnded();
@@ -174,7 +174,7 @@ this.spinnerService.requestStarted();
       this.http
         .post(environment.apiURL + `JobTransfer/ConvertDepartment`, convertdata).pipe(catchError((error)=>{
           this.spinnerService.requestEnded();
-          return Swal.fire('Alert!','An error occurred while processing your request','Error');
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
         }))
         .subscribe((response: any) => {
           this.spinnerService.requestEnded();

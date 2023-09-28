@@ -69,7 +69,7 @@
 
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header  *ngIf="this.checkIsTrue([2,1090],isAdmin)">
-          <mat-icon class="account_circle">account_circle</mat-icon> <span class="sidelabel">EMPLOYEE</span>
+          <mat-icon class="account_circle">account_circle</mat-icon> <span>EMPLOYEE</span>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item routerLink="Emp-Empcontroller"  *ngIf="this.checkIsTrue([2],isAdmin)">
@@ -84,7 +84,7 @@
       <mat-expansion-panel [class.mat-elevation-z0]="true"
         *ngIf="this.checkIsTrue([10,11,1074,12,13,14 ], isAdmin )">
         <mat-expansion-panel-header>
-          <mat-icon class="account_circle">account_circle</mat-icon> <span class="sidelabel">CUSTOMER</span>
+          <mat-icon class="account_circle">account_circle</mat-icon> <span >CUSTOMER</span>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a *ngIf="this.checkIsTrue([13],isAdmin)" mat-list-item routerLink="cus-cusvsemp">
@@ -98,7 +98,7 @@
 
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header  *ngIf="this.checkIsTrue([1047,38,3, 16, 17,4,5, 6, 7,18,19,37,1048,1049,1050,1051,1073 ], isAdmin)">
-          <mat-icon class="account_circle">account_circle</mat-icon> <span class="sidelabel">ACCOUNTS</span>
+          <mat-icon class="account_circle">account_circle</mat-icon> <span >ACCOUNTS</span>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item  *ngIf="this.checkIsTrue([1063], isAdmin)" routerLink="acc-pricing">
@@ -137,7 +137,7 @@
 
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header  *ngIf="this.checkIsTrue([53,1063,50,51,52,1067,1076], isAdmin)">
-          <mat-icon class="account_circle">account_circle</mat-icon> <span class="sidelabel">SALES</span>
+          <mat-icon class="account_circle">account_circle</mat-icon> <span>SALES</span>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item routerLink="pricing"  *ngIf="this.checkIsTrue([25,], isAdmin)">
@@ -167,7 +167,7 @@
 
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header *ngIf="this.checkIsTrue([8,9,11,12,13,14,16,17,19,20,21,22,23,24,25,26,27,28,29,2075], isAdmin)">
-          <mat-icon class="account_circle">account_circle</mat-icon> <span class="sidelabel">MASTER</span>
+          <mat-icon class="account_circle">account_circle</mat-icon> <span>MASTER</span>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item routerLink="master-user" *ngIf="this.checkIsTrue([9], isAdmin)">
@@ -196,7 +196,7 @@
 
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header  *ngIf="this.checkIsTrue([1054,1055,1056], isAdmin)">
-          <mat-icon class="account_circle">account_circle</mat-icon> <span class="sidelabel">BENCH</span>
+          <mat-icon class="account_circle">account_circle</mat-icon> <span>BENCH</span>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item routerLink="benchOptions" *ngIf="this.checkIsTrue([1055], isAdmin)">
@@ -206,38 +206,38 @@
       </mat-expansion-panel>
 
       <mat-list-item routerLink="JobFilesLocationMaster" *ngIf="this.checkIsTrue([1101], isAdmin)">
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">JOB FILES LOCATION MASTER</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>JOB FILES LOCATION MASTER</span>
       </mat-list-item>
       
       <mat-list-item routerLink="clientindex/completedjobs" >
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">TRANSITION FILES</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>TRANSITION FILES</span>
       </mat-list-item>
 
       <mat-list-item routerLink="ITAsset" *ngIf="this.checkIsTrue([1101], isAdmin)">
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">IT ASSET</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >IT ASSET</span>
       </mat-list-item>
 
       <mat-list-item routerLink="customerNorms">
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">CUSTOMER NORMS</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>CUSTOMER NORMS</span>
       </mat-list-item>
       <mat-list-item routerLink="attendance">
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">ATTENDANCE</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>ATTENDANCE</span>
       </mat-list-item>
 
       <mat-list-item routerLink="vendor" *ngIf="this.checkIsTrue([1102], isAdmin)">
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">VENDOR</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>VENDOR</span>
       </mat-list-item>
 
       <mat-list-item routerLink="bank" *ngIf="this.checkIsTrue([1103], isAdmin)" >
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">BANK</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>BANK</span>
       </mat-list-item>
       <mat-list-item routerLink="CustomerVsChecklist" *ngIf="this.checkIsTrue([1106], isAdmin)">
-        <mat-icon class="push_pin">push_pin</mat-icon> <span class="sidelabel">CUSTOMER VS CHECKLIST</span>
+        <mat-icon class="push_pin">push_pin</mat-icon> <span>CUSTOMER VS CHECKLIST</span>
       </mat-list-item>
 
 
       <mat-list-item routerLink="indexskillset" >
-        <mat-icon class="push_pin">push_pin</mat-icon><span class="sidelabel">EMPLOYEE VS SKILLSET</span>
+        <mat-icon class="push_pin">push_pin</mat-icon><span>EMPLOYEE VS SKILLSET</span>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>

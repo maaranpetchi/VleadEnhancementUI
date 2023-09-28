@@ -11,6 +11,8 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { QuotationPopupComponent } from '../quotation-popup/quotation-popup.component';
 import saveAs from 'file-saver';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-production-quotation',
   templateUrl: './production-quotation.component.html',
@@ -29,6 +31,7 @@ export class ProductionQuotationComponent implements OnInit{
     private http: HttpClient,
     private loginservice: LoginService,
     private _coreService: CoreService,
+    private spinnerService: SpinnerService,
     private router: Router,
     public dialogRef: MatDialogRef<ProductionQuotationComponent>,
     
@@ -274,8 +277,20 @@ export class ProductionQuotationComponent implements OnInit{
       fileReceivedDate: '2023-07-01T10:02:55.095Z',
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
-    };
-    this.http.post<any>(apiUrl, saveData).subscribe((response) => {
+    }
+    try{
+    this.spinnerService.requestEnded();
+    this.http.post<any>(apiUrl, saveData).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire(
+          'Alert!',
+          'An error occurred while processing your request',
+          'error'
+        );
+      })
+    ).subscribe((response) => {
       if (response.success === true) {
         Swal.fire(
           'Done!',
@@ -291,7 +306,17 @@ export class ProductionQuotationComponent implements OnInit{
         )
       }
     });
+  }catch (error) {
+    this.spinnerService.resetSpinner();
+    console.error('API Error:', error);
+    Swal.fire(
+      'Alert!',
+      'An error occurred while processing your request',
+      'error'
+    );
   }
+  }
+
 
   //////////////////Popupsubmit///////////////////
   getQueryDetailList() {

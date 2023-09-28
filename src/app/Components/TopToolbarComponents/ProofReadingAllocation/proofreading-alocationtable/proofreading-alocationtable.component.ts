@@ -7,10 +7,11 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { EmployeePopupComponent } from '../employee-popup/employee-popup.component';
 import { JobCategorypopupComponent } from '../job-categorypopup/job-categorypopup.component';
 import { SelectionModel } from '@angular/cdk/collections';
+import Swal from 'sweetalert2';
 interface Employee {
   id: number;
   name: string;
@@ -196,6 +197,12 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
       .subscribe({
         next: (freshJobs) => {
@@ -208,106 +215,203 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          console.log(err);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
         },
       });
   }
   revisionJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/2/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((revisionJobs) => {
+      .subscribe( {
+        next:(revisionJobs) =>{
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(revisionJobs.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        },
       });
   }
   reworkJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/3/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((reworkJobs) => {
+      .subscribe( {
+        next:(reworkJobs) =>{
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(reworkJobs.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        },
       });
   }
   allocaetdJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/4/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((allocaetdJobs) => {
+      .subscribe( {
+        next:(allocaetdJobs) =>{
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(allocaetdJobs.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+      },
+        error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        },
       });
   }
   queries() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getQueryPendingJobs/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/5/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((queries) => {
+      .subscribe( {
+        next:(queries) =>{
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(queries.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner();
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      },
       });
   }
   queryResposne() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/6/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((queryResposne) => {
+      .subscribe({
+        next:(queryResposne) => {
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(queryResposne.allocationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+        }, error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        },
       });
   }
   errorJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((errorJobs) => {
+      .subscribe( {
+        next:(errorJobs) =>{
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(errorJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+      },
+        error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        },
       });
   }
   quotationJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/8/0`
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
       )
-      .subscribe((quotationJobs) => {
+      .subscribe( {
+        next:(quotationJobs) =>{
+          this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(quotationJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        },
       });
   }
 
@@ -424,15 +528,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     }
   }
   postJobs(data: any) {
-    //   let processMovement = {
-    //     selectedRows: this.selectedJobs,
-    //     selectedEmployees: this.selectedEmployee,
-    //     selectedScopeId: this.ScopeId,
-    //     employeeId: this.loginservice.getUsername(),
-    //     processId: this.loginservice.getProcessId(),
-    //     statusId: 1,
-    //     isBench:this.benchChecked
-    // }
     let processMovement = {
       id: 0,
       processId: this.loginservice.getProcessId(),

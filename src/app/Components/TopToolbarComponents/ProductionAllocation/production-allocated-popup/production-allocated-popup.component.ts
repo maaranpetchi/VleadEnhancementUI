@@ -6,10 +6,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import saveAs from 'file-saver';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
-import Swal from 'sweetalert2/src/sweetalert2.js'
+import Swal from 'sweetalert2/src/sweetalert2.js';
 @Component({
   selector: 'app-production-allocated-popup',
   templateUrl: './production-allocated-popup.component.html',
@@ -22,11 +24,10 @@ export class ProductionAllocatedPopupComponent implements OnInit {
     private http: HttpClient,
     private loginservice: LoginService,
     private _coreService: CoreService,
-    private router :Router,
-  public dialogRef: MatDialogRef<ProductionAllocatedPopupComponent>
-
-  ) {
-  }
+    private router: Router,
+    private spinnerService: SpinnerService,
+    public dialogRef: MatDialogRef<ProductionAllocatedPopupComponent>
+  ) {}
 
   displayedJobColumns: string[] = [
     'movedFrom',
@@ -156,48 +157,56 @@ export class ProductionAllocatedPopupComponent implements OnInit {
     );
   }
   zipFiles(): void {
-    let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
-     
-    const fileUrl = environment.apiURL+'Allocation/DownloadZipFile?path='+`${path}`; // Replace with the actual URL of your zip file
+
+    const fileUrl =
+      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
 
     // Use HttpClient to make a GET request to fetch the zip file
-    this.http.get(fileUrl, { responseType: 'blob' }).subscribe(response => {
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
       this.saveFile(response);
     });
   }
-    private saveFile(blob: Blob) {
-      // Create a blob URL for the file
-      const url = window.URL.createObjectURL(blob);
-  
-      // Create a link element to trigger the download
-      const a = document.createElement('a');
-      a.href = url;
-      a.download =this.data.fileName; // Replace with the desired file name
-      document.body.appendChild(a);
-  
-      // Trigger the click event to start the download
-      a.click();
-  
-      // Clean up the blob URL and the link element
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    }
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.data.fileName; // Replace with the desired file name
+    document.body.appendChild(a);
+
+    // Trigger the click event to start the download
+    a.click();
+
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
   workFiles(id: number): void {
-    let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
 
     this.http
-      .get(
-        environment.apiURL +
-          `Allocation/getFileNames/${path}`
-      )
+      .get(environment.apiURL + `Allocation/getFileNames/${path}`)
       .subscribe((response: any) => {
         const fileUrls: string[] = response.files;
         fileUrls.forEach((url) => {
-          this.http.get(environment.apiURL+'Allocation/downloadFilesTest/'+`${path}/`+url).subscribe((response:any) => {
-            saveAs(new Blob([response.data], { type: "application/octet-stream" }), url);
-          })
+          this.http
+            .get(
+              environment.apiURL +
+                'Allocation/downloadFilesTest/' +
+                `${path}/` +
+                url
+            )
+            .subscribe((response: any) => {
+              saveAs(
+                new Blob([response.data], { type: 'application/octet-stream' }),
+                url
+              );
+            });
         });
       });
   }
@@ -206,12 +215,10 @@ export class ProductionAllocatedPopupComponent implements OnInit {
     return pathParts[pathParts.length - 1];
   }
   onSubmit() {
-
-      this.processMovement();
+    this.processMovement();
   }
-  close(){
-      this.dialogRef.close();
-
+  close() {
+    this.dialogRef.close();
   }
 
   processMovement() {
@@ -262,15 +269,33 @@ export class ProductionAllocatedPopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    
-    this.http
-      .post<any>(environment.apiURL + 'Allocation/processMovement', saveData)
-      .subscribe((response) => {
-        Swal.fire(
-          'Good job!',
-          'You clicked the button!',
-          'success'
-        )      });
+    try {
+      this.spinnerService.requestStarted();
+      this.http
+        .post<any>(environment.apiURL + 'Allocation/processMovement', saveData)
+        .pipe(
+          catchError((error) => {
+            this.spinnerService.requestEnded();
+            console.error('API Error:', error);
+            return Swal.fire(
+              'Alert!',
+              'An error occurred while processing your request',
+              'error'
+            );
+          })
+        )
+        .subscribe((response) => {
+          Swal.fire('Good job!', 'You clicked the button!', 'success');
+        });
+    } catch (error) {
+      this.spinnerService.requestEnded();
+      console.error('API Error:', error);
+      Swal.fire(
+        'Alert!',
+        'An error occurred while processing your request',
+        'error'
+      );
+    }
   }
 
   changeEstTime() {
@@ -354,21 +379,35 @@ export class ProductionAllocatedPopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
+    
+try{
+  this.spinnerService.requestEnded();
     this.http
       .post<any>(
         environment.apiURL + 'Allocation/changeEstimatedTime',
         estTimeData
+      ).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
+        })
       )
-      .subscribe(
-        (response) => {
-
-          // Handle the API response
-        },
-        (error) => {
-          console.log(error);
-
-          // Handle the API error
-        }
-      );
+      .subscribe((response) => {
+        Swal.fire('Good job!', 'You clicked the button!', 'success');
+      });
+  } catch (error) {
+    this.spinnerService.resetSpinner();
+    console.error('API Error:', error);
+    Swal.fire(
+      'Alert!',
+      'An error occurred while processing your request',
+      'error'
+    );
   }
+}
 }

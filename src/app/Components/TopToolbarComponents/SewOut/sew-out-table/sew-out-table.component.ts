@@ -143,7 +143,6 @@ export class SewOutTableComponent implements OnInit {
 
   freshJobs() {
     this.sewOutService.getTabValue1().subscribe(freshJobs => {
-      
       this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

@@ -9,11 +9,10 @@ import { JobAssignedDetailsPopupComponent } from '../job-assigned-details-popup/
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
-import { Observable } from 'rxjs';
+import { Observable, catchError, forkJoin, switchMap, throwError } from 'rxjs';
 import { ProductionAllocatedPopupComponent } from '../production-allocated-popup/production-allocated-popup.component';
 import { JoballocatedEmplpopupComponent } from '../joballocated-emplpopup/joballocated-emplpopup.component';
 import { EmployeePopupTableComponent } from '../../QualityAllocation/employee-popup-table/employee-popup-table.component';
-import { error } from 'jquery';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { ProductionQuotationComponent } from '../production-quotation/production-quotation.component';
@@ -206,7 +205,6 @@ export class ProductionallocationtableComponent implements OnInit {
     }
   }
 
-  //to save the checkbox value
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
@@ -297,43 +295,58 @@ export class ProductionallocationtableComponent implements OnInit {
 
   freshJobs() {
     this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
+    try {
+      const username = parseInt(this.loginservice.getUsername());
+      const processId = parseInt(this.loginservice.getProcessId());
+  
+      const allocationJobs$ = this.http.get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/1/0`
-      )
-      .subscribe({
-        next: (freshJobs) => {
+          `Allocation/getPendingAllocationJobsAndEmployees/${username}/${processId}/1/0`
+      );
+  
+      allocationJobs$
+        .pipe(
+          catchError((error) => {
+            this.spinnerService.resetSpinner();
+            console.error(error);
+            return throwError(error);
+          }),
+          switchMap((freshJobs) => {
+            this.spinnerService.requestEnded();
+            this.displayedColumnsVisibility.employee = false;
+            this.displayedColumnsVisibility.allocatedJobId = false;
+            this.displayedColumnsVisibility.quatationJobId = false;
+            this.displayedColumnsVisibility.jobId = true;
+            this.displayedEmployeeColumnsVisibility.allocatedEmployee = false;
+            this.displayedEmployeeColumnsVisibility.employees = true;
+            this.dataSource = new MatTableDataSource(freshJobs.allocationJobs);
+            this.dataSource.paginator = this.paginator1;
+            this.dataSource.sort = this.sort;
+            this.dataEmployeeSource = new MatTableDataSource(
+              freshJobs.employees
+            );
+            this.dataEmployeeSource.paginator = this.paginator2;
+            this.dataEmployeeSource.sort = this.sort;
+  
+            this.employeeCount = freshJobs.allocationJobs.employeeCount;
+            this.QueryJobDate = freshJobs.allocationJobs.queryJobDate;
+            this.CustomerJobType = freshJobs.allocationJobs.customerJobType;
+            this.StatusId = freshJobs.allocationJobs.statusId;
+            this.JobStatusId = freshJobs.allocationJobs.jobStatusId;
+  
+            // Return an observable with the processed data
+            return forkJoin([allocationJobs$]);
+          })
+        )
+        .subscribe(() => {
           this.spinnerService.requestEnded();
-          this.displayedColumnsVisibility.employee = false;
-          this.displayedColumnsVisibility.allocatedJobId = false;
-          this.displayedColumnsVisibility.quatationJobId = false;
-          this.displayedColumnsVisibility.jobId = true;
-          this.displayedEmployeeColumnsVisibility.allocatedEmployee = false;
-          this.displayedEmployeeColumnsVisibility.employees = true;
-          this.dataSource = new MatTableDataSource(freshJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          this.dataSource.sort = this.sort;
-          this.dataEmployeeSource = new MatTableDataSource(
-            freshJobs.employees
-          );
-          this.dataEmployeeSource.paginator = this.paginator2;
-          this.dataEmployeeSource.sort = this.sort;
-
-          this.employeeCount = freshJobs.allocationJobs.employeeCount;
-          this.QueryJobDate = freshJobs.allocationJobs.queryJobDate;
-          this.CustomerJobType = freshJobs.allocationJobs.customerJobType;
-          this.StatusId = freshJobs.allocationJobs.statusId;
-          this.JobStatusId = freshJobs.allocationJobs.jobStatusId;
-         
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
+          // Success logic here
+        });
+    } catch (error) {
+      // Handle synchronous errors here
+      console.error('Synchronous error:', error);
+      this.spinnerService.resetSpinner();
+    }
   }
   revisionJobs() {
     this.spinnerService.requestStarted();
@@ -573,12 +586,8 @@ export class ProductionallocationtableComponent implements OnInit {
         this.estTimeinput = data;
       });
   }
-
-
-  onKeyPress(event: KeyboardEvent, job: any) {
-    // if (event.key === 'Enter') {
+  onKeyPress(job: any) {
       this.afterCellEdit(job);
-    // }
   }
   afterCellEdit(rowEntity: any) {
 
@@ -666,7 +675,6 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     });
   }
-  // 681
   getQuatationJobId(data:any){
     const dialogRef = this._dialog.open(ProductionQuotationComponent, {
       width: '100%',
@@ -846,7 +854,7 @@ export class ProductionallocationtableComponent implements OnInit {
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-        Swal.fire('Info!', 'Following Job Ids are assigne to same Employee!', 'info',strJobId);
+        Swal.fire('Info!', 'Following Job Ids are assigne to same Employee!', 'info');
             
             // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
@@ -865,7 +873,6 @@ export class ProductionallocationtableComponent implements OnInit {
       .post(environment.apiURL + 'Allocation/processMovement', processMovement)
       .subscribe((response:any) => {
         confirmationMessage = response;
-        this.spinnerService.requestEnded();
         if (response.success === false) {
         Swal.fire('Info!', 'Error the job assigned!', 'info');
         }else if(response.success === true){
@@ -945,9 +952,7 @@ export class ProductionallocationtableComponent implements OnInit {
   }
   refreshPage() {
     this.freshJobs();
-    // window.location.reload();
   }
-  
   ProcessMovementData(url: string, data: any): Observable<any> {
     return this.http.post(
       environment.apiURL + 'Allocation/QARestriction ',
@@ -959,7 +964,6 @@ export class ProductionallocationtableComponent implements OnInit {
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-
   masterToggle() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -991,8 +995,6 @@ export class ProductionallocationtableComponent implements OnInit {
 
   //textcolor
   getCellClass(data) {
-    console.log(data,"Job");
-    
     return {
       'text-color-green':data.employeeCount === 1,
       'text-color-brown': data.queryJobDate !== null,

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
@@ -107,8 +108,19 @@ export class QuotationPopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
+    try{
     this.http
-      .post(environment.apiURL + `Allocation/processMovement`, saveData)
+      .post(environment.apiURL + `Allocation/processMovement`, saveData).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
+        })
+      )
       .subscribe(
         (response: any) => {
           confirmationMessage = response;
@@ -147,6 +159,15 @@ export class QuotationPopupComponent implements OnInit {
           console.error('An error occurred:', error);
         }
       );
+    }catch (error) {
+      this.spinnerService.resetSpinner();
+      console.error('API Error:', error);
+      Swal.fire(
+        'Alert!',
+        'An error occurred while processing your request',
+        'error'
+      );
+    }
 
    
   }

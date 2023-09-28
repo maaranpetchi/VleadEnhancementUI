@@ -15,6 +15,7 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-clientorderstable',
@@ -142,7 +143,21 @@ export class ClientorderstableComponent implements OnInit {
 
   fetchdivision() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/nGetDivisionForJO').subscribe(data => {
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/nGetDivisionForJO').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(data => {
       this.spinnerService.requestEnded();
       this.DivisionApiData = data;
     });
@@ -169,7 +184,21 @@ export class ClientorderstableComponent implements OnInit {
 
   bindingjobs() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe(binddata => {
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(binddata => {
       this.dataSource = new MatTableDataSource(binddata.data);
       this.dataSource.paginator = this.paginator;
       this.spinnerService.requestEnded();
@@ -190,7 +219,21 @@ export class ClientorderstableComponent implements OnInit {
   }
   quotationjobs() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/2').subscribe(quotation => {
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/2').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(quotation => {
       this.dataSource = new MatTableDataSource(quotation.data),
         this.dataSource.paginator = this.paginator;
       this.spinnerService.requestEnded();
@@ -211,7 +254,21 @@ export class ClientorderstableComponent implements OnInit {
   }
   convertedjobs() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/3').subscribe(converted => {
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/3').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(converted => {
       this.dataSource = new MatTableDataSource(converted.data);
       this.spinnerService.requestEnded();
 
@@ -232,7 +289,21 @@ export class ClientorderstableComponent implements OnInit {
   }
   deletedjobs() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/4').subscribe(deleted => {
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/4').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(deleted => {
       this.dataSource = new MatTableDataSource(deleted.data);
       this.spinnerService.requestEnded();
       this.displayedColumnsvisibility.filecount = false;
@@ -253,7 +324,21 @@ export class ClientorderstableComponent implements OnInit {
   quotenotapprovaljobs() {
     this.spinnerService.requestStarted();
 
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/5').subscribe(quotenotapproval => {
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/5').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(quotenotapproval => {
       this.dataSource = new MatTableDataSource(quotenotapproval.data)
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -273,7 +358,20 @@ export class ClientorderstableComponent implements OnInit {
   }
   queryforsp() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'CustomerQuery/GetNotApprovedQueryForSPJobsToCC').subscribe(queryforsp => {
+    this.http.get<any>(environment.apiURL + 'CustomerQuery/GetNotApprovedQueryForSPJobsToCC').pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+return Swal.fire('Alert','Error occured','error');
+      })
+
+    ).subscribe(queryforsp => {
       this.dataSource = new MatTableDataSource(queryforsp.data)
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -496,7 +594,21 @@ export class ClientorderstableComponent implements OnInit {
       }
 
       this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).subscribe(convertdata => {
+      this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      ).subscribe(convertdata => {
         let JobId = convertdata.jobId;
         this.spinnerService.requestEnded();
         if (JobId == `File Name Already Exist!,${GetAllvalues.fileName}` || JobId == "Previous Job is not closed for the File Name and Client!") {
@@ -673,7 +785,21 @@ export class ClientorderstableComponent implements OnInit {
     }
 
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).subscribe(convertdata => {
+    this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).pipe(
+
+      catchError((error) => {
+
+        this.spinnerService.requestEnded();
+
+        console.error('API Error:', error);
+
+ 
+
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+      })
+
+    ).subscribe(convertdata => {
       this.spinnerService.requestEnded();
 
       let JobId = convertdata.jobId;

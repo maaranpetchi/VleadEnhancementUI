@@ -2,46 +2,48 @@ import { ClientorderstableComponent } from '../clientorderstable/clientorderstab
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { data } from 'jquery';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
-import Swal from 'sweetalert2/src/sweetalert2.js'
+import Swal from 'sweetalert2/src/sweetalert2.js';
 @Component({
   selector: 'app-clientorders',
   templateUrl: './clientorders.component.html',
-  styleUrls: ['./clientorders.component.scss']
+  styleUrls: ['./clientorders.component.scss'],
 })
 export class ClientordersComponent implements OnInit {
-  @ViewChild(ClientorderstableComponent) ClientorderstableComponent: ClientorderstableComponent;
+  @ViewChild(ClientorderstableComponent)
+  ClientorderstableComponent: ClientorderstableComponent;
 
-
-  constructor(private http: HttpClient,private spinnerService:SpinnerService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private spinnerService: SpinnerService
+  ) {}
 
   DivisionApiData: any[];
   ngOnInit(): void {
-this.getDivisionAPi();
-this.getmattabcount();
-this.getclientordercount();
+    this.getDivisionAPi();
+    this.getmattabcount();
+    this.getclientordercount();
   }
 
-getDivisionAPi(){
-      //division dropdown
-      this.spinnerService.requestStarted();
-      this.http.get<any>(environment.apiURL+'ClientOrderService/nGetDivisionForJO').subscribe({next:(divisiondata) => {
-        this.spinnerService.requestEnded();
-        this.DivisionApiData = divisiondata;
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err); 
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
-      })
-}
+  getDivisionAPi() {
+    //division dropdown
+    this.spinnerService.requestStarted();
+    this.http
+      .get<any>(environment.apiURL + 'ClientOrderService/nGetDivisionForJO')
+      .subscribe({
+        next: (divisiondata) => {
+          this.spinnerService.requestEnded();
+          this.DivisionApiData = divisiondata;
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner(); // Reset spinner on error
+          console.error(err);
+          Swal.fire('Error!', 'An error occurred !.', 'error');
+        },
+      });
+  }
 
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
@@ -52,7 +54,6 @@ getDivisionAPi(){
         this.BindPendingJobs();
         break;
       case 1: // Revision Jobs tab
-
         // Call your REST API for Revision Jobs
         this.quotationjobs();
         break;
@@ -79,7 +80,7 @@ getDivisionAPi(){
 
   BindPendingJobs() {
     this.ClientorderstableComponent.tab('1');
-  };
+  }
   quotationjobs() {
     this.ClientorderstableComponent.tab('2');
   }
@@ -89,82 +90,209 @@ getDivisionAPi(){
   deletedjobs() {
     this.ClientorderstableComponent.tab('4');
   }
-  quotenotapprovaljobs(){
+  quotenotapprovaljobs() {
     this.ClientorderstableComponent.tab('5');
   }
-  queryforsp(){
+  queryforsp() {
     this.ClientorderstableComponent.tab('6');
   }
-
 
   NewJobCount: any;
   QuoteJobCount: any;
   getclientordercount() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
-      this.spinnerService.requestEnded();
-      this.NewJobCount = responsedata1.count;
-    });
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata1) => {
+        this.spinnerService.requestEnded();
+        this.NewJobCount = responsedata1.count;
+      });
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
-      this.spinnerService.requestEnded();
-      this.QuoteJobCount = responsedata2.count;
-    });
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata2) => {
+        this.spinnerService.requestEnded();
+        this.QuoteJobCount = responsedata2.count;
+      });
   }
 
+  NewJobTabCount: number;
+  QuotationTabCount: number;
+  ConvertedJobTabCount: number;
+  DeletedJobTabCount: number;
+  QuoteNotApprovalJobTabCount: number;
+  QueryforjobJobTabCount: number;
 
-  NewJobTabCount:number;
-  QuotationTabCount:number;
-  ConvertedJobTabCount:number;
-  DeletedJobTabCount:number;
-  QuoteNotApprovalJobTabCount:number;
-  QueryforjobJobTabCount:number;
-
-  getmattabcount(){
+  getmattabcount() {
     this.spinnerService.requestStarted();
 
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).subscribe(responsedata1 => {
-      this.spinnerService.requestEnded();
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/1`).pipe(
 
-      this.NewJobTabCount = responsedata1.count;
-    });
+        catchError((error) => {
 
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).subscribe(responsedata2 => {
-      this.spinnerService.requestEnded();
+          this.spinnerService.requestEnded();
 
-      this.QuotationTabCount = responsedata2.count;
-    });
-    this.spinnerService.requestStarted();
+          console.error('API Error:', error);
 
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/3`).subscribe(responsedata3 => {
-      this.spinnerService.requestEnded();
    
-    
-      this.ConvertedJobTabCount = responsedata3.count;
-    });
-    this.spinnerService.requestStarted();
 
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/4`).subscribe(responsedata4 => {
-      this.spinnerService.requestEnded();
-     
-      this.DeletedJobTabCount = responsedata4.count;
-    });
-    this.spinnerService.requestStarted();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
 
-    this.http.get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/5`).subscribe(responsedata5 => {
-      this.spinnerService.requestEnded();
-     
-       responsedata5
-      this.QuoteNotApprovalJobTabCount = responsedata5.count;
-    });
-    this.spinnerService.requestStarted();
+        })
 
-    this.http.get<any>(environment.apiURL + `CustomerQuery/GetNotApprovedQueryForSPJobsToCCCount`).subscribe(responsedata6 => {
-      this.spinnerService.requestEnded();
+      )
+      .subscribe((responsedata1) => {
+        this.spinnerService.requestEnded();
+
+        this.NewJobTabCount = responsedata1.count;
+      });
+
+    this.spinnerService.requestStarted();
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/2`).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
    
-    
-      this.QueryforjobJobTabCount = responsedata6.count;
-    });
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata2) => {
+        this.spinnerService.requestEnded();
+
+        this.QuotationTabCount = responsedata2.count;
+      });
+    this.spinnerService.requestStarted();
+
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/3`).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata3) => {
+        this.spinnerService.requestEnded();
+
+        this.ConvertedJobTabCount = responsedata3.count;
+      });
+    this.spinnerService.requestStarted();
+
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/4`).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata4) => {
+        this.spinnerService.requestEnded();
+
+        this.DeletedJobTabCount = responsedata4.count;
+      });
+    this.spinnerService.requestStarted();
+
+    this.http
+      .get<any>(environment.apiURL + `ClientOrderService/ClientOrdersCount/5`).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata5) => {
+        this.spinnerService.requestEnded();
+
+        responsedata5;
+        this.QuoteNotApprovalJobTabCount = responsedata5.count;
+      });
+    this.spinnerService.requestStarted();
+
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `CustomerQuery/GetNotApprovedQueryForSPJobsToCCCount`
+      ).pipe(
+
+        catchError((error) => {
+
+          this.spinnerService.requestEnded();
+
+          console.error('API Error:', error);
+
+   
+
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        })
+
+      )
+      .subscribe((responsedata6) => {
+        this.spinnerService.requestEnded();
+
+        this.QueryforjobJobTabCount = responsedata6.count;
+      });
   }
 }

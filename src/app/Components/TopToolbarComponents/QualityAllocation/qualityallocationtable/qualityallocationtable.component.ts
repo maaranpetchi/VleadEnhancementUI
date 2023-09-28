@@ -69,14 +69,6 @@ export class QualityallocationtableComponent implements OnInit {
     //Employeetable
   }
 
-  // applyFilter(event: Event): void {
-  //   const filterValue = (event.target as HTMLInputElement).value;
-  //   this.dataSource.filter = filterValue.trim().toLowerCase();
-
-  //   if (this.dataSource.paginator) {
-  //     this.dataSource.paginator.firstPage();
-  //   }
-  // }
   filterValue: any = null;
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
@@ -601,7 +593,7 @@ export class QualityallocationtableComponent implements OnInit {
             Swal.fire(
               'Info!',
               'Following Job Ids are assigned to same Employee',
-              'info' + strJobId
+              'info' 
             );
             // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }

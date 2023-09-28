@@ -4,8 +4,11 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-joballocated-emplpopup',
@@ -21,7 +24,8 @@ export class JoballocatedEmplpopupComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
-    private loginservice: LoginService
+    private loginservice: LoginService,
+    private spinnerService: SpinnerService,
   ) {}
   ngOnInit(): void {
     this.getJobAllocatedDetails();
@@ -72,19 +76,29 @@ export class JoballocatedEmplpopupComponent implements OnInit {
       trayTime: 0,
       balanceTime: 0,
     };
+    this.spinnerService.requestStarted();
     this.http
       .post(
         environment.apiURL + 'JobOrder/GetAssignedEmployees',
         storeData
       )
+      .pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
+        })
+      )
       .subscribe(
         (response:any) => {
+          this.spinnerService.requestEnded();
           this.dataSource = new MatTableDataSource(response.assignedEmployees);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         },
         (error) => {
-          console.log(error);
+          this.spinnerService.resetSpinner();
+          return Swal.fire('Alert!','An error occurred while processing your request','error');
         }
       );
   

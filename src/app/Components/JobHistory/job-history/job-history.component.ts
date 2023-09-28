@@ -46,13 +46,20 @@ export class JobHistoryComponent implements OnInit {
 
   displayedColumns: string[] = [
     'selected',
+    'id',
     'jobnumber',
-    'jobdate',
+    'estqueryDate',
     'department',
     'client',
+    'clientstatus',
     'jobstatus',
+    'projectCode',
     'filename',
-    'jobdate1',
+    'fileinward',
+    'filereceived',
+    'process',
+    'status',
+    'comments',
 
   ];
 

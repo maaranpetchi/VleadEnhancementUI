@@ -5,8 +5,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import saveAs from 'file-saver';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-job-categorypopup',
   templateUrl: './job-categorypopup.component.html',
@@ -18,7 +21,8 @@ export class JobCategorypopupComponent implements OnInit {
   constructor(
   @Inject(MAT_DIALOG_DATA) public data: any,
   private http: HttpClient,
-  private loginservice:LoginService
+  private loginservice:LoginService,
+  private spinnerService: SpinnerService
   ){
   }
   
@@ -248,7 +252,23 @@ export class JobCategorypopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    this.http.post<any>(apiUrl, saveData).subscribe((response) => {});
+    this.spinnerService.requestStarted();
+    this.http.post<any>(apiUrl, saveData).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe((response) => {
+      this.spinnerService.requestEnded();
+      // Handle the API response
+    },
+    (error) => {
+      console.log(error);
+      this.spinnerService.resetSpinner();
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+      // Handle the API error
+    });
   }
 
   changeEstTime() {
@@ -291,14 +311,22 @@ export class JobCategorypopupComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    this.http.post<any>(environment.apiURL+'Allocation/changeEstimatedTime', estTimeData).subscribe(
+    this.spinnerService.requestStarted();
+    this.http.post<any>(environment.apiURL+'Allocation/changeEstimatedTime', estTimeData).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(
       (response) => {
-        
+        this.spinnerService.resetSpinner();
         // Handle the API response
       },
       (error) => {
         console.log(error);
-        
+        this.spinnerService.resetSpinner();
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
         // Handle the API error
       }
     );

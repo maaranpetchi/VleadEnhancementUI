@@ -13,6 +13,8 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { QualityWorkflowComponent } from '../../Quality/quality-workflow/quality-workflow.component';
 import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productiontable',
@@ -115,49 +117,126 @@ export class ProductiontableComponent {
   }
 
   freshJobs() {
-    
-    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(freshdata => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(freshdata => {
       
       this.dataSource =  new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    },(error) => {
+      this.spinnerService.resetSpinner();
+
+      console.log(error);
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+
     });
   }
   revisionJobs() {
-    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/0`).subscribe(freshdata => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/0`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(freshdata => {
       this.dataSource =new MatTableDataSource  (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    },(error) => {
+      this.spinnerService.resetSpinner();
+
+      console.log(error);
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+
     });
   }
   reworkJobs() {
-    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/0`).subscribe(freshdata => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/0`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(freshdata => {
       this.dataSource =new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    },(error) => {
+      this.spinnerService.resetSpinner();
+
+      console.log(error);
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+
     });
   }
   quoteJobs() {
-    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/4/0`).subscribe(freshdata => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/4/0`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(freshdata => {
       this.dataSource=new MatTableDataSource( freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    },(error) => {
+      this.spinnerService.resetSpinner();
+
+      console.log(error);
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+
     });
   }
   scopeDisplay:boolean = false; // display a scope dropdown div
   bulkJobs() {
-    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/0`).subscribe(freshdata => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/0`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(freshdata => {
       this.dataSource =new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.scopeDisplay = true;
+    },(error) => {
+      this.spinnerService.resetSpinner();
+
+      console.log(error);
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+
     });
   }
   bulkUploadJobs() {
-    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/0`).subscribe(freshdata => {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL+`Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/0`).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','error');
+      })
+    ).subscribe(freshdata => {
       this.dataSource = new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    },(error) => {
+      this.spinnerService.resetSpinner();
+
+      console.log(error);
+      return Swal.fire('Alert!','An error occurred while processing your request','error');
+
     });
   }
 

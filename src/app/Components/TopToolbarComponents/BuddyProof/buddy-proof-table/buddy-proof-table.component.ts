@@ -121,7 +121,9 @@ export class BuddyProofTableComponent implements OnInit {
 
 
   freshJobs() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue1().subscribe(freshJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -129,7 +131,9 @@ export class BuddyProofTableComponent implements OnInit {
     });
   }
   revisionJobs() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue2().subscribe(revisionJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(revisionJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -137,7 +141,9 @@ export class BuddyProofTableComponent implements OnInit {
     });
   }
   reworkJobs() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue3().subscribe(reworkJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(reworkJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -145,7 +151,9 @@ export class BuddyProofTableComponent implements OnInit {
     });
   }
   quoteJobs() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue4().subscribe(quoteJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(quoteJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -153,7 +161,9 @@ export class BuddyProofTableComponent implements OnInit {
     });
   }
   sewOut() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue5().subscribe(sewOut => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(sewOut.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -164,7 +174,9 @@ export class BuddyProofTableComponent implements OnInit {
 
   displayScopeDropdown: boolean = false; // hide a scope dropdown
   bulkJobs() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue6().subscribe(bulkJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(bulkJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -172,7 +184,9 @@ export class BuddyProofTableComponent implements OnInit {
     });
   }
   bulkUploadJobs() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getTabValue7().subscribe(bulkUploadJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(bulkUploadJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -183,7 +197,9 @@ export class BuddyProofTableComponent implements OnInit {
 
 
   scopeDropdown() {
+    this.spinnerservice.requestStarted();
     this.buddyService.getScopeDropdown().subscribe(scopedata => {
+      this.spinnerservice.requestEnded();
       this.scopes = scopedata.scopeDetails
 
 

@@ -16,18 +16,18 @@
         <table mat-table [dataSource]="dataSource" matSort id="custom-table"
           class="table table-sm table-responsive table table-bordered text-center">
           <ng-container matColumnDef="selected">
-            <mat-header-cell *matHeaderCellDef>
+            <th *matHeaderCellDef>
               <mat-checkbox (change)="$event ? masterToggle() : null"
                             [checked]="selection.hasValue() && isAllSelected()"
                             [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+            </th>
+            <td *matCellDef="let row">
               <mat-checkbox (click)="$event.stopPropagation()"
                             (change)="$event ? selection.toggle(row) : null"
                             [checked]="selection.isSelected(row)">
               </mat-checkbox>
-            </mat-cell>
+            </td>
           </ng-container>
           <ng-container matColumnDef="jobId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>

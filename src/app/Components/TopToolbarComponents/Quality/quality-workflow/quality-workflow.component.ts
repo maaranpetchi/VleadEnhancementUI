@@ -273,7 +273,10 @@ export class QualityWorkflowComponent implements OnInit {
     });
   }
 
-
+////////////////Changing color in table////////////
+shouldShowGreenText(status: string): boolean {
+  return status === 'working';
+}
 
   ////////////////////////////Main Method//////////////////////////////////////////
 

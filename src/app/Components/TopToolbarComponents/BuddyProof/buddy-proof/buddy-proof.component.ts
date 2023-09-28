@@ -7,6 +7,7 @@ import { Output, EventEmitter } from '@angular/core';
 import { BuddyProofTableComponent } from '../buddy-proof-table/buddy-proof-table.component';
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 
 @Component({
   selector: 'app-buddy-proof',
@@ -25,7 +26,7 @@ export class BuddyProofComponent {
   BulkJobsCount: any;
   BulkUploadJobsCount: any;
 
-  constructor(private http: HttpClient,private loginservice:LoginService) { }
+  constructor(private http: HttpClient,private loginservice:LoginService,private spinnerService:SpinnerService) { }
 
   ngOnInit(): void {
     this.getCount();
@@ -120,8 +121,10 @@ export class BuddyProofComponent {
 
   
   getCount() {
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe(freshdataCount => {
-      
+      this.spinnerService.requestEnded();
+
       this.freshJobsCount = freshdataCount.freshJobsCount;
       this.RevisionJobsCount = freshdataCount.revisionJobsCount;
       this.ReworkJobsCount = freshdataCount.reworkJobsCount;

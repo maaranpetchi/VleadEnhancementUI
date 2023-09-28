@@ -128,19 +128,12 @@ export class QualitytableComponent {
       catchError((error) => {
         this.spinnerService.requestEnded();
         console.error('API Error:', error);
-        // return Swal.fire({
-        //   icon: 'error', // Use 'error' icon
-        //   title: 'Alert!',
-        //   text: 'An error occurred while processing your request',
-        // });
         return Swal.fire('Alert!','An error occurred while processing your request','error');
 
       })
 
     ).subscribe(freshdata => {
       this.spinnerService.requestEnded();
-      
-      
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -168,6 +161,7 @@ export class QualitytableComponent {
       })
 
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -179,6 +173,8 @@ export class QualitytableComponent {
   }
   reworkJobs() {
     try{
+      this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/3/0`).pipe(
 
       catchError((error) => {
@@ -194,6 +190,7 @@ export class QualitytableComponent {
       })
 
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -221,6 +218,7 @@ export class QualitytableComponent {
       })
 
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -249,6 +247,7 @@ export class QualitytableComponent {
       })
 
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -277,6 +276,7 @@ export class QualitytableComponent {
       })
 
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

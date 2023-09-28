@@ -51,7 +51,7 @@ export class SewOutTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('sewout') SewOutComponent: SewOutComponent;
-  constructor(private http: HttpClient, private sewOutService: SewOutService, private router: Router, private dialog: MatDialog, private loginservice: LoginService, private _coreService: CoreService, private SewOutComponent1: SewOutComponent,private workflowservice:WorkflowService,private spinnerservice:SpinnerService) {
+  constructor(private http: HttpClient, private sewOutService: SewOutService, private router: Router, private dialog: MatDialog, private loginservice: LoginService, private _coreService: CoreService, private SewOutComponent1: SewOutComponent, private workflowservice: WorkflowService, private spinnerservice: SpinnerService) {
     this.SewOutComponent = SewOutComponent1
   }
 
@@ -142,7 +142,10 @@ export class SewOutTableComponent implements OnInit {
   }
 
   freshJobs() {
+    this.spinnerservice.requestStarted();
     this.sewOutService.getTabValue1().subscribe(freshJobs => {
+      this.spinnerservice.requestEnded();
+
       this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -150,7 +153,11 @@ export class SewOutTableComponent implements OnInit {
   }
 
   revisionJobs() {
+    this.spinnerservice.requestStarted();
+
     this.sewOutService.getTabValue2().subscribe(revisionJobs => {
+      this.spinnerservice.requestStarted();
+
       this.dataSource = new MatTableDataSource(revisionJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -158,7 +165,9 @@ export class SewOutTableComponent implements OnInit {
   }
 
   reworkJobs() {
+    this.spinnerservice.requestStarted();
     this.sewOutService.getTabValue3().subscribe(reworkJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(reworkJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -166,7 +175,10 @@ export class SewOutTableComponent implements OnInit {
   }
 
   quoteJobs() {
+    this.spinnerservice.requestStarted()
     this.sewOutService.getTabValue4().subscribe(quoteJobs => {
+      this.spinnerservice.requestEnded()
+
       this.dataSource = new MatTableDataSource(quoteJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -174,7 +186,11 @@ export class SewOutTableComponent implements OnInit {
   }
 
   sewOut() {
+    this.spinnerservice.requestStarted();
+
     this.sewOutService.getTabValue5().subscribe(sewOut => {
+      this.spinnerservice.requestEnded();
+
       this.dataSource = new MatTableDataSource(sewOut.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -183,7 +199,9 @@ export class SewOutTableComponent implements OnInit {
 
   displayScopeDropdown: boolean = false; // hide a scope dropdown
   bulkJobs() {
+    this.spinnerservice.requestStarted();
     this.sewOutService.getTabValue6().subscribe(bulkJobs => {
+      this.spinnerservice.requestEnded();
       this.dataSource = new MatTableDataSource(bulkJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -192,7 +210,10 @@ export class SewOutTableComponent implements OnInit {
   }
 
   bulkUploadJobs() {
+    this.spinnerservice.requestStarted();
     this.sewOutService.getTabValue7().subscribe(bulkUploadJobs => {
+      this.spinnerservice.requestEnded();
+
       this.dataSource = new MatTableDataSource(bulkUploadJobs.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -200,7 +221,11 @@ export class SewOutTableComponent implements OnInit {
   }
 
   scopeDropdown() {
+    this.spinnerservice.requestStarted();
+
     this.sewOutService.getScopeDropdown().subscribe(scopedata => {
+      this.spinnerservice.requestEnded();
+
       this.scopes = scopedata.ScopeDetails;
     });
   }
@@ -217,7 +242,7 @@ export class SewOutTableComponent implements OnInit {
           // Handle success response here
           let timeStamp = response.getWorkflowDetails[0].timeStamp;
           let customerId = response.getWorkflowDetails[0].customerId
- 
+
           let existingSelectedRows = {
             // Existing selectedRows array
             // Add your existing selectedRows elements here
@@ -305,7 +330,7 @@ export class SewOutTableComponent implements OnInit {
           // Make the POST request with the updated payload
           this.sewOutService.getprocessmovement(payload).subscribe(
             (response: any) => {
-             
+
               localStorage.setItem('WFTID', response.wftId);
               localStorage.setItem('WFMID', response.wfmid);
               localStorage.setItem('JID', response.jid);
@@ -313,21 +338,21 @@ export class SewOutTableComponent implements OnInit {
                 this._coreService.openSnackBar("Workflow converted successfully");
               }
 
-              else{
+              else {
                 if (response.processId == 9 || response.processId == 11) {
                   localStorage.setItem("WFTId", response.tranId);
                   localStorage.setItem("WFMId", response.tranMasterId);
                   localStorage.setItem("JId", response.jid);
                   localStorage.setItem("processid", response.processId);
                   // $location.path('/ProcessTransaction');
-              }
-              else {
+                }
+                else {
                   localStorage.setItem("WFTId", response.wftId);
                   localStorage.setItem("WFMId", response.wfmid);
                   localStorage.setItem("JId", response.jid);
                   localStorage.setItem("processid", response.processId);
                   // $location.path('/ProcessTransaction');
-              }
+                }
 
               }
 
@@ -432,7 +457,7 @@ export class SewOutTableComponent implements OnInit {
           this.router.navigate(['/topnavbar/qualityworkflow']);
         }
         else {
-           Swal.fire('Alert!', result.message, 'error');
+          Swal.fire('Alert!', result.message, 'error');
 
           this.BindPendingJobs();
         }

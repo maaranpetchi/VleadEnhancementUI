@@ -8,6 +8,7 @@ import { environment } from 'src/Environments/environment';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { CustomerNormsService } from 'src/app/Services/CustomerNorms/customer-norms.service';
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-customernormsindex',
   templateUrl: './customernormsindex.component.html',
@@ -27,7 +28,10 @@ export class CustomernormsindexComponent implements OnInit {
   }
 getFetchTables(){
   this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`CustomerVsEmployee/GetCustomerNorms`).subscribe({
+  this.http.get<any>(environment.apiURL+`CustomerVsEmployee/GetCustomerNorms`).pipe(catchError((error) => {
+    this.spinnerService.requestEnded();
+    return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+  })).subscribe({
     next:(employees) => {
     this.spinnerService.requestEnded();
     this.dataSource = new MatTableDataSource(employees);
@@ -58,7 +62,10 @@ getFetchTables(){
 //aCTIONS
 openEditForm(id: number) {
   this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL + `CustomerVsEmployee/GetCustomerNormsById?Id=${id}`).subscribe({
+  this.http.get<any>(environment.apiURL + `CustomerVsEmployee/GetCustomerNormsById?Id=${id}`).pipe(catchError((error) => {
+    this.spinnerService.requestEnded();
+    return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+  })).subscribe({
     next:(results) => {
     this.spinnerService.requestEnded();
     this._empService.setData({ type: 'EDIT', data: results });
@@ -80,7 +87,10 @@ openEditForm(id: number) {
 }
 viewEmployee(id: number) {
   this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).subscribe({
+  this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
+    this.spinnerService.requestEnded();
+    return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+  })).subscribe({
     next:(results) => {
     this.spinnerService.requestEnded();
     this._empService.setData({ type: 'EDIT', data: results });
@@ -102,7 +112,10 @@ viewEmployee(id: number) {
 deleteEmployee(id: number) {
    this.spinnerService.requestStarted();
    let payload={Id:id}
-this.http.post<any>(environment.apiURL+`CustomerVsEmployee/DeleteCustomerNormById`,payload).subscribe({
+this.http.post<any>(environment.apiURL+`CustomerVsEmployee/DeleteCustomerNormById`,payload).pipe(catchError((error) => {
+  this.spinnerService.requestEnded();
+  return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+})).subscribe({
     next: (res) => {
       this.spinnerService.requestEnded();
 

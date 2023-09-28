@@ -48,3 +48,56 @@
     width: 75%; /* Set the table width to 75% of its container */
     border-collapse: collapse; /* Optional: Collapse borders between table cells */
   }
+  .mat-elevation-z8{
+    overflow-x: scroll;
+  }
+  .clickable-link {
+    cursor: pointer;
+  }
+  
+  .table-container {
+    height: 60vh; /* Set a fixed height of 50% of the viewport height */
+    overflow: auto; /* Enable vertical scrolling if content overflows */
+    overflow-x: auto; 
+    
+  }
+  .checkbox{
+    background-color: #fff;
+  }
+  
+  /* Define the custom-table class for styling */
+  #custom-table {
+    width: 75%; /* Set the table width to 75% of its container */
+    border-collapse: collapse; /* Optional: Collapse borders between table cells */
+  }
+
+  
+  
+.table-container {
+  height: 483px; /* Set the maximum height for the table container */
+  overflow-y: auto; /* Enable vertical scrolling */
+background: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

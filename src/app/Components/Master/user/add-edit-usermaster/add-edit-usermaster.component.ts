@@ -2,10 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { UserMasterService } from 'src/app/Services/Master/user-master.service';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
 @Component({
   selector: 'app-add-edit-usermaster',
@@ -36,6 +39,7 @@ export class AddEditUsermasterComponent implements OnInit {
     private http:HttpClient,
     private _coreService: CoreService,
     private loginservice: LoginService,
+    private spinnerService: SpinnerService,
 
     public dialogRef: MatDialogRef<AddEditUsermasterComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -54,7 +58,10 @@ export class AddEditUsermasterComponent implements OnInit {
 
 
   getAllUsersById(data:any){
-    this._service.getUserByEmployeeId(data).subscribe(
+    this._service.getUserByEmployeeId(data).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(
       (data: any) => {
         this.employees = data;
         this.userRegistrationForm.patchValue(data);
@@ -165,9 +172,16 @@ onCancel():void {
           employee: null
         }
         //  This is for the Save Api Call.
-    this.http.post(environment.apiURL+'User/SaveUser?actionType=2', updateUserData).subscribe({
+    this.http.post(environment.apiURL+'User/SaveUser?actionType=2', updateUserData).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (data: any) =>{
-        this._coreService.openSnackBar('User detail added!');
+        Swal.fire('Done','User detail added!','success').then((result)=>{
+          if(result.isConfirmed){
+            this.dialogRef.close();
+          }
+        });
       },
       error: (err: any) => {
         throw new Error('API Error', err);

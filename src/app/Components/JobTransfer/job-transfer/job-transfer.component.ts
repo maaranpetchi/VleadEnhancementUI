@@ -12,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogComponent } from '../../dialog/dialog.component';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { catchError } from 'rxjs';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-job-transfer',
@@ -131,10 +133,13 @@ export class JobTransferComponent implements OnInit {
         fileReceivedDate: this.selectedfromDate,
       };
       this.spinnerService.requestStarted();
-      this._service.jobOrderDetails(jobOrder).subscribe({
+      this._service.jobOrderDetails(jobOrder).pipe(catchError((error)=>{
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      })).subscribe({
         next: (response) => {
           this.spinnerService.requestEnded();
-          this.dataSource = response.jobs;
+          this.dataSource = new MatTableDataSource(response.jobs);
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
         },
@@ -165,10 +170,14 @@ export class JobTransferComponent implements OnInit {
         ConvertDepartment: this.selectedJobs,
         UpdatedBy: this.loginservice.getUsername(),
       };
-
+this.spinnerService.requestStarted();
       this.http
-        .post(environment.apiURL + `JobTransfer/ConvertDepartment`, convertdata)
+        .post(environment.apiURL + `JobTransfer/ConvertDepartment`, convertdata).pipe(catchError((error)=>{
+          this.spinnerService.requestEnded();
+          return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        }))
         .subscribe((response: any) => {
+          this.spinnerService.requestEnded();
           if (response) {
             Swal.fire(
               'Done!',

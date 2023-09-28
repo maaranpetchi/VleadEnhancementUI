@@ -62,11 +62,9 @@
                 </div>
                 <br>
                 <div class="table">
-                    <div class="example-container mat-elevation-z8">
-
-                        <mat-table mat-table [dataSource]="dataSource" matSort id="custom-table"
-                        class="table table-sm table-responsive table table-bordered text-center">
-
+                    <div class="table-container">
+              
+                        <table class="table table-sm table-responsive" id="custom-table" mat-table [dataSource]="dataSource"  matSort>
                             <ng-container matColumnDef="customershortname">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     <div class="header-wrapper">
@@ -127,9 +125,10 @@
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                        </mat-table>
-                        <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+                        </table>
                     </div>
+                    <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+
                 </div>
 
 

@@ -11,6 +11,7 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { throwDialogContentAlreadyAttachedError } from '@angular/cdk/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-addeditemployeevsdivision',
@@ -23,8 +24,8 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   table1Data: MatTableDataSource<any>;
 
   table2Data: MatTableDataSource<any>;
+  public dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>;
 
-  dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>;
   myForm: FormGroup;
   // table1Data: any;
   // table2Data: any;
@@ -56,7 +57,13 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   getTable1() {
     this.spinnerService.requestStarted();
 
-    this.http.get<any>(environment.apiURL + 'EmployeeVsDivision/GetEmployee').subscribe(data => {
+    this.http.get<any>(environment.apiURL + 'EmployeeVsDivision/GetEmployee').pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      })
+    ).subscribe(data => {
       // this.table1Data =data.eEvDList ;
       this.table1Data = new MatTableDataSource(data.eEvDList);
       this.spinnerService.requestEnded();
@@ -70,7 +77,13 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
 
   getTable2() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + 'EmployeeVsDivision/GetDivision').subscribe(data => {
+    this.http.get<any>(environment.apiURL + 'EmployeeVsDivision/GetDivision').pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      })
+    ).subscribe(data => {
       this.table2Data = new MatTableDataSource(data.dEvDList);
       this.spinnerService.requestEnded();
 
@@ -93,7 +106,13 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
         "selectedEmployee": this.table1selectedarray,
         "selectedDivision": this.table2selectedarray,
         "createdBy": 152,
-      }).subscribe(response => {
+      }).pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          console.error('API Error:', error);
+          return Swal.fire('Alert!','An error occurred while processing your request','Error');
+        })
+      ).subscribe(response => {
         this.spinnerService.requestEnded();
 
         // Handle the response from the API
@@ -108,7 +127,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'success'
           ).then((result)=>{
             if(result.isConfirmed){
-              this.dialogRef.close();
+              window.location.reload();
             }
           })
         }
@@ -120,7 +139,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
             'error'
           ).then((result)=>{
             if(result.isConfirmed){
-              this.dialogRef.close();
+              window.location.reload();
             }
           })
         }

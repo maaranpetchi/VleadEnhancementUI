@@ -7,6 +7,7 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { SpinnerService } from '../../Spinner/spinner.service';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-add-edit-skillset',
   templateUrl: './add-edit-skillset.component.html',
@@ -43,7 +44,10 @@ export class AddEditSkillsetComponent implements OnInit {
   selectedEmployeeCode: any; // Property to store selected code
   onSelectCode(code: string): void {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeCodeByEmployeeId?employeeid=${code}`).subscribe({
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeCodeByEmployeeId?employeeid=${code}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (getEmployeeName) => {
         this.spinnerService.requestEnded();
 
@@ -63,7 +67,10 @@ export class AddEditSkillsetComponent implements OnInit {
   }
   getEmployeeCode() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetDropDownList`).subscribe({
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetDropDownList`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (getCode) => {
         this.spinnerService.requestEnded();
 
@@ -141,7 +148,10 @@ export class AddEditSkillsetComponent implements OnInit {
 
     }
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `EmployeeVsSkillset/CreateEmployeeSkillset`, payload).subscribe({
+    this.http.post<any>(environment.apiURL + `EmployeeVsSkillset/CreateEmployeeSkillset`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (response) => {
         this.spinnerService.requestEnded();
 

@@ -9,6 +9,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdduserMasterComponent } from '../adduser-master/adduser-master.component';
 import { AddEditUsermasterComponent } from '../add-edit-usermaster/add-edit-usermaster.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { catchError } from 'rxjs';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
 @Component({
   selector: 'app-user-master',
@@ -50,7 +52,10 @@ export class UserMasterComponent implements OnInit {
 
   getMasterUsers() {
     this.spinnerService.requestStarted();
-    this._empService.getAllMasterUsers().subscribe({
+    this._empService.getAllMasterUsers().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (data) => {
         this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(data);
@@ -110,8 +115,11 @@ export class UserMasterComponent implements OnInit {
     }
     this._empService.deleteMasterUser(deleteUser).subscribe({
       next: (res) => {
-        this._coreService.openSnackBar('Employee deleted!', 'done');
-        this.getMasterUsers();
+        Swal.fire('Done!', 'User Deleted Successfully', 'error').then((response)=>{
+          if(response.isConfirmed){
+            this.getMasterUsers();
+          }
+        });        
 
       },
       error: console.log,

@@ -274,7 +274,6 @@ export class PricingComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.Scopes = response;
-          console.log(response, 'departmentsValues');
         },
         (error) => {
           console.log('Error loading departments values:', error);

@@ -3,33 +3,30 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=, initial-scale=1.0">
   <title>Document</title>
 </head>
 
 <body>
-  <div class="main-body">
-    <div class="container">
-      <div class="mat-elevation-z8">
-        <div class="table-container">
-          <div class="advance">
-            <div class="customerProfile">
-              <div class="backgroundcolor">
-                <div class="panel-heading">
-                  <h2 class="panel-title" style="color:#fff;">
-                    Proof Reading
-                  </h2>
-                </div>
+  <div class="container">
+    <div class="advance">
+      <div class="customerProfile">
+        <div class="backgroundcolor">
+          <div class="panel-heading">
+            <h2 class="panel-title" style="color:#fff;">
+              Proof Reading
+            </h2>
+          </div>
+          <div class="table-container">
+            <div class="checkbox">
+              <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedValue">
+                <mat-radio-button [value]="0" checked>Both</mat-radio-button>
+                <mat-radio-button [value]="1">Artwork</mat-radio-button>
+                <mat-radio-button [value]="2">Digitizing</mat-radio-button>
+              </mat-radio-group>
+            </div>
 
-                <!-- <div class="table-container"> -->
-                  <div class="checkbox">
-                    <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedValue">
-                      <mat-radio-button [value]="0" checked>Both</mat-radio-button>
-                      <mat-radio-button [value]="1">Artwork</mat-radio-button>
-                      <mat-radio-button [value]="2">Digitizing</mat-radio-button>
-                    </mat-radio-group>
-                  </div>
-                  <table mat-table [dataSource]="dataSource" matSort id="custom-table"
+            <table mat-table [dataSource]="dataSource" matSort id="custom-table"
                     class="table table-sm table-responsive table table-bordered text-center">
                     <!--Checkbox to select the values-->
                     <ng-container matColumnDef="selected">
@@ -264,26 +261,20 @@
                     <!-- Table Rows -->
                     <tr mat-row *matRowDef="let job; columns:visibility()"></tr>
                   </table>
-                <!-- </div> -->
-
-              </div>
-
-            </div>
           </div>
-
+          <mat-paginator [pageSizeOptions]="[25, 50, 75]" showFirstLastButtons></mat-paginator>
+        </div>
+        <div class="scope" style="display:flex;justify-content: center;" *ngIf="displayScopeDropdown">
+          <mat-form-field>
+            <mat-label>Scope</mat-label>
+            <mat-select [(value)]="selectedScope">
+              <mat-option *ngFor="let item of scopes" [value]="item.Id">
+                {{ item.Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
-    </div>
-    <mat-paginator style="margin-top: 120px;" [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
-    <div class="scope" style="display:flex;justify-content: center;" *ngIf="displayScopeDropdown">
-      <mat-form-field>
-        <mat-label>Scope</mat-label>
-        <mat-select [(value)]="selectedScope">
-          <mat-option *ngFor="let item of scopes" [value]="item.Id">
-            {{ item.Name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
     </div>
   </div>
 

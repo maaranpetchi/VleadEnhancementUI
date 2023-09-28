@@ -9,6 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-attendance-index',
@@ -48,8 +49,10 @@ export class AttendanceIndexComponent implements OnInit {
       fd.append('Files', this.selectedFile[i]);
     }
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `JobOrder/PostImportAttendanceExcel`, fd).subscribe(result => {
-
+    this.http.post<any>(environment.apiURL + `JobOrder/PostImportAttendanceExcel`, fd).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({next:(result) =>{
       this.spinnerService.requestEnded();
       if (result.result == "success") {
 
@@ -67,18 +70,15 @@ export class AttendanceIndexComponent implements OnInit {
       }
       else {
         Swal.fire(
-          'Done!',
+          'Alert!',
           'Please upload valid file!',
-          'success'
+          'info'
         )
 
       }
       //BindFileInward();
       this.selectedFile.length = 0;
-      //BindFileInwardOnlyTrue();
-    }, error => {
-      this.spinnerService.resetSpinner();
-    })
+    },})
 
   };
 
@@ -102,7 +102,10 @@ export class AttendanceIndexComponent implements OnInit {
     }
 
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `JobOrder/SaveAttendanceList`, payload).subscribe(results => {
+    this.http.post<any>(environment.apiURL + `JobOrder/SaveAttendanceList`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.spinnerService.requestEnded();
       if (results.result = "Following employee Ids are not available ARTWORK") {
         Swal.fire(

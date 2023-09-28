@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { environment } from 'src/Environments/environment';
@@ -8,6 +8,9 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
+import { VendorComponent } from '../vendor/vendor.component';
+import { VendorService } from 'src/app/Services/Vendor/vendor.service';
 
 @Component({
   selector: 'app-edit-vendor',
@@ -22,7 +25,6 @@ export class EditVendorComponent implements OnInit {
   pendingAmount: number;
   amtTobePaid: number;
   amtPaidHide: boolean = true;
-
   constructor(
     private loginservice: LoginService,
     private _fb: FormBuilder,
@@ -31,8 +33,10 @@ export class EditVendorComponent implements OnInit {
     private http: HttpClient,
     private _dialogRef: MatDialogRef<EditVendorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _coreService: CoreService
-  ) { }
+    private _coreService: CoreService,
+  ) {
+  }
+  @ViewChild(VendorComponent, { static: false }) VendorComponent: VendorComponent;
 
   ngOnInit(): void {
   }
@@ -55,17 +59,36 @@ export class EditVendorComponent implements OnInit {
     };
 
     this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `ITAsset/nSetVendorDetails`, payload).subscribe({
+    this.http.post<any>(environment.apiURL + `ITAsset/nSetVendorDetails`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (val: any) => {
         this.spinnerService.requestEnded();
         Swal.fire(
           'Done!',
-          'Employee Added Succesfully!',
+          val.setVDetailList,
           'success'
-        )
+        ).then((response) => {
+          if (response.isConfirmed) {
+            this._dialogRef.close();
+
+            window.location.reload();
+          }
+        })
       },
       error: (err: any) => {
         this.spinnerService.resetSpinner();
+        Swal.fire(
+          'Alert!!',
+          'Record Not added',
+          'error'
+        ).then((response) => {
+          if (response.isConfirmed) {
+            this._dialogRef.close();
+
+            window.location.reload();          }
+        })
       }
     });
   }

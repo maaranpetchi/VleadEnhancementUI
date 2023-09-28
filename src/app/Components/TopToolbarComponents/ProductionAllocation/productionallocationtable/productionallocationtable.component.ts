@@ -551,6 +551,7 @@ export class ProductionallocationtableComponent implements OnInit {
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
+          
           console.log(err);
         },
       });

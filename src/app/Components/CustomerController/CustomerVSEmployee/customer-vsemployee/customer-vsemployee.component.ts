@@ -12,6 +12,7 @@ import { CustomerVSEmployeeService } from 'src/app/Services/CustomerVSEmployee/c
 import { AddEditCustomerVSEmployeeComponent } from '../add-edit-customer-vsemployee/add-edit-customer-vsemployee.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-customer-vsemployee',
   templateUrl: './customer-vsemployee.component.html',
@@ -49,7 +50,7 @@ export class CustomerVSEmployeeComponent implements OnInit {
   openAddEditEmpForm() {
     // this.state=1;
     const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
-      // height: '60vh',
+       height: '60vh',
       width: '50vw'
     });
     dialogRef.afterClosed().subscribe({
@@ -66,7 +67,10 @@ export class CustomerVSEmployeeComponent implements OnInit {
   getEmployeeList() {
     this.spinnerService.requestStarted();
 
-    this._empService.getEmployeeList().subscribe({
+    this._empService.getEmployeeList().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
 
       next: (res) => {
         this.spinnerService.requestEnded();
@@ -101,7 +105,10 @@ export class CustomerVSEmployeeComponent implements OnInit {
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
 
-    this._empService.deleteEmployee(id).subscribe({
+    this._empService.deleteEmployee(id).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
         Swal.fire(

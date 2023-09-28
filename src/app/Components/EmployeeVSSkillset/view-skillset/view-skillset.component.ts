@@ -4,7 +4,8 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { EmployeevsskillsetService } from 'src/app/Services/EmployeeVsSkillset/employeevsskillset.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/Environments/environment';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-view-skillset',
   templateUrl: './view-skillset.component.html',
@@ -44,7 +45,13 @@ export class ViewSkillsetComponent implements OnInit {
 
 
   openEditForm() {
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${this.apiResponseData.id}`).subscribe(results => {
+    this.spinnerService.requestStarted();
+
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${this.apiResponseData.id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
+      this.spinnerService.requestEnded();
       this._empService.setViewData({ type: 'EDIT', data: results });
       this._empService.shouldFetchData = true;
       this.router.navigate(['/topnavbar/updateskillset']);

@@ -6,6 +6,7 @@ import { CustomerNormsService } from 'src/app/Services/CustomerNorms/customer-no
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 @Component({
   selector: 'app-add-customer-norms',
   templateUrl: './add-customer-norms.component.html',
@@ -38,7 +39,10 @@ export class AddCustomerNormsComponent implements OnInit {
   //Method
   fetchDepartments(): void {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Pricing/pricingList`).subscribe({
+    this.http.get<any>(environment.apiURL + `Pricing/pricingList`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(data) => {
       this.spinnerService.requestEnded();
       this.departments = data.departments;
@@ -57,7 +61,10 @@ export class AddCustomerNormsComponent implements OnInit {
   }
   onSelectCode(id) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Pricing/ScopeByDeptCustId?clientid=${id}&departmentId=${this.selectedDepartment}`).subscribe({
+    this.http.get<any>(environment.apiURL + `Pricing/ScopeByDeptCustId?clientid=${id}&departmentId=${this.selectedDepartment}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(results) => {
       this.spinnerService.requestEnded();
 
@@ -76,7 +83,10 @@ export class AddCustomerNormsComponent implements OnInit {
   }
   fetchJobStatus(): void {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Pricing/GetJobStatusList`).subscribe({
+    this.http.get<any>(environment.apiURL + `Pricing/GetJobStatusList`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(data) => {
       this.spinnerService.requestEnded();
       this.jobstatus = data.jsList;
@@ -95,7 +105,10 @@ export class AddCustomerNormsComponent implements OnInit {
   fetchProcess(): void {
     this.spinnerService.requestStarted();
 
-    this.http.get<any>(environment.apiURL + `Pricing/GetProcessListforNorms`).subscribe({
+    this.http.get<any>(environment.apiURL + `Pricing/GetProcessListforNorms`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(data) => {
       this.spinnerService.requestEnded();
       this.process = data.prList;
@@ -114,7 +127,10 @@ export class AddCustomerNormsComponent implements OnInit {
   fetchDivision(): void {
     this.spinnerService.requestStarted();
 
-    this.http.get<any>(environment.apiURL + `Pricing/GetCusDvisionforNorms`).subscribe({
+    this.http.get<any>(environment.apiURL + `Pricing/GetCusDvisionforNorms`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(data) => {
       this.spinnerService.requestEnded();
       this.CustomerDivisions = data.divList;
@@ -151,10 +167,13 @@ export class AddCustomerNormsComponent implements OnInit {
 
     this.spinnerService.requestStarted();
 
-    this.http.post<any>(environment.apiURL + `Pricing/CreateCustomerNormDetails`, payload).subscribe({
+    this.http.post<any>(environment.apiURL + `Pricing/CreateCustomerNormDetails`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (results) => {
         this.spinnerService.requestEnded();
-
+if(results.stringList =="Customer Norms Details created successfully"){
         Swal.fire(
           'Done!',
           results.stringList,
@@ -164,6 +183,18 @@ export class AddCustomerNormsComponent implements OnInit {
             this.router.navigate(['/topnavbar/customerNorms']);
           }
         })
+      }
+      else{
+        Swal.fire(
+          'Alert!',
+          results.stringList,
+          'info'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/topnavbar/customerNorms']);
+          }
+        })
+      }
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error

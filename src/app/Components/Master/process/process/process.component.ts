@@ -4,10 +4,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { ProcessService } from 'src/app/Services/Process/process.service';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-process',
   templateUrl: './process.component.html',
@@ -33,7 +35,8 @@ export class ProcessComponent implements OnInit{
     private _service:ProcessService,
     private route:Router,
     private _coreService:CoreService,
-    private http:HttpClient
+    private http:HttpClient,
+    private spinnerService:SpinnerService
   ){}
   
   ngOnInit(): void {
@@ -41,8 +44,13 @@ export class ProcessComponent implements OnInit{
   }
 
   getListProcess(){
-    this._service.getProcessList().subscribe({
+    this.spinnerService.requestStarted();
+    this._service.getProcessList().pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (data) => {
+        this.spinnerService.requestEnded();
         this.dataSource = new MatTableDataSource(data);
         
         this.dataSource.sort = this.sort;
@@ -62,22 +70,41 @@ export class ProcessComponent implements OnInit{
 
 
   openViewForm(data:any){
-    this.http.get(environment.apiURL+`Process/ProcessDetails?Id=${data.id}`).subscribe((response:any) =>{
+    this.spinnerService.requestStarted();
+    this.http.get(environment.apiURL+`Process/ProcessDetails?Id=${data.id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response:any) =>{
+      this.spinnerService.requestEnded();
+
     this.route.navigate(['/topnavbar/process-view'], {state:{data:response}});
   })
 }
   openEditForm(id:any){
     this._service.setFormData(id);
-    this.http.get(environment.apiURL+`Process/ProcessDetails?Id=${id}`).subscribe((response:any) =>{
+    this.spinnerService.requestStarted();
+
+    this.http.get(environment.apiURL+`Process/ProcessDetails?Id=${id}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response:any) =>{
+      this.spinnerService.requestEnded();
+
       this.route.navigate(['/topnavbar/process-addEdit'], {state:{data:response}});
   })
   }
 
 
 
-  deleteScopeUser(id:any){
-    this._service.deleteProcess(id).subscribe({
+  deleteScopeUser(id:any){        this.spinnerService.requestStarted();
+
+    this._service.deleteProcess(id).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next: (response) => {
+        this.spinnerService.requestEnded();
+
         if(response === true){
         this._coreService.openSnackBar('Process deleted!', 'done');
         window.location.reload()

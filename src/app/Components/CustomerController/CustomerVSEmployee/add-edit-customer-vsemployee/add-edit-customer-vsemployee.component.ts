@@ -8,6 +8,7 @@ import { CustomerVSEmployeeService } from 'src/app/Services/CustomerVSEmployee/c
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 //customerClassification INTERFACE
 interface customerClassification {
   value: string;
@@ -57,16 +58,20 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.spinnerService.requestStarted();
-
-    this.http.get<any>(environment.apiURL + 'CustomerVsEmployee/GetAllddlList').subscribe(data => {
-      this.spinnerService.requestEnded();
-      this.data = data;
-
-    });
+ this.getData();
   }
 
+getData(){
+  this.spinnerService.requestStarted();
+  this.http.get<any>(environment.apiURL + 'CustomerVsEmployee/GetAllddlList').pipe(catchError((error) => {
+    this.spinnerService.requestEnded();
+    return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+  })).subscribe(data => {
+    this.spinnerService.requestEnded();
+    this.data = data;
 
+  });
+}
 
   onSubmit(num: number) {
 
@@ -84,14 +89,21 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
         UpdatedBy: 152,
         ClassId: this.myForm.value.classificationList
 
-      }).subscribe({
+      }).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
         next:(result) =>{
           this.spinnerService.requestEnded();
           Swal.fire(
             'Done!',
             'Updated Data Successfully!',
             'success'
-          );        }, error: (err) => {
+          ).then((response)=>{
+            if(response.isConfirmed){
+              window.location.reload();
+            }
+          });        }, error: (err) => {
           this.spinnerService.resetSpinner(); // Reset spinner on error
           console.error(err);
           Swal.fire(
@@ -113,7 +125,10 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
         CreatedBy: 152,
         UpdatedBy: 0,
         ClassId: this.myForm.value.classificationList
-      }).subscribe({
+      }).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
         next: (res) => {
           this.spinnerService.requestEnded();
 
@@ -123,7 +138,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
             'success'
           ).then((result)=>{
             if(result.isConfirmed){
-              this._dialogRef.close();
+              window.location.reload();
             }
           })
 

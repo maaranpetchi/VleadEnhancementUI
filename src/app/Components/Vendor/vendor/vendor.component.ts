@@ -11,7 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { VendorService } from 'src/app/Services/Vendor/vendor.service';
 import { UpdatevendorComponent } from '../updatevendor/updatevendor.component';
 import { SpinnerService } from '../../Spinner/spinner.service';
-
+import { catchError } from 'rxjs';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-vendor',
   templateUrl: './vendor.component.html',
@@ -32,7 +33,10 @@ export class VendorComponent implements OnInit {
 
   fetchtableData() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `ITAsset/nGetVendorData`).subscribe({
+    this.http.get<any>(environment.apiURL + `ITAsset/nGetVendorData`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
       next:(data) => {
         this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource(data.vendorGDetailList);

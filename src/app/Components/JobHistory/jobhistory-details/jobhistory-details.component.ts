@@ -6,6 +6,10 @@ import { Router } from '@angular/router';
 import { JobHistoryComponent } from '../job-history/job-history.component';
 import { environment } from 'src/Environments/environment';
 import saveAs from 'file-saver';
+import { SpinnerService } from '../../Spinner/spinner.service';
+import { catchError } from 'rxjs';
+import { error } from 'jquery';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
 @Component({
   selector: 'app-jobhistory-details',
@@ -22,7 +26,7 @@ export class JobhistoryDetailsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
     public dialogRef: MatDialogRef<JobHistoryComponent>,
-
+private spinnerservice:SpinnerService
   ){}
   dataJobSource: MatTableDataSource<any>;
 
@@ -32,7 +36,13 @@ export class JobhistoryDetailsComponent implements OnInit {
   }
 
   getJobHistoryDetails(data:any){
-    this.http.post<any>(environment.apiURL+'JobOrder/getJobHistory',this.data.jId).subscribe(data => {
+    this.spinnerservice.requestStarted();
+    this.http.post<any>(environment.apiURL+'JobOrder/getJobHistory',this.data.jId).pipe(catchError((error)=>{
+      this.spinnerservice.requestEnded();
+      return Swal.fire('Alert!','An error occurred while processing your request','Error');
+
+    })).subscribe(data => {
+      this.spinnerservice.requestEnded();
       this.dataJobSource = data.jobHistory; 
   })
   }
@@ -40,12 +50,17 @@ export class JobhistoryDetailsComponent implements OnInit {
     
     // let path= this.jobHistory.fileUploadPath
     path = path.replace(/\\/g, '_');
+    this.spinnerservice.requestStarted();
     this.http
       .get(
         environment.apiURL +
           `Allocation/getFileNames/${path}`
-      )
+      ).pipe(catchError((error)=>{
+        this.spinnerservice.requestEnded();
+        return Swal.fire('Alert!','An error occurred while processing your request','Error');
+      }))
       .subscribe((response: any) => {
+        this.spinnerservice.requestEnded();
         const fileUrls: string[] = response.files;
         fileUrls.forEach((url) => {
           this.http.get(environment.apiURL+'Allocation/downloadFilesTest/'+`${path}/`+url).subscribe((response:any) => {

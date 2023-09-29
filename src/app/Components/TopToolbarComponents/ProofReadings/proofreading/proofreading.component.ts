@@ -23,7 +23,8 @@ export class ProofreadingComponent implements OnInit {
   quoteJobsCount: number;
   bulkUploadJobsCount: number;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private loginService: LoginService, private spinnerService: SpinnerService) {  this.getCount();
+  constructor(private http: HttpClient, public dialog: MatDialog, private loginService: LoginService, private spinnerService: SpinnerService) {
+    this.getCount();
   }
   ngOnInit() {
     this.freshJobs();

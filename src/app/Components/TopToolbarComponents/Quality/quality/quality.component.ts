@@ -5,7 +5,7 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { QualitytableComponent } from '../qualitytable/qualitytable.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { catchError, throwError } from 'rxjs';
-
+import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-quality',
   templateUrl: './quality.component.html',
@@ -92,7 +92,7 @@ export class QualityComponent implements OnInit {
       .pipe(
         catchError((error) => {
           this.spinnerService.resetSpinner();
-          return throwError(error);
+          return Swal.fire('Alert', 'An error occurred while processing your request','error')
         })
       ).subscribe(freshdataCount => {
         this.spinnerService.requestEnded();

@@ -125,7 +125,7 @@ export class ProductiontableComponent {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(freshdata => {
-      
+      this.spinnerService.requestEnded();
       this.dataSource =  new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -146,6 +146,7 @@ export class ProductiontableComponent {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource =new MatTableDataSource  (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -166,6 +167,7 @@ export class ProductiontableComponent {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource =new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -186,6 +188,7 @@ export class ProductiontableComponent {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource=new MatTableDataSource( freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -207,6 +210,7 @@ export class ProductiontableComponent {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource =new MatTableDataSource(freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -228,6 +232,7 @@ export class ProductiontableComponent {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(freshdata => {
+      this.spinnerService.requestEnded();
       this.dataSource = new MatTableDataSource (freshdata.getWorkflowDetails);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

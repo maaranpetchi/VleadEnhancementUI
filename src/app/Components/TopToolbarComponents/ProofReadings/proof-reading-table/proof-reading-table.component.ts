@@ -314,6 +314,8 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = true;
     this.displayedColumnsVisibility.end = true;
     this.displayedColumnsVisibility.bulkupload = true;
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/${this.selectedValue}`).pipe(
       catchError((error) => {
         this.spinnerService.requestEnded();
@@ -339,6 +341,8 @@ export class ProofReadingTableComponent implements OnInit {
     this.displayedColumnsVisibility.workfiles = false;
     this.displayedColumnsVisibility.end = false;
     this.displayedColumnsVisibility.bulkupload = false;
+    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/${this.selectedValue}`).pipe(
       catchError((error) => {
         this.spinnerService.requestEnded();

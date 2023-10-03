@@ -31,7 +31,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
     this.gettingindex = this._empService.getData() ?? 0;
 
 
-    if (this.gettingindex == 0 || this.gettingindex.data == 1 || this.gettingindex.data == 3) {
+    if (this.gettingindex == 0 || this.gettingindex.data==0|| this.gettingindex.data == 1 || this.gettingindex.data == 3) {
       this.popupStatus = true;
     }
 

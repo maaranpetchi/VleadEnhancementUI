@@ -99,6 +99,8 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   submitButton: boolean = true;
   EmployeeEditName: boolean = false;
   fetchUpdateData() {
+    console.log(this.apiResponseData.emp.empHry, "ApiresponseData");
+
     this.resignShow = true;
     this.submitButton = false;
     this.updateButton = true;
@@ -239,7 +241,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
   //2.product
   getMangerLeaderHierarchy() {
-    this.http.get<any[]>(environment.apiURL + 'Employee/GetEmployeeList').subscribe(productDropdownResponse => {
+    this.http.get<any>(environment.apiURL + 'Employee/GetEmployeeList').subscribe(productDropdownResponse => {
       this.rm1options = productDropdownResponse;
       this.rm2options = productDropdownResponse;
       this.rl1options = productDropdownResponse;
@@ -336,15 +338,24 @@ export class EditaddemployeecontrollerComponent implements OnInit {
 
   onSubmit() {
     ///Employee Added SuccessFully
-    this.employeeRoles.forEach((item) => {
-      this.roleID = item.id;
-      this.roleDescription = item.description;
+
+    let empRoleList = this.employeeRoles.map((item) => {
+      return {
+        "roleId": item.id ? item.id :'',
+        "roleDescription": item.description ? item.description:'',
+        "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+        "updatedBy": 0
+      }
     });
-    this.employeehierarchy.forEach((item) => {
-      this.subEmpId = item.employeeId,
-        this.subEmpName = item.employeeName
-      //this.createdBy = this.loginservice.getUsername()
+    let empHierarchyList = this.employeehierarchy.map(item => {
+      return {
+        "subEmpId": item.employeeId ? item.employeeId : '',
+        "subEmpName": item.employeeName ? item.employeeName : '',
+        "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+      };
     });
+    console.log(empHierarchyList, "EmployeeHierarchy");
+
     let payload = {
       "employeeId": this.loginservice.getUsername(),
       "employeeCode": this.employeeCode,
@@ -388,21 +399,8 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "result": this.outsource ? this.outsource : false,
       "roleDescription": "",
       "isOutsource": true,
-      "empRolesList": [
-        {
-          "roleDescription": this.roleDescription ? this.roleDescription : '',
-          "roleId": this.roleId,
-          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
-          "updatedBy": 0
-        }
-      ],
-      "empHierarchyList": [
-        {
-          "subEmpId": this.subEmpId ? this.subEmpId : '',
-          "subEmpName": this.subEmpName ? this.subEmpName : '',
-          "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
-        }
-      ],
+      "empRolesList": empRoleList,
+      "empHierarchyList": empHierarchyList,
       "isInternetConnection": this.internetAvailable,
       "isSystem": this.systemlaptop,
       "netWorkType": this.internetType ? this.internetType : '',
@@ -416,7 +414,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     })).subscribe({
       next: (val: any) => {
         this.spinnerservice.requestEnded();
-
+if(val==true){
         Swal.fire(
           'Done!',
           'Employee Added Succesfully',
@@ -426,6 +424,18 @@ export class EditaddemployeecontrollerComponent implements OnInit {
             this.router.navigate(['/topnavbar/Emp-Empcontroller']);
           }
         })
+      }
+      else{
+        Swal.fire(
+          'ALert!',
+          'Employee Not Added Succesfully',
+          'info'
+        ).then((respone) => {
+          if (respone.isConfirmed) {
+            this.router.navigate(['/topnavbar/Emp-Empcontroller']);
+          }
+        })
+      }
       },
       error: (err: any) => {
         Swal.fire(

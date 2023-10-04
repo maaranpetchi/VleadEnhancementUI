@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ThisReceiver } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { error } from 'jquery';
@@ -92,7 +92,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     this.employeeProcess = this.apiViewResponseData.emp.code
     this.personalEmail = this.apiViewResponseData.emp.addressDetail.personalEmail
   }
-  constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService, private spinnerservice: SpinnerService) {
+  constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService, private spinnerservice: SpinnerService,private ngZone: NgZone) {
 
   }
   updateButton: boolean = false;
@@ -237,8 +237,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.Resigndropdownvalues = resignreasons;
     });
   }
-
-
   //2.product
   getMangerLeaderHierarchy() {
     this.http.get<any[]>(environment.apiURL + 'Employee/GetEmployeeList').subscribe(productDropdownResponse => {
@@ -251,7 +249,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
 
   //3.communication
-
   roleDescription: any;
   roleId: any;
   createdBy: any;
@@ -282,8 +279,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   hideForm() {
     this.formVisible = false;
   }
-
-
 
   newRoleSubmit() {
 
@@ -325,21 +320,38 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       )
     });
   }
-
-
-  onCheckboxChange(event: Event) {
-    this.copyAddress = (event.target as HTMLInputElement).checked;
-    if (this.copyAddress) {
-      this.presentAddress1 = this.permanentAddress1;
-      this.presentAddress2 = this.permanentAddress2;
-      this.presentaddress3 = this.permanentaddress3;
-
-    } else {
-      this.presentAddress1 = "";
-      this.presentAddress2 = "";
-      this.presentaddress3 = "";
-    }
+  onCheckboxChange(event: any) {
+    this.ngZone.run(() => {
+      if (event.checked) {      
+        this.permanentAddress1 = this.presentAddress1;
+        this.permanentAddress2 = this.presentAddress2;
+        this.permanentaddress3 = this.presentaddress3;
+      } else {
+        this.permanentAddress1 = '';
+        this.permanentAddress2 = '';
+        this.permanentaddress3 = '';
+      }
+    });
   }
+
+  // onCheckboxChange(event: any) {
+  //   if (event.checked) {
+  //     console.log("FirstConsole");
+  //     console.log(this.presentAddress1 =this.permanentAddress1, "Address123");
+  //     console.log(this.presentAddress2 =this.permanentAddress2, "Address123");
+  //     console.log(this.presentaddress3 =this.permanentaddress3, "Address123");
+
+  //     this.presentAddress1 = this.permanentAddress1;
+  //     this.presentAddress2 = this.permanentAddress2;
+  //     this.presentaddress3 = this.permanentaddress3;
+  //     // this.permanentAddress3 = this.presentAddress3;
+  //   } else {
+  //     console.log("SecondConsole");
+  //     this.presentAddress1 = "";
+  //     this.presentAddress2 = "";
+  //     this.presentaddress3 = "";
+  //   }
+  // }
 
 
 
@@ -558,4 +570,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   onHome() {
     this.router.navigate(['/topnavbar/Emp-Empcontroller']);
   }
+
+
 }

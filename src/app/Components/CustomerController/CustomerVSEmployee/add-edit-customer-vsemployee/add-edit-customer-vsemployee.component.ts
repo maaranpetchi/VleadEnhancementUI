@@ -54,24 +54,24 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
 
     public data1: any,
 
-  ) { this.customervalue.push(data1?.customerId);  }
+  ) { this.customervalue.push(data1?.customerId); }
 
 
   ngOnInit(): void {
- this.getData();
+    this.getData();
   }
 
-getData(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL + 'CustomerVsEmployee/GetAllddlList').pipe(catchError((error) => {
-    this.spinnerService.requestEnded();
-    return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-  })).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.data = data;
+  getData() {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + 'CustomerVsEmployee/GetAllddlList').pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(data => {
+      this.spinnerService.requestEnded();
+      this.data = data;
 
-  });
-}
+    });
+  }
 
   onSubmit(num: number) {
 
@@ -93,17 +93,18 @@ getData(){
         this.spinnerService.requestEnded();
         return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })).subscribe({
-        next:(result) =>{
+        next: (result) => {
           this.spinnerService.requestEnded();
           Swal.fire(
             'Done!',
             'Updated Data Successfully!',
             'success'
-          ).then((response)=>{
-            if(response.isConfirmed){
+          ).then((response) => {
+            if (response.isConfirmed) {
               window.location.reload();
             }
-          });        }, error: (err) => {
+          });
+        }, error: (err) => {
           this.spinnerService.resetSpinner(); // Reset spinner on error
           console.error(err);
           Swal.fire(
@@ -127,31 +128,43 @@ getData(){
         ClassId: this.myForm.value.classificationList
       }).pipe(catchError((error) => {
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+        return Swal.fire('Alert!', 'Customer Already Exists', 'error');
       })).subscribe({
         next: (res) => {
           this.spinnerService.requestEnded();
-
-          Swal.fire(
-            'Done!',
-            'Employee Added Successfully!',
-            'success'
-          ).then((result)=>{
-            if(result.isConfirmed){
-              window.location.reload();
-            }
-          })
+          if (res == true) {
+            Swal.fire(
+              'Done!',
+              'Employee Added Successfully!',
+              'success'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            })
+          }
+          else {
+            Swal.fire(
+              'Alert!',
+              'Please try another customer!',
+              'info'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            })
+          }
 
         },
         error: (err) => {
-           this.spinnerService.resetSpinner(); // Reset spinner on error
-           console.error(err);
-           Swal.fire(
-             'Error!',
-             'Already Exist',
-             'error'
-           );
-         }
+          this.spinnerService.resetSpinner(); // Reset spinner on error
+          console.error(err);
+          Swal.fire(
+            'Error!',
+            'Already Exist',
+            'error'
+          );
+        }
       });
     }
 

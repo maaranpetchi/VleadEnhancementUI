@@ -126,8 +126,10 @@ console.log( this.apiResponseData,"Apresponsedata");
       this.reportingManager2 = this.apiResponseData.emp.addressDetail.reportingManager2,
       this.reportingLeader1 = this.apiResponseData.emp.addressDetail.reportLeader1,
       this.reportingLeader2 = this.apiResponseData.emp.addressDetail.reportingLeader2,
-      this.employeehierarchy = this.apiResponseData.emp.empHry,
-      console.log(this.employeehierarchy, "employeehierarchy");
+
+      this.EmployeeHierarchyOptions = this.apiResponseData.emp.empHry.map(employee => employee.employeeName);
+      
+      console.log(this.EmployeeHierarchyOptions, "employeehierarchy");
 
       this.proficiency = this.apiResponseData.emp.addressDetail.profiencyId,
       this.presentAddress1 = this.apiResponseData.emp.addressDetail.address1,
@@ -210,7 +212,7 @@ console.log( this.apiResponseData,"Apresponsedata");
   reportingLeader1: any;
   reportingLeader2: any;
   employeehierarchy: any[] = [];
-  proficiency: string = ''
+  proficiency: string = '';
   //3.Communication
   presentAddress1: string = ''
   permanentAddress1: string = ''
@@ -352,7 +354,7 @@ console.log( this.apiResponseData,"Apresponsedata");
       return {
         "subEmpId": item.employeeId ? item.employeeId : '',
         "subEmpName": item.employeeName ? item.employeeName : '',
-        "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+        // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
       };
     });
     console.log(empHierarchyList, "EmployeeHierarchy");
@@ -451,7 +453,8 @@ if(val==true){
   }
 
   onUpdate() {
-
+    console.log(this.resignReason,"resignReason");
+    
     let empRoleList = this.employeeRoles.map((item) => {
       return {
         "roleId": item.id ? item.id :'',
@@ -464,7 +467,7 @@ if(val==true){
       return {
         "subEmpId": item.employeeId ? item.employeeId : '',
         "subEmpName": item.employeeName ? item.employeeName : '',
-        "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+        // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
       };
     });
     let payload = {
@@ -488,10 +491,10 @@ if(val==true){
       "createdBy": 0,
       "updatedUTC": new Date().toISOString,
       "updatedBy": 0,
-      "reportingManager1": this.reportingManager1 ? this.reportingManager1:'',
-      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1:'',
-      "reportingManager2": this.reportingManager2 ? this.reportingManager2:'',
-      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2:'',
+      "reportingManager1": this.reportingManager1 ? this.reportingManager1:0,
+      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1:0,
+      "reportingManager2": this.reportingManager2 ? this.reportingManager2:0,
+      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2:0,
       "address1": this.presentAddress1 ? this.presentAddress1:'',
       "address2": this.presentAddress2 ? this.presentAddress2:'',
       "address3": this.presentaddress3 ? this.presentaddress3:'',
@@ -503,7 +506,7 @@ if(val==true){
       "addressType": "",
       "mobileNo":this.mobileNumber ? this.mobileNumber:'',
       "phoneNo": this.phonenum ? this.phonenum:'',
-      "resignReasons":  this.resignReason ,
+      "resignReasons":  this.resignReason ? this.resignReason:0 ,
       "dateOfResignation": this.dor ?  this.dor:'',
       "processCode": this.employeeProcess ? this.employeeProcess:0,
       "result": this.outsource ? this.outsource : '',

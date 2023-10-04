@@ -92,7 +92,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     this.employeeProcess = this.apiViewResponseData.emp.code
     this.personalEmail = this.apiViewResponseData.emp.addressDetail.personalEmail
   }
-  constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService, private spinnerservice: SpinnerService,private ngZone: NgZone) {
+  constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService, private spinnerservice: SpinnerService, private ngZone: NgZone) {
 
   }
   updateButton: boolean = false;
@@ -322,7 +322,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
   onCheckboxChange(event: any) {
     this.ngZone.run(() => {
-      if (event.checked) {      
+      if (event.checked) {
         this.permanentAddress1 = this.presentAddress1;
         this.permanentAddress2 = this.presentAddress2;
         this.permanentaddress3 = this.presentaddress3;
@@ -334,28 +334,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     });
   }
 
-  // onCheckboxChange(event: any) {
-  //   if (event.checked) {
-  //     console.log("FirstConsole");
-  //     console.log(this.presentAddress1 =this.permanentAddress1, "Address123");
-  //     console.log(this.presentAddress2 =this.permanentAddress2, "Address123");
-  //     console.log(this.presentaddress3 =this.permanentaddress3, "Address123");
-
-  //     this.presentAddress1 = this.permanentAddress1;
-  //     this.presentAddress2 = this.permanentAddress2;
-  //     this.presentaddress3 = this.permanentaddress3;
-  //     // this.permanentAddress3 = this.presentAddress3;
-  //   } else {
-  //     console.log("SecondConsole");
-  //     this.presentAddress1 = "";
-  //     this.presentAddress2 = "";
-  //     this.presentaddress3 = "";
-  //   }
-  // }
-
-
-
-  /////////////////submit an update /////
   onSubmit() {
     ///Employee Added SuccessFully
     this.employeeRoles.forEach((item) => {
@@ -407,7 +385,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "dateOfResignation": this.dor,
       "processCode":
         this.employeeProcess ? this.employeeProcess : '',
-      "result": this.outsource ? this.outsource : '',
+      "result": this.outsource ? this.outsource : false,
       "roleDescription": "",
       "isOutsource": true,
       "empRolesList": [

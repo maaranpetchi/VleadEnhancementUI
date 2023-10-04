@@ -45,8 +45,6 @@ export class JobHistoryComponent implements OnInit {
   ) { }
 
   displayedColumns: string[] = [
-    'selected',
-    'id',
     'jobnumber',
     'estqueryDate',
     'department',

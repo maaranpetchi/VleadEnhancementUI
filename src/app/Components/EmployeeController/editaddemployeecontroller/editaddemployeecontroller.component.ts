@@ -33,6 +33,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     if (this._empservice.shouldFetchData) {
       const data = this._empservice.getData();
       this.apiResponseData = data.data;
+console.log( this.apiResponseData,"Apresponsedata");
 
       this.fetchUpdateData();
       this._empservice.shouldFetchData = false;
@@ -125,7 +126,9 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.reportingManager2 = this.apiResponseData.emp.addressDetail.reportingManager2,
       this.reportingLeader1 = this.apiResponseData.emp.addressDetail.reportLeader1,
       this.reportingLeader2 = this.apiResponseData.emp.addressDetail.reportingLeader2,
-      this.employeehierarchy = this.apiResponseData.emp.empHry[0].employeeId,
+      this.employeehierarchy = this.apiResponseData.emp.empHry,
+      console.log(this.employeehierarchy, "employeehierarchy");
+
       this.proficiency = this.apiResponseData.emp.addressDetail.profiencyId,
       this.presentAddress1 = this.apiResponseData.emp.addressDetail.address1,
       this.permanentAddress1 = this.apiResponseData.emp.addressDetail.address11,
@@ -168,7 +171,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   destinations: any[] = [];
   selectedDestination: any;
 
-  resignReason: any = '';
+  resignReason:any;
   Resigndropdownvalues: any[] = [];
 
 
@@ -342,9 +345,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     let empRoleList = this.employeeRoles.map((item) => {
       return {
         "roleId": item.id ? item.id :'',
-        "roleDescription": item.description ? item.description:'',
-        "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
-        "updatedBy": 0
+        "roleDescription": item.description ? item.description:''
       }
     });
     let empHierarchyList = this.employeehierarchy.map(item => {
@@ -357,7 +358,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     console.log(empHierarchyList, "EmployeeHierarchy");
 
     let payload = {
-      "employeeId": this.loginservice.getUsername(),
+      "employeeId":0,
       "employeeCode": this.employeeCode,
       "employeeName": this.employeeName,
       "departmentId": this.selectedDepartment,
@@ -374,7 +375,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       "email": this.officialemailaddress ? this.officialemailaddress : '',
       "personalEmail": this.personalEmail,
       "createdUTC": new Date().toISOString,
-      "createdBy": this.loginservice.getUsername(),
+      "createdBy": 0,
       "updatedUTC": new Date().toISOString,
       "updatedBy": 0,
       "reportingManager1": this.reportingManager1 ? this.reportingManager1 : '',
@@ -450,78 +451,71 @@ if(val==true){
   }
 
   onUpdate() {
-    ///Employee Added SuccessFully
-    this.employeeRoles.forEach((item) => {
-      this.roleID = item.id;
-      this.roleDescription = item.description;
+
+    let empRoleList = this.employeeRoles.map((item) => {
+      return {
+        "roleId": item.id ? item.id :'',
+        "roleDescription": item.description ? item.description:'',
+        // "createdBy": item.createdBy ? item.createdBy : '',
+        // "updatedBy": item.updatedBy? item.updatedBy:''
+      }
     });
-    this.employeehierarchy.forEach((item) => {
-      this.subEmpId = item.employeeId,
-        this.subEmpName = item.employeeName
-      // this.createdBy = this.loginservice.getUsername()
+    let empHierarchyList = this.employeehierarchy.map(item => {
+      return {
+        "subEmpId": item.employeeId ? item.employeeId : '',
+        "subEmpName": item.employeeName ? item.employeeName : '',
+        "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+      };
     });
     let payload = {
-      "employeeId": this.loginservice.getUsername(),
-      "employeeCode": this.employeeCode,
-      "employeeName": this.employeeName,
-      "departmentId": this.selectedDepartment,
-      "designationId": this.selectedDestination,
-      "dateOfJoining": this.doj,
-      "dateOfBirth": this.dob,
-      "bloodGroup": this.BloodGroup,
-      "gender": this.gender,
-      "maritalStatus": this.martialStatus,
+      "employeeId": this.apiResponseData.emp.addressDetail.employeeId ? this.apiResponseData.emp.addressDetail.employeeId:0,
+      "employeeCode": this.employeeCode ? this.employeeCode:'',
+      "employeeName": this.employeeName ? this.employeeName:'',
+      "departmentId": this.selectedDepartment ? this.selectedDepartment:0,
+      "designationId": this.selectedDestination ? this.selectedDestination:0,
+      "dateOfJoining": this.doj ? this.doj:'',
+      "dateOfBirth": this.dob ? this.dob:'',
+      "bloodGroup": this.BloodGroup ? this.BloodGroup:0,
+      "gender": this.gender ? this.gender:0,
+      "maritalStatus": this.martialStatus ? this.martialStatus:0,
       "companyId": 0,
-      "profiencyId": this.proficiency,
-      "emergencyContactName": this.emergencyContactName,
-      "emergencyContactNo": this.emergencyContactName,
-      "email": this.officialemailaddress,
-      "personalEmail": this.personalEmail,
+      "profiencyId": this.proficiency ? this.proficiency:'',
+      "emergencyContactName": this.emergencyContactName ? this.emergencyContactName:'',
+      "emergencyContactNo": this.emergencyContactName ? this.emergencyContactName:'',
+      "email": this.officialemailaddress ? this.officialemailaddress:'',
+      "personalEmail": this.personalEmail ? this.personalEmail:'',
       "createdUTC": new Date().toISOString,
       "createdBy": 0,
       "updatedUTC": new Date().toISOString,
-      "updatedBy": this.loginservice.getUsername(),
-      "reportingManager1": this.reportingManager1,
-      "reportLeader1": this.reportingLeader1,
-      "reportingManager2": this.reportingManager2,
-      "reportingLeader2": this.reportingLeader2,
-      "address1": this.presentAddress1,
-      "address2": this.presentAddress2,
-      "address3": this.presentaddress3,
-      "address11": this.permanentAddress1,
-      "address22": this.permanentAddress2,
-      "address33": this.permanentaddress3,
+      "updatedBy": 0,
+      "reportingManager1": this.reportingManager1 ? this.reportingManager1:'',
+      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1:'',
+      "reportingManager2": this.reportingManager2 ? this.reportingManager2:'',
+      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2:'',
+      "address1": this.presentAddress1 ? this.presentAddress1:'',
+      "address2": this.presentAddress2 ? this.presentAddress2:'',
+      "address3": this.presentaddress3 ? this.presentaddress3:'',
+      "address11": this.permanentAddress1 ? this.permanentAddress1:'',
+      "address22": this.permanentAddress2 ? this.permanentAddress2:'',
+      "address33": this.permanentaddress3 ? this.permanentaddress3:'',
       "locationId": 0,
       "locationId1": 0,
       "addressType": "",
-      "mobileNo": this.mobileNumber,
-      "phoneNo": this.phonenum,
-      "resignReasons": this.resignReason,
-      "dateOfResignation": this.dor,
-      "processCode": this.employeeProcess,
+      "mobileNo":this.mobileNumber ? this.mobileNumber:'',
+      "phoneNo": this.phonenum ? this.phonenum:'',
+      "resignReasons":  this.resignReason ,
+      "dateOfResignation": this.dor ?  this.dor:'',
+      "processCode": this.employeeProcess ? this.employeeProcess:0,
       "result": this.outsource ? this.outsource : '',
       "roleDescription": "",
       "isOutsource": true,
-      "empRolesList": [
-        {
-          "roleDescription": this.roleDescription,
-          "roleId": this.roleId,
-          "createdBy": 0,
-          "updatedBy": this.loginservice.getUsername()
-        }
-      ],
-      "empHierarchyList": [
-        {
-          "subEmpId": this.subEmpId,
-          "subEmpName": this.subEmpName,
-          "createdBy": 0
-        }
-      ],
-      "isInternetConnection": this.internetAvailable,
-      "isSystem": this.systemlaptop,
-      "netWorkType": this.internetType,
-      "serviceProvider": this.ServiceProvider,
-      "systemConfig": this.systemconfiguration,
+      "empRolesList":empRoleList ? empRoleList:0,
+      "empHierarchyList": empHierarchyList ? empHierarchyList:0 ,
+      "isInternetConnection": this.internetAvailable ? this.internetAvailable:false,
+      "isSystem": this.systemlaptop ? this.systemlaptop:false,
+      "netWorkType": this.internetType ? this.internetAvailable:0,
+      "serviceProvider": this.ServiceProvider ? this.ServiceProvider:0,
+      "systemConfig": this.systemconfiguration ? this.systemconfiguration:0,
     }
     this.spinnerservice.requestStarted();
     this.http.post<any>(environment.apiURL + `Employee/EditEmployee`, payload).pipe(
@@ -533,6 +527,7 @@ if(val==true){
     ).subscribe({
       next: (val: any) => {
         this.spinnerservice.requestEnded();
+        if(val == true){
         Swal.fire(
           'Updated!',
           'Employee updated successfully',
@@ -542,6 +537,18 @@ if(val==true){
             this.router.navigate(['/topnavbar/Emp-Empcontroller'])
           }
         });
+      }
+      else{
+        Swal.fire(
+          'Alert!',
+          'Employee not updated successfully',
+          'info'
+        ).then((update) => {
+          if (update.isConfirmed) {
+            this.router.navigate(['/topnavbar/Emp-Empcontroller'])
+          }
+        });
+      }
       },
       error: (err: any) => {
         Swal.fire(

@@ -9,6 +9,7 @@ import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
+import { LoginService } from 'src/app/Services/Login/login.service';
 //customerClassification INTERFACE
 interface customerClassification {
   value: string;
@@ -50,6 +51,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
     private _coreService: CoreService,
     private spinnerService: SpinnerService,
     private employeeservice: CustomerVSEmployeeService,
+    private loginservice:LoginService,
     @Inject(MAT_DIALOG_DATA)
 
     public data1: any,
@@ -85,8 +87,8 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
         IsDeleted: 0,
         CreatedUTC: new Date(),
         UpdatedUTC: new Date(),
-        CreatedBy: 152,
-        UpdatedBy: 152,
+        CreatedBy: 0,
+        UpdatedBy: this.loginservice.getUsername(),
         ClassId: this.myForm.value.classificationList
 
       }).pipe(catchError((error) => {
@@ -123,7 +125,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
         IsDeleted: 0,
         CreatedUTC: new Date(),
         UpdatedUTC: new Date(),
-        CreatedBy: 152,
+        CreatedBy: this.loginservice.getUsername(),
         UpdatedBy: 0,
         ClassId: this.myForm.value.classificationList
       }).pipe(catchError((error) => {

@@ -232,7 +232,7 @@ export class JobHistoryComponent implements OnInit {
     const csv = [header.join(','), ...csvData].join('\n');
 
     const blob = new Blob([csv], { type: 'text/csv' });
-    FileSaver.saveAs(blob, 'table-data.csv');
+    FileSaver.saveAs(blob, 'Job-History.csv');
   }
 
 }

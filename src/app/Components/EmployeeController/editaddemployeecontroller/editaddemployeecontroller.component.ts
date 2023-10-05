@@ -198,7 +198,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   BloodGroup: any;
   internetAvailable:string = "";
   outsource: boolean = false;
-  internetType: any;
+  internetType:string = "";
   ServiceProvider: any;
   systemlaptop: string = "";
   systemconfiguration: string = "";
@@ -341,17 +341,17 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
 
   onSubmit() {
-    ///Employee Added SuccessFully
-    let empRoleList = this.employeeRoles.map((item) => {
+    let empRoleList = this.employeeRoles.map((item) => {      
       return {
-        "roleId": item.id ? item.id :'',
-        "roleDescription": item.description ? item.description:''
+        "roleId": item.id ? item.id : '',
+        "roleDescription": item.description ? item.description:'',
+        // "createdBy": item.createdBy ? item.createdBy : '',
+        // "updatedBy": item.updatedBy? item.updatedBy:''
       }
     });
     let empHierarchyList = this.employeehierarchy.map(item => {
-
       return {
-        "subEmpId": item.employeeId ? item.employeeId : '',
+        "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
         "subEmpName": item.employeeName ? item.employeeName : '',
         // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
       };
@@ -454,7 +454,7 @@ if(val==true){
     
     let empRoleList = this.employeeRoles.map((item) => {      
       return {
-        "roleId": item.id ? item.id :'',
+        "roleId": item.id ? item.id : '',
         "roleDescription": item.description ? item.description:'',
         // "createdBy": item.createdBy ? item.createdBy : '',
         // "updatedBy": item.updatedBy? item.updatedBy:''
@@ -462,7 +462,7 @@ if(val==true){
     });
     let empHierarchyList = this.employeehierarchy.map(item => {
       return {
-        "subEmpId": item.employeeId ? item.employeeId : '',
+        "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
         "subEmpName": item.employeeName ? item.employeeName : '',
         // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
       };
@@ -513,7 +513,7 @@ if(val==true){
       "empHierarchyList": empHierarchyList ? empHierarchyList:0 ,
       "isInternetConnection": this.internetAvailable ? this.internetAvailable:'',
       "isSystem": this.systemlaptop ? this.systemlaptop:false,
-      "netWorkType": this.internetType ? this.internetAvailable:0,
+      "netWorkType": this.internetType ? this.internetType:0,
       "serviceProvider": this.ServiceProvider ? this.ServiceProvider:0,
       "systemConfig": this.systemconfiguration ? this.systemconfiguration:0,
     }

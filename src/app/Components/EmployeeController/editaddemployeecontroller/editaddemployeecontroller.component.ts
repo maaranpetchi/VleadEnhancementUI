@@ -33,8 +33,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     if (this._empservice.shouldFetchData) {
       const data = this._empservice.getData();
       this.apiResponseData = data.data;
-console.log( this.apiResponseData,"Apresponsedata");
-
       this.fetchUpdateData();
       this._empservice.shouldFetchData = false;
     }
@@ -100,8 +98,8 @@ console.log( this.apiResponseData,"Apresponsedata");
   submitButton: boolean = true;
   EmployeeEditName: boolean = false;
   fetchUpdateData() {
-    console.log(this.apiResponseData.emp.empHry, "ApiresponseData");
-
+    console.log(this.apiResponseData.emp,"ApiresponseData");
+    
     this.resignShow = true;
     this.submitButton = false;
     this.updateButton = true;
@@ -127,9 +125,9 @@ console.log( this.apiResponseData,"Apresponsedata");
       this.reportingLeader1 = this.apiResponseData.emp.addressDetail.reportLeader1,
       this.reportingLeader2 = this.apiResponseData.emp.addressDetail.reportingLeader2,
 
-      this.EmployeeHierarchyOptions = this.apiResponseData.emp.empHry.map(employee => employee.employeeName);
+    this.employeehierarchy =  this.apiResponseData.emp.empHry.map(option => option.employeeId);
       
-      console.log(this.EmployeeHierarchyOptions, "employeehierarchy");
+      console.log(this.employeehierarchy, "employeehierarchyoptions");
 
       this.proficiency = this.apiResponseData.emp.addressDetail.profiencyId,
       this.presentAddress1 = this.apiResponseData.emp.addressDetail.address1,
@@ -143,8 +141,8 @@ console.log( this.apiResponseData,"Apresponsedata");
       this.emergencyContactName = this.apiResponseData.emp.addressDetail.emergencyContactName,
       this.emergencyMobilenumber = this.apiResponseData.emp.addressDetail.emergencyContactNo,
       this.officialemailaddress = this.apiResponseData.emp.addressDetail.email,
-      this.employeeRoles = this.apiResponseData.emp.role
-    this.employeeProcess = this.apiResponseData.emp.code
+      this.employeeRoles = this.apiResponseData.emp.role;
+    this.employeeProcess = this.apiResponseData.emp.code.map(process => process.id);
     this.personalEmail = this.apiResponseData.emp.addressDetail.personalEmail
     if (this.data.type === "view") {
       this.homeButton = true;
@@ -198,7 +196,7 @@ console.log( this.apiResponseData,"Apresponsedata");
   martialStatus: any;
   gender: any;
   BloodGroup: any;
-  internetAvailable: any;
+  internetAvailable:string = "";
   outsource: boolean = false;
   internetType: any;
   ServiceProvider: any;
@@ -252,6 +250,7 @@ console.log( this.apiResponseData,"Apresponsedata");
       this.rl1options = productDropdownResponse;
       this.rl2options = productDropdownResponse;
       this.EmployeeHierarchyOptions = productDropdownResponse;
+      
     });
   }
 
@@ -343,7 +342,6 @@ console.log( this.apiResponseData,"Apresponsedata");
 
   onSubmit() {
     ///Employee Added SuccessFully
-
     let empRoleList = this.employeeRoles.map((item) => {
       return {
         "roleId": item.id ? item.id :'',
@@ -351,13 +349,13 @@ console.log( this.apiResponseData,"Apresponsedata");
       }
     });
     let empHierarchyList = this.employeehierarchy.map(item => {
+
       return {
         "subEmpId": item.employeeId ? item.employeeId : '',
         "subEmpName": item.employeeName ? item.employeeName : '',
         // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
       };
     });
-    console.log(empHierarchyList, "EmployeeHierarchy");
 
     let payload = {
       "employeeId":0,
@@ -404,7 +402,7 @@ console.log( this.apiResponseData,"Apresponsedata");
       "isOutsource": true,
       "empRolesList": empRoleList,
       "empHierarchyList": empHierarchyList,
-      "isInternetConnection": this.internetAvailable,
+      "isInternetConnection": this.internetAvailable ? this.internetAvailable:'',
       "isSystem": this.systemlaptop,
       "netWorkType": this.internetType ? this.internetType : '',
       "serviceProvider": this.ServiceProvider ? this.ServiceProvider : '',
@@ -453,9 +451,8 @@ if(val==true){
   }
 
   onUpdate() {
-    console.log(this.resignReason,"resignReason");
     
-    let empRoleList = this.employeeRoles.map((item) => {
+    let empRoleList = this.employeeRoles.map((item) => {      
       return {
         "roleId": item.id ? item.id :'',
         "roleDescription": item.description ? item.description:'',
@@ -484,7 +481,7 @@ if(val==true){
       "companyId": 0,
       "profiencyId": this.proficiency ? this.proficiency:'',
       "emergencyContactName": this.emergencyContactName ? this.emergencyContactName:'',
-      "emergencyContactNo": this.emergencyContactName ? this.emergencyContactName:'',
+      "emergencyContactNo": this.emergencyMobilenumber ? this.emergencyMobilenumber:'',
       "email": this.officialemailaddress ? this.officialemailaddress:'',
       "personalEmail": this.personalEmail ? this.personalEmail:'',
       "createdUTC": new Date().toISOString,
@@ -512,9 +509,9 @@ if(val==true){
       "result": this.outsource ? this.outsource : '',
       "roleDescription": "",
       "isOutsource": true,
-      "empRolesList":empRoleList ? empRoleList:0,
+      "empRolesList":empRoleList ? empRoleList:'',
       "empHierarchyList": empHierarchyList ? empHierarchyList:0 ,
-      "isInternetConnection": this.internetAvailable ? this.internetAvailable:false,
+      "isInternetConnection": this.internetAvailable ? this.internetAvailable:'',
       "isSystem": this.systemlaptop ? this.systemlaptop:false,
       "netWorkType": this.internetType ? this.internetAvailable:0,
       "serviceProvider": this.ServiceProvider ? this.ServiceProvider:0,

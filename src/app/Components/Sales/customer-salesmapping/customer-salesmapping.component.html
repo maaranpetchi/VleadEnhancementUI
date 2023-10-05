@@ -117,7 +117,7 @@
                 </table>
 
               </div>
-              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+              <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
             </div>
             <div class="col-5">
               <div class="table-container table-responsive mt-4">
@@ -181,8 +181,9 @@
 
                 </table>
 
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
               </div>
+              <mat-paginator #paginator2 [pageSizeOptions]="[25, 50,75,100]"></mat-paginator>
+
             </div>
           </div>
         </div>

@@ -45,12 +45,12 @@ export class CustomerSalesmappingComponent implements OnInit {
     'salesemployee',
   ];
 
-  dataSource!: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  dataSource: MatTableDataSource<any>;
+  @ViewChild('paginator1') paginator1: MatPaginator;
+  @ViewChild('paginator2') paginator2: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   // employee
-  employeeDaSource!: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator1!: MatPaginator;
+  employeeDaSource: MatTableDataSource<any> = new MatTableDataSource<any>();
 
   filterValue: any
   filterValue1: any
@@ -86,7 +86,7 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
 
   setAll(item: any) {
-
+    console.log(item)
     if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
     if (item.employeeId == null) item.employeeId = 0;
     if (item.estimatedTime == null) item.estimatedTime = 0;
@@ -98,8 +98,12 @@ export class CustomerSalesmappingComponent implements OnInit {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
-      customerId: [item.customerId],
-      CustomerName: item.employeeName,
+      customerId:[item.id],
+      EmployeeName:"",
+      EmployeeCode:item.employeeCode?item.employeeCode:'',
+      CustomerName: item.employeeName?item.employeeName:'',
+      isActive:false,
+      isDeleted:false,
     });
   }
 
@@ -137,10 +141,10 @@ export class CustomerSalesmappingComponent implements OnInit {
           this.spinner.requestEnded();
           this.dataSource = new MatTableDataSource(response);
           this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-          this.employeeDaSource = new MatTableDataSource(response);
-          this.employeeDaSource.sort = this.sort;
-          this.employeeDaSource.paginator = this.paginator1;
+          this.dataSource.paginator = this.paginator1;
+          // this.employeeDaSource = new MatTableDataSource(response);
+          // this.employeeDaSource.sort = this.sort;
+          // this.employeeDaSource.paginator = this.paginator1;
           this.GetAllddlList();
         },
         error: (err) => {
@@ -162,7 +166,7 @@ export class CustomerSalesmappingComponent implements OnInit {
           this.spinner.requestEnded();
           this.employeeDaSource = new MatTableDataSource(response.employeeList);
           this.employeeDaSource.sort = this.sort;
-          this.employeeDaSource.paginator = this.paginator1;
+          this.employeeDaSource.paginator = this.paginator2;
         },
         error(err) {
           console.log(err);

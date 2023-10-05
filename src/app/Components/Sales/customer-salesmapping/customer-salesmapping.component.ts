@@ -214,7 +214,11 @@ export class CustomerSalesmappingComponent implements OnInit {
                 'Done!',
                 'Salesperson assigned successfully!',
                 'success'
-              )
+              ).then((response)=>{
+                if(response.isConfirmed){
+                  this.ngOnInit()
+                }
+              })
             } else {
               Swal.fire(
                 'Done!',

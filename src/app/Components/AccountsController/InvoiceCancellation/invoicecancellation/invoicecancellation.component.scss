@@ -130,7 +130,7 @@
   
 
   .table-container {
-    height:50vh; /* Set the maximum height for the table container */
+    height: 60vh;
     overflow-y: auto; /* Enable vertical scrolling */
   }
   
@@ -251,7 +251,7 @@
   
   .table-container {
     background: white;
-    height: 40vh;
+    height: 60vh;
     /* Set a fixed height of 50% of the viewport height */
     overflow: auto;
     /* Enable vertical scrolling if content overflows */

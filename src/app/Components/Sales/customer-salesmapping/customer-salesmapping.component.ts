@@ -98,12 +98,13 @@ export class CustomerSalesmappingComponent implements OnInit {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
-      customerId:[item.id],
-      EmployeeName:"",
-      EmployeeCode:item.employeeCode?item.employeeCode:'',
-      CustomerName: item.employeeName?item.employeeName:'',
-      isActive:false,
-      isDeleted:false,
+      customerId: [item.id],
+      EmployeeName: "",
+      EmployeeCode: item.employeeCode ? item.employeeCode : '',
+      CustomerName: item.employeeName ? item.employeeName : '',
+      ShortName: item.shortName ? item.shortName : '',
+      isActive: false,
+      isDeleted: false,
     });
   }
 
@@ -119,10 +120,10 @@ export class CustomerSalesmappingComponent implements OnInit {
       SelectedEmployees: [],
       SelectedRows: [],
       CustomerId: [0],
-      CustomerName: item.employeeName,
-      Description: item.employeeName,
-      Name: item.employeeName,
-      ShortName: item.employeeCode,
+      CustomerName: item.employeeName ? item.employeeName:'',
+      Description: item.employeeName ? item.employeeName:'',
+      Name: item.employeeName ? item.employeeName:'',
+      ShortName: item.employeeCode ? item.employeeCode:'',
       TimeStamp: '',
     });
   }
@@ -214,9 +215,9 @@ export class CustomerSalesmappingComponent implements OnInit {
                 'Done!',
                 'Salesperson assigned successfully!',
                 'success'
-              ).then((response)=>{
-                if(response.isConfirmed){
-                  this.ngOnInit()
+              ).then((response) => {
+                if (response.isConfirmed) {
+                  window.location.reload();
                 }
               })
             } else {

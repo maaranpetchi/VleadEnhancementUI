@@ -71,7 +71,7 @@
 }
 
 .table-container {
-  max-height: 300px; /* Set the maximum height for the table container */
+  max-height: 500px; /* Set the maximum height for the table container */
   overflow-y: auto; /* Enable vertical scrolling */
 }
 
@@ -191,7 +191,7 @@ th {
 
 .table-container {
   background: white;
-  height: 60vh;
+     height: 76vh;
   /* Set a fixed height of 50% of the viewport height */
   overflow: auto;
   /* Enable vertical scrolling if content overflows */

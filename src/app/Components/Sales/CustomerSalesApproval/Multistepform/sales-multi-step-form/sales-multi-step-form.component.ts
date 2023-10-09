@@ -17,7 +17,8 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-sales-multi-step-form',
   templateUrl: './sales-multi-step-form.component.html',
-  styleUrls: ['./sales-multi-step-form.component.scss']
+  styleUrls: ['./sales-multi-step-form.component.scss'],
+
 })
 export class SalesMultiStepFormComponent implements OnInit {
   customerProfile: FormGroup;
@@ -55,6 +56,7 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.fetchUpdateData();
     this.getCustomervsscopeDepartments();
     this.getCustomerDatainForm();
+    this.GetTimeZoneList()
   }
   constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
     this.getCustomerData();
@@ -67,6 +69,7 @@ export class SalesMultiStepFormComponent implements OnInit {
 
   ///fetch update data into ngmodel when edit button clicked
   fetchUpdateData() {
+    console.log(this.apiResponseData, "ApiresponseData");
     this.ShortName = this.apiResponseData.shortName;
     this.CustomerClassificationId = this.apiResponseData.customerClassificationId;
     this.selectedDepartments = this.apiResponseData.selectedDepartments;
@@ -155,14 +158,14 @@ export class SalesMultiStepFormComponent implements OnInit {
   CreditDays: '';
   CreditLimit: '';
   CustomerJobType: '';
-  Country: any;
-  State = '';
-  City = '';
-  BillingCycleType = '';
-  PaymentMode = '';
-  PrivilegedClient = '';
-  InputType = '';
-  OutputType = '';
+  Country: '';
+  State: '';
+  City: '';
+  BillingCycleType: '';
+  PaymentMode: '';
+  PrivilegedClient: '';
+  InputType: '';
+  OutputType: '';
   isBulk: boolean = false;
   isRushed: boolean = false;
   manualupload: boolean = false;
@@ -199,6 +202,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   }
 
   GetTimeZoneList() {
+    console.log(this.City, "City");
     this.http.get<any>(environment.apiURL + `Customer/GetAllTimeZoneListbyCityId?CityId=${this.City}`).subscribe(results => {
       this.timezone = results[0].timeZone;
     });
@@ -208,45 +212,45 @@ export class SalesMultiStepFormComponent implements OnInit {
     let payload = {
       "id": this.apiResponseData.id,
       "companyId": 0,
-      "name": "string",
+      "name": "",
       "shortName": this.ShortName,
       "customerClassificationId": this.CustomerClassificationId,
       "creditDays": this.CreditDays,
       "isBlacklisted": true,
       "isApproved": true,
-      "blacklistedReasons": "string",
+      "blacklistedReasons": "",
       "department": [],
       "creditLimit": this.CreditLimit,
       "creditLimitAvailed": 0,
       "timeZone": this.timezone ? this.timezone : '',
-      "reportTimeZone": "string",
-      "dropdownTimeZone": "string",
+      "reportTimeZone": "",
+      "dropdownTimeZone": "",
       "departmentId": 0,
-      "establishmentType": "string",
-      "billingCycleType": "string",
+      "establishmentType": "",
+      "billingCycleType": "",
       "employeeId": 0,
-      "address1": "string",
-      "address2": "string",
-      "address3": "string",
+      "address1": "",
+      "address2": "",
+      "address3": "",
       "locationId": 0,
-      "emailAddress": "string",
-      "phone1": "string",
-      "phone2": "string",
-      "webAddress": "string",
-      "contactName": "string",
-      "contactPhone": "string",
-      "contactEmail": "string",
-      "customerDepartmentName": "string",
+      "emailAddress": "",
+      "phone1": "",
+      "phone2": "",
+      "webAddress": "",
+      "contactName": "",
+      "contactPhone": "",
+      "contactEmail": "",
+      "customerDepartmentName": "",
       "createdUTC": "2023-07-24T12:37:19.961Z",
       "createdBy": 0,
       "updatedUTC": "2023-07-24T12:37:19.961Z",
       "updatedBy": 0,
       "selectedDepartments": this.getDepartmentObjects(),
-      "userName": "string",
-      "emailID": "string",
-      "phoneNo": "string",
+      "userName": "",
+      "emailID": "",
+      "phoneNo": "",
       "active": true,
-      "verifyCode": "string",
+      "verifyCode": "",
       "country": this.Country,
       "state": this.State,
       "city": this.City,
@@ -254,7 +258,7 @@ export class SalesMultiStepFormComponent implements OnInit {
       "inputType": this.InputType ? this.InputType : '',
       "outputType": this.OutputType ? this.OutputType : '',
       "privilegedClient": this.PrivilegedClient ? this.PrivilegedClient : '',
-      "paymentMode": "string",
+      "paymentMode": "",
       "isBulk": this.isBulk,
       "checklist": this.Checklist,
       "isRush": this.isRushed,
@@ -300,7 +304,7 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.selectedDepartments.map(x => {
       department.push({
         "id": x,
-        "description": "string",
+        "description": "",
         "isDeleted": true,
         "createdUtc": "2023-07-25T09:22:18.009Z",
         "updatedUtc": "2023-07-25T09:22:18.009Z",
@@ -343,10 +347,10 @@ export class SalesMultiStepFormComponent implements OnInit {
       "custId": this.apiResponseData.id,
       "scopeId": this.selectedScopeID,
       "deptId": this.selectedDept.id,
-      "custName": "string",
-      "description": "string",
+      "custName": "",
+      "description": "",
       "scopeName": this.selectedDeptDescription,
-      "scopeGroupDescription": "string",
+      "scopeGroupDescription": "",
       "scopeGroupId": 0,
       "deptName": this.selectedDept.description,
       "custJobType": this.SelectedCustType,
@@ -357,11 +361,19 @@ export class SalesMultiStepFormComponent implements OnInit {
       "updatedBy": 0,
       "updatedUTC": new Date().toISOString,
     }]
-
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerVsScope`, payload).subscribe(results => {
       this.dataSource = results
-      this._coreService.openSnackBar("Data Added successfully!");
-      this.getTableData();
+      this.spinnerService.requestEnded();
+      Swal.fire('Done', 'Data Added Successfully', 'success').then((respone) => {
+        if (respone.isConfirmed) {
+          this.selectedDept="";
+          this.SelectedScope=[];
+          this.SelectedCustType="";
+          this.getTableData();
+
+        }
+      })
     });
   }
   onScopeChange() {
@@ -374,7 +386,7 @@ export class SalesMultiStepFormComponent implements OnInit {
 
         this.selectedScopeID = selectedDeptId;
         this.selectedDeptDescription = selectedDeptDescription;
-       
+
         // Do whatever you need with the selectedDeptId and selectedDeptDescription here
       }
     }
@@ -418,9 +430,13 @@ export class SalesMultiStepFormComponent implements OnInit {
       }
     ]
     this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerTAT`, payload).subscribe(results => {
-      this._coreService.openSnackBar("Data Added successfully!")
       this.customertatdatasource = results;
-      this.getCustomerTatTable();
+      Swal.fire('Done', 'Data Added Successfully', 'success').then((respone) => {
+        if (respone.isConfirmed) {
+          this.getCustomerTatTable();
+
+        }
+      })
     });
   }
 
@@ -460,13 +476,19 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.uptcustat = false;
   }
 
+//2nd cancel
+  Cancel(){
+    this.selectedDept="";
+    this.SelectedScope=[];
+    this.SelectedCustType="";
+  }
   updatecustattable() {
     let payload = {
       "id": this.customerTatid,
       "customerId": this.apiResponseData.id,
       "jobStatusId": 0,
-      "customerShortName": "string",
-      "jobStatusDescription": "string",
+      "customerShortName": "",
+      "jobStatusDescription": "",
       "tat": this.tatValue,
       "createdBy": this.loginservice.getUsername(),
       "createdUtc": new Date().toISOString,
@@ -478,14 +500,14 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.customertatdatasource = results;
       this._coreService.openSnackBar("Data Updated Succesfully!");
       this.getCustomerTatTable();
-      this.tatValue="";
+      this.tatValue = "";
       this.returnForm();
     });
   }
 
 
   onJobChange() {
-    if (this.SelectedJobStatus.length > 0) { 
+    if (this.SelectedJobStatus.length > 0) {
       for (const selectedJobStatus of this.SelectedJobStatus) {
         const selectedJobId = selectedJobStatus.id;
         const selectedJobDescription = selectedJobStatus.jobStatusDescription;
@@ -495,11 +517,15 @@ export class SalesMultiStepFormComponent implements OnInit {
     }
   }
 
-  OnSubmit(){
+  OnSubmit() {
     Swal.fire(
-      'Good job!',
-      'You clicked the button!',
+    'Done!',
+      'Data Submitted Successfully!',
       'success'
-    )
+    ).then((response)=>{
+      if(response.isConfirmed){
+        this.router.navigate(['/topnavbar/customerSalesApproval']);
+      }
+    })
   }
 }

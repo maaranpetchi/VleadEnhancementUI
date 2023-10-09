@@ -342,9 +342,9 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
     let processTransaction = {
       "wftid": this.data.wftid,
       "wfmid": this.data.wfmid,
-      "workType": "string",
-      "status": "string",
-      "remarks": "string",
+      "workType": "",
+      "status": "",
+      "remarks": "",
       "employeeId": this.loginService.getUsername(),
       "copyFiles": true,
       "errorCategoryId": 0,
@@ -355,28 +355,28 @@ this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localS
       "orderId": 0,
       "isClientOrder": 0,
       "statusId": 0,
-      "sourcePath": "string",
-      "dynamicFolderPath": "string",
-      "folderPath": "string",
-      "fileName": "string",
+      "sourcePath": "",
+      "dynamicFolderPath": "",
+      "folderPath": "",
+      "fileName": "",
       "fileCount": 0,
-      "orignalPath": "string",
-      "orignalDynamicPath": "string",
-      "jobId": "string",
+      "orignalPath": "",
+      "orignalDynamicPath": "",
+      "jobId": "",
       "isProcessWorkFlowTranInserted": 0,
       "isCopyFiles": 0,
       "pid": 0,
       "fakeProcessId": 0,
       "fakeStatusId": 0,
-      "fakeDynamicFolderPath": "string",
-      "jobFileName": "string",
+      "fakeDynamicFolderPath": "",
+      "jobFileName": "",
       "files": [
-        "string"
+        ""
       ],
-      "commentsToClient": "string",
-      "tranFileUploadPath": "string",
+      "commentsToClient": "",
+      "tranFileUploadPath": "",
       "selectedRows": [
-        "string"
+        ""
       ]
     }
     this.http.post<any>(environment.apiURL + "Workflow/GetProductionWorkList", processTransaction).subscribe((result) => {

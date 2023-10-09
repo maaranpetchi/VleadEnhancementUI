@@ -292,14 +292,14 @@
                                 </div>
 
                                 <div class="col">
-                                    <label class="col-sm-2 control-label">
+                                    <label>
                                         Date of Creation :
-                                        <span>{{AppCustomerDetails?.createdUTC}}</span></label>
+                                        <span>{{AppCustomerDetails?.createdUTC  | date:'MM-dd-yyyy'}}</span></label>
                                 </div>
 
                                 <div class="col">
-                                    <label class="col-sm-2 control-label">
-                                        Approved By : <span></span>
+                                    <label >
+                                        Approved By : <span>{{this.apiResponseData.empName ? this.apiResponseData.empName:''}}</span>
                                     </label>
 
                                 </div>
@@ -312,7 +312,7 @@
                                     </label>
                                     &nbsp;
                                     <span
-                                        style="color:#333333;  font-weight:normal;">{{this.apiResponseData.approvedDate
+                                        style="color:#333333;  font-weight:normal;">{{this.apiResponseData.approvedDate  | date:'MM-dd-yyyy'
                                         }}</span>
 
                                 </div>
@@ -320,10 +320,11 @@
                                     <mat-checkbox [(ngModel)]="Checklist" name="Checklist">Is Approved</mat-checkbox>
                                 </div>
                                 <div class="col">
-                                    <label class="col-sm-2 control-label">
-                                        Trial Period
+                                    <label >
+                                        Trial Period :
                                     </label>
-                                    <!-- <span>{{CustomerapprovalAllDetails.TrialStartDate | date:"MM/dd/yyyy"}}</span> -->
+                                    &nbsp;
+                                    <span>{{this.apiResponseData.trialStartDate | date:"MM/dd/yyyy"}}</span>
                                 </div>
                             </div>
 
@@ -430,7 +431,7 @@
                                 <div class="col">
                                     <button type="button" class="btn btn-success" id="button-gap"
                                         (click)="addDataToTable()">Add</button> <button type="button" id="button-gap"
-                                        class="btn btn-warning">Cancel</button>
+                                        class="btn btn-warning" (click)="Cancel()">Cancel</button>
                                 </div>
                             </div>
                             <br>

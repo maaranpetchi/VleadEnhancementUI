@@ -226,14 +226,14 @@ export class JoborderComponent implements OnInit {
       "virtualProof": this.joborder.value.virtualproof,
       "dateofUpload": new Date().toISOString,
       "dateofClose": new Date().toISOString,
-      "customerJobType": "string",
+      "customerJobType": "",
       "jobDate": new Date().toISOString  ,
       "clientOrderId": 0,
       "viewDatas": null,
       "createdBy": this.loginservice.getUsername(),
       "poDate": new Date().toISOString,
       "ccId": this.joborder.value.clientSalesperson,
-      "ccEmailId": "string",
+      "ccEmailId": "",
       "dateofDelivery": new Date().toISOString,
       "getAllValues": []
     }
@@ -285,7 +285,7 @@ export class JoborderComponent implements OnInit {
       "createdBy": this.loginservice.getUsername(),
       "poDate": new Date().toISOString,
       "ccId": this.joborder.value.customercontactname,
-      "ccEmailId": "string",
+      "ccEmailId": "",
       "dateofDelivery": new Date().toISOString,
       "getAllValues": []
     }

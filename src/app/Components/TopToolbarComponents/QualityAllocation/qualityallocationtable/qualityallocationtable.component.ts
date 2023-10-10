@@ -295,6 +295,27 @@ export class QualityallocationtableComponent implements OnInit {
   }
   queries() {
     this.spinner.requestStarted();
+
+    this.http
+    .get<any>(
+      environment.apiURL +
+        `Allocation/getQueryPendingJobs/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/0`
+    ).subscribe({
+      next: (queries) => {
+        
+        this.spinner.requestEnded();
+        this.dataSource = new MatTableDataSource(queries.queryPendingJobs);
+        this.dataSource.paginator = this.paginator1;
+        this.dataSource.sort = this.sort;
+      },
+      error: (err) => {
+        this.spinner.resetSpinner();
+        console.log(err);
+      },
+    });
+
     this.http
       .get<any>(
         environment.apiURL +
@@ -304,11 +325,11 @@ export class QualityallocationtableComponent implements OnInit {
       )
       .subscribe({
         next: (queries) => {
+          
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(queries.allocationJobs);
           this.dataEmployeeSource = new MatTableDataSource(queries.employees);
-          this.dataSource.paginator = this.paginator1;
-          this.dataSource.sort = this.sort;
+          this.dataEmployeeSource.paginator = this.paginator2;
+          this.dataEmployeeSource.sort = this.sort;
         },
         error: (err) => {
           this.spinner.resetSpinner();

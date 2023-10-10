@@ -48,20 +48,19 @@ export class QualitypopupjobassignComponent implements OnInit {
   estTime: number;
   jobCommonDetails: any;
   selectedScope: any = 0;
-  Scopes:any[]=[];
+  Scopes: any[] = [];
   QueryDetailsList: any;
   confirmationMessage: any;
-  selectedJobs: { DepartmentId: any; TranMasterId: any; JId: any; CustomerId: any; JobId:any;Comments:any;TimeStamp:any;CategoryDesc:any;SelectedRows:any;FileInwardType:any;CommentsToClient:any;SelectedEmployees:any}[];
+  selectedJobs: { DepartmentId: any; TranMasterId: any; JId: any; CustomerId: any; JobId: any; Comments: any; TimeStamp: any; CategoryDesc: any; SelectedRows: any; FileInwardType: any; CommentsToClient: any; SelectedEmployees: any }[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
     private loginservice: LoginService,
-    private spinnerservice:SpinnerService,
+    private spinnerservice: SpinnerService,
     private dialogRef: MatDialogRef<QualitypopupjobassignComponent>
   ) {
-    console.log(data,"InjectedData");
-    
+this.fetchData();
   }
   displayedJobColumns: string[] = [
     'movedFrom',
@@ -100,17 +99,17 @@ export class QualitypopupjobassignComponent implements OnInit {
       this.remarksdata = true;
       this.EstimatedTime = false;
       this.EmployeData = false;
-      this.EmployeDatascope= false;
+      this.EmployeDatascope = false;
     } else if (this.selectedQureryStatus == 8) {
       this.EstimatedTime = true;
       this.remarksdata = true;
       this.EmployeData = false;
-      this.EmployeDatascope= true;
+      this.EmployeDatascope = true;
     } else if (this.selectedQureryStatus == 100) {
       this.EstimatedTime = false;
       this.EmployeData = true;
       this.remarksdata = false;
-      this.EmployeDatascope= false;
+      this.EmployeDatascope = false;
 
       this.http
         .get<any>(
@@ -125,10 +124,12 @@ export class QualitypopupjobassignComponent implements OnInit {
   fetchData() {
     const apiUrl = environment.apiURL + 'JobOrder/getJobHistory';
 
-    this.http.post(apiUrl, this.data.jId).subscribe(
+    this.http.post<any>(apiUrl, this.data.jId).subscribe(
       (response: any) => {
         this.restApiData = response;
         this.jobCommonDetails = response;
+        console.log(this.jobCommonDetails, "JobCommonDetails");
+
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
         this.dataJobSource.paginator = this.paginator;
         this.dataJobSource.sort = this.sort; // Assuming the REST API response is an array of objects
@@ -175,7 +176,7 @@ export class QualitypopupjobassignComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getScopeValues/${this.loginservice.getUsername()}`
+        `Allocation/getScopeValues/${this.loginservice.getUsername()}`
       )
       .subscribe((scopedata) => {
         this.Scopes = scopedata.scopeDetails; // Sort the scopes based on the 'name' property
@@ -192,7 +193,7 @@ export class QualitypopupjobassignComponent implements OnInit {
     }
   }
   processMovement() {
-    
+
     const apiUrl = environment.apiURL + `Allocation/processMovement`;
 
     let saveData = {
@@ -204,7 +205,7 @@ export class QualitypopupjobassignComponent implements OnInit {
       employeeId: this.loginservice.getUsername(),
       remarks: this.remarks,
       isBench: true,
-      jobId:this.data.jobId,
+      jobId: this.data.jobId,
       value: 0,
       amount: 0,
       stitchCount: 0,
@@ -220,7 +221,7 @@ export class QualitypopupjobassignComponent implements OnInit {
       selectedRows: [
         {
           customerId: this.data.customerId,
-          departmentId:  this.data.departmentId,
+          departmentId: this.data.departmentId,
           estimatedTime: this.estimatedTime,
           jId: this.data.jid,
           tranMasterId: this.data.tranMasterId,
@@ -236,7 +237,7 @@ export class QualitypopupjobassignComponent implements OnInit {
         },
       ],
       selectedEmployees: [],
-      departmentId:  this.data.departmentId,
+      departmentId: this.data.departmentId,
       updatedUTC: '2023-07-01T10:02:55.095Z',
       categoryDesc: 'string',
       allocatedEstimatedTime: 0,
@@ -257,7 +258,11 @@ export class QualitypopupjobassignComponent implements OnInit {
       this.spinnerservice.requestEnded();
 
       if (response.success === true) {
-        Swal.fire('Done!', response.message, 'success');
+        Swal.fire('Done!', response.message, 'success').then((response)=>{
+          if(response.isConfirmed){
+            this.dialogRef.close();
+          }
+        });
       } else if (response.success === false) {
         Swal.fire('Error!', response.message, 'error');
       }
@@ -309,11 +314,11 @@ export class QualitypopupjobassignComponent implements OnInit {
       (response) => {
         this.spinnerservice.requestEnded();
 
-          if (response.success === true) {
-            Swal.fire('Done!', response.message, 'success');
-          } else if (response.success === false) {
-            Swal.fire('Error!', response.message, 'error');
-          };
+        if (response.success === true) {
+          Swal.fire('Done!', response.message, 'success');
+        } else if (response.success === false) {
+          Swal.fire('Error!', response.message, 'error');
+        };
         // Handle the API response
       },
       (error) => {
@@ -325,7 +330,7 @@ export class QualitypopupjobassignComponent implements OnInit {
 
   }
 
-  close(){
+  close() {
     this.dialogRef.close()
   }
   // workFiles(id:number){
@@ -349,14 +354,16 @@ export class QualitypopupjobassignComponent implements OnInit {
 
 
   zipFiles(): void {
-    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    let path = this.data.tranFileUploadPath || this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
 
     const fileUrl =
       environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
 
     // Use HttpClient to make a GET request to fetch the zip file
+    this.spinnerservice.requestStarted();
     this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.spinnerservice.requestEnded();
       this.saveFile(response);
     });
   }
@@ -378,28 +385,27 @@ export class QualitypopupjobassignComponent implements OnInit {
     document.body.removeChild(a);
   }
 
+  //Workfile downlaod//
   workFiles(id: number): void {
-    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
-    path = path.replace(/\\/g, '_');
 
+    let path = this.data.tranFileUploadPath || this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+
+    console.log(path, "PathFiles");
+
+    path = path.replace(/\\/g, '_');
+    this.spinnerservice.requestStarted();
     this.http
       .get(environment.apiURL + `Allocation/getFileNames/${path}`)
       .subscribe((response: any) => {
         const fileUrls: string[] = response.files;
         fileUrls.forEach((url) => {
-          this.http
-            .get(
-              environment.apiURL +
-                'Allocation/downloadFilesTest/' +
-                `${path}/` +
-                url
-            )
-            .subscribe((response: any) => {
-              saveAs(
-                new Blob([response.data], { type: 'application/octet-stream' }),
-                url
-              );
-            });
+          this.http.get(environment.apiURL + 'Allocation/downloadFilesTest/' + `${path}/` + url).subscribe((response: any) => {
+            this.spinnerservice.requestEnded();
+            saveAs(
+              new Blob([response.data], { type: 'application/octet-stream' }),
+              url
+            );
+          });
         });
       });
   }
@@ -503,7 +509,7 @@ export class QualitypopupjobassignComponent implements OnInit {
   //       //////alreadypayload//
   //       autoUploadJobs: true,
   //       employeeId: this.loginservice.getUsername(),
-      
+
   //       isBench: true,
   //       value: 0,
   //       amount: 0,
@@ -519,7 +525,7 @@ export class QualitypopupjobassignComponent implements OnInit {
   //       tranMasterId: 0,
   //       // customerId:'',
   //       // DepartmentId:0
-  
+
   //       selectedEmployees: [],
   //       departmentId: 0,
   //       updatedUTC: new Date().toISOString,
@@ -540,7 +546,7 @@ export class QualitypopupjobassignComponent implements OnInit {
   //       this.confirmationMessage = result.message;
   //       Swal.fire(
   //         result.message,
-    
+
   //       )
   //     },error =>{
   //       Swal.fire(

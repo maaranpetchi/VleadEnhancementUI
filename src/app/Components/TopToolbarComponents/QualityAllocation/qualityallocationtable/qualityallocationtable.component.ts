@@ -38,10 +38,10 @@ export class QualityallocationtableComponent implements OnInit {
     'jobId',
     'artist',
     'estjob',
-    'fileName',
-    'fileInwardMode',
     'client',
     'customerClassification',
+    'fileName',
+    'fileInwardMode',
     'jobstatus',
     'projectcode',
     'status',
@@ -49,6 +49,93 @@ export class QualityallocationtableComponent implements OnInit {
     'esttime',
     'deliverydate',
   ];
+
+
+  visibility() {
+    let result: string[] = [];
+    if (this.displayedColumnsvisibility.selected) {
+      result.push('selected');
+    }
+
+    if (this.displayedColumnsvisibility.jobId) {
+      result.push('jobId');
+    }
+    if (this.displayedColumnsvisibility.employees) {
+      result.push('employees');
+    }
+    if (this.displayedColumnsvisibility.artist) {
+      result.push('artist');
+    }
+    if (this.displayedColumnsvisibility.estjob) {
+      result.push('estjob');
+    }
+    if (this.displayedColumnsvisibility.querydate) {
+      result.push('querydate');
+    }
+    if (this.displayedColumnsvisibility.client) {
+      result.push('client');
+    }
+    if (this.displayedColumnsvisibility.customerClassification) {
+      result.push('customerClassification');
+    }
+    if (this.displayedColumnsvisibility.fileName) {
+      result.push('fileName');
+    }
+    if (this.displayedColumnsvisibility.fileInwardMode) {
+      result.push('fileInwardMode');
+    }
+    if (this.displayedColumnsvisibility.jobstatus) {
+      result.push('jobstatus');
+    }
+    if (this.displayedColumnsvisibility.projectcode) {
+      result.push('projectcode');
+    }
+    if (this.displayedColumnsvisibility.status) {
+      result.push('status');
+    }
+    if (this.displayedColumnsvisibility.scope) {
+      result.push('scope');
+    }
+    if (this.displayedColumnsvisibility.esttime) {
+      result.push('esttime');
+    }
+    if (this.displayedColumnsvisibility.deliverydate) {
+      result.push('deliverydate');
+    }
+    return result;
+  }
+
+
+//////////////////////////////////////////////
+
+displayedColumnsvisibility: any = {
+    'selected': true,
+    'jobId': true,
+    'employees': false,
+    'artist': true,
+    'querydate':false,
+    'estjob': true,
+    'client': true,
+    'customerClassification': true,
+    'fileName': true,
+    'fileInwardMode': true,
+    'jobstatus': true,
+    'projectcode': true,
+    'status': true,
+    'scope': true,
+    'esttime': true,
+    'deliverydate': true,
+  };
+
+
+
+
+
+
+
+
+
+
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -192,6 +279,10 @@ export class QualityallocationtableComponent implements OnInit {
 
   freshJobs() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.artist = true;
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.estjob = true;
     this.http
       .get<any>(
         environment.apiURL +
@@ -217,6 +308,11 @@ export class QualityallocationtableComponent implements OnInit {
   }
   revisionJobs() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.artist = true;
+    this.displayedColumnsvisibility.estjob = true;
+
     this.http
       .get<any>(
         environment.apiURL +
@@ -242,6 +338,11 @@ export class QualityallocationtableComponent implements OnInit {
   }
   reworkJobs() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.artist = true;
+    this.displayedColumnsvisibility.estjob = true;
+
     this.http
       .get<any>(
         environment.apiURL +
@@ -268,6 +369,10 @@ export class QualityallocationtableComponent implements OnInit {
   }
   allocaetdJobs() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.artist = false;
+    this.displayedColumnsvisibility.estjob = true;
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.employees = true;
     this.http
       .get<any>(
         environment.apiURL +
@@ -295,6 +400,10 @@ export class QualityallocationtableComponent implements OnInit {
   }
   queries() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.querydate = true;
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.artist = false;
+    this.displayedColumnsvisibility.estjob = false;
 
     this.http
     .get<any>(
@@ -338,6 +447,11 @@ export class QualityallocationtableComponent implements OnInit {
   }
   queryResposne() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.artist = false;
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.estjob = true;
+
     this.http
       .get<any>(
         environment.apiURL +
@@ -365,6 +479,11 @@ export class QualityallocationtableComponent implements OnInit {
   }
   errorJobs() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.artist = false;
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.estjob = true;
+
     this.http
       .get<any>(
         environment.apiURL +
@@ -388,6 +507,11 @@ export class QualityallocationtableComponent implements OnInit {
   }
   quotationJobs() {
     this.spinner.requestStarted();
+    this.displayedColumnsvisibility.artist = false;
+    this.displayedColumnsvisibility.querydate = false;
+    this.displayedColumnsvisibility.employees = false;
+    this.displayedColumnsvisibility.estjob = true;
+
     this.http
       .get<any>(
         environment.apiURL +
@@ -413,6 +537,9 @@ export class QualityallocationtableComponent implements OnInit {
         },
       });
   }
+
+
+
 
   estTimeinput: any[] = [];
 

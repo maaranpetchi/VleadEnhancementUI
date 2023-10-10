@@ -83,7 +83,7 @@ export class GetJobHistoryPopupComponent implements OnInit {
       "stitchCount": 0,
       "estimationTime": 0,
       "dateofDelivery": "2023-06-24T09:40:49.877Z",
-      "comments": "string",
+      "comments": "",
       "validity": 0,
       "copyFiles": true,
       "updatedBy": 0,
@@ -94,10 +94,10 @@ export class GetJobHistoryPopupComponent implements OnInit {
       "selectedEmployees": [],
       "departmentId": 0,
       "updatedUTC": "2023-06-24T09:40:49.877Z",
-      "categoryDesc": "string",
+      "categoryDesc": "",
       "allocatedEstimatedTime": 0,
       "tranId": 0,
-      "fileInwardType": "string",
+      "fileInwardType": "",
       "timeStamp": this.data.timeStamp,
       "scopeId": this.data.scopeId,
       "quotationRaisedby": 0,
@@ -105,7 +105,7 @@ export class GetJobHistoryPopupComponent implements OnInit {
       "clientId": this.data.clientId,
       "customerId": 0,
       "fileReceivedDate": this.data.estfileReceivedDate,
-      "commentsToClient": "string",
+      "commentsToClient": "",
       "isJobFilesNotTransfer": true
     }
 

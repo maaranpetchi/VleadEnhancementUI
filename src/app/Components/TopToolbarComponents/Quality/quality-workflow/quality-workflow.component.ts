@@ -82,11 +82,12 @@ export class QualityWorkflowComponent implements OnInit {
 
   }
 
-  constructor(private location:Location,private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService,
+  constructor(private location: Location, private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService,
   ) {
     this.data = this.workflowservice.getData();
-    
-    
+    console.log(this.data, "Injected Data");
+
+
   }
 
   zipFiles(): void {
@@ -131,9 +132,9 @@ export class QualityWorkflowComponent implements OnInit {
           this.http
             .get(
               environment.apiURL +
-                'Allocation/downloadFilesTest/' +
-                `${path}/` +
-                url
+              'Allocation/downloadFilesTest/' +
+              `${path}/` +
+              url
             )
             .subscribe((response: any) => {
               saveAs(
@@ -151,16 +152,16 @@ export class QualityWorkflowComponent implements OnInit {
   fetchData() {
     const apiUrl = environment.apiURL + 'JobOrder/getJobHistory';
 
-    this.http.post<any>(apiUrl, this.data.jId?this.data.jId:0).subscribe((response: any) => {
-        this.jobCommonDetails = response;
-      },
+    this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : 0).subscribe((response: any) => {
+      this.jobCommonDetails = response;
+    },
       (error: any) => {
         console.log('Error fetching data from REST API:', error);
       }
     );
   }
 
-  Back(){
+  Back() {
     this.location.back();
   }
 
@@ -231,7 +232,7 @@ export class QualityWorkflowComponent implements OnInit {
   AttachedFiles1: File[] = [];
 
   onFileSelected(event: any) {
-    
+
     const file: File = event.target.files[0];
     this.AttachedFiles = [event.target.files[0], ...this.AttachedFiles];//store the selected file in selectdfile;
     this.AttachedFiles1 = [event.target.files[0].name, ...this.AttachedFiles1];//store the selected file in selectdfile;
@@ -252,7 +253,7 @@ export class QualityWorkflowComponent implements OnInit {
       this.isHold = result.isHold;
       this.SameEmp = result.sameEmp;
       this.Checkbench = result.checkbench;
-      
+
 
       if (result.getWorkflowDetails.workStatus == 'Working') {
         this.disableWorkType = false;
@@ -273,10 +274,7 @@ export class QualityWorkflowComponent implements OnInit {
     });
   }
 
-////////////////Changing color in table////////////
-shouldShowGreenText(status: string): boolean {
-  return status === 'working';
-}
+
 
   ////////////////////////////Main Method//////////////////////////////////////////
 
@@ -284,7 +282,7 @@ shouldShowGreenText(status: string): boolean {
     if (workType == 'Start') {
       this.disableWorkType = false;
       this.showFiles = true;
-      
+
       this.footerDropdown = true;
       this.ChangeWorkflow(workType);
     }
@@ -490,24 +488,28 @@ shouldShowGreenText(status: string): boolean {
             this.BindWorkDetails();
             this.confirmationMessage = ChangeWorkflowResult.message;
             this.spinnerService.requestEnded();
-if(ChangeWorkflowResult.success == true){
-            Swal.fire(
-              'Done!',
-              this.confirmationMessage,
-              'success'
-            ).then((result)=>{
-              if(result.isConfirmed){
-                this.location.back();  
-              }
-            })
-          }
-          else{
-            Swal.fire(
-              'Error!',
-              this.confirmationMessage,
-              'error'
-            )
-          }
+            if (ChangeWorkflowResult.success == true) {
+              Swal.fire(
+                'Done!',
+                this.confirmationMessage,
+                'success'
+              ).then((result) => {
+                if (result.isConfirmed) {
+                  this.Back();
+                }
+              })
+            }
+            else {
+              Swal.fire(
+                'Error!',
+                this.confirmationMessage,
+                'error'
+              ).then((result) => {
+                if (result.isConfirmed) {
+                  this.Back();
+                }
+              })
+            }
           });
 
 
@@ -526,8 +528,8 @@ if(ChangeWorkflowResult.success == true){
                 'success'
               ).then((result) => {
                 if (result.isConfirmed) {
-                  this.location.back();        
-                       }
+                  this.location.back();
+                }
               })
             }
             else {
@@ -535,7 +537,11 @@ if(ChangeWorkflowResult.success == true){
                 'Error!',
                 this.confirmationMessage,
                 'error'
-              )
+              ).then((result) => {
+                if (result.isConfirmed) {
+                  this.location.back();
+                }
+              })
             }
 
           });
@@ -566,19 +572,27 @@ if(ChangeWorkflowResult.success == true){
           this.BindWorkDetails();
           this.confirmationMessage = ChangeWorkflowResult.message;
 
-          if(ChangeWorkflowResult.success ==true) {
-          Swal.fire(
-            'Done!',
-            this.confirmationMessage,
-            'success'
-          )
+          if (ChangeWorkflowResult.success == true) {
+            Swal.fire(
+              'Done!',
+              this.confirmationMessage,
+              'success'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                this.Back();
+              }
+            })
           }
-          else{
+          else {
             Swal.fire(
               'Error!',
               this.confirmationMessage,
               'error'
-            )
+            ).then((result) => {
+              if (result.isConfirmed) {
+                this.Back();
+              }
+            })
           }
         }
         else {
@@ -591,7 +605,7 @@ if(ChangeWorkflowResult.success == true){
 
 
   BindWorkDetails() {
-    
+
 
     let processTransaction = {
       "wftid": localStorage.getItem("WFTId"),
@@ -637,8 +651,8 @@ if(ChangeWorkflowResult.success == true){
       let History = result.summary.summaryHistory;
       this.SummaryHistory = History[0];
 
-      
-      
+
+
       this.TotalTimeWorked = result.summary.summaryHistory[0].totalTime;
       this.Break = result.summary.summaryHistory[0].break;
       this.Training = result.summary.summaryHistory[0].trainingorMeeting;
@@ -655,7 +669,7 @@ if(ChangeWorkflowResult.success == true){
         this.showFiles = true;
       }
 
-      
+
 
     });
   }
@@ -683,7 +697,7 @@ if(ChangeWorkflowResult.success == true){
 
   ///to get the error dropdown value
   rbnError() {
-    
+
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Workflow/GetErrorCategories/${localStorage.getItem('WFTId')}/${this.loginService.getUsername()}`).subscribe(result => {
       this.spinnerService.requestEnded();

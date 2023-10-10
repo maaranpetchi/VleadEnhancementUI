@@ -54,17 +54,18 @@ export class EmployeecontrollerComponent implements OnInit {
 
   openEditForm(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
+    this.http.get<any[]>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
       this.spinnerService.requestEnded();
       return Swal.fire('Alert!','An error occurred while processing your request','error');
     })).subscribe(results => {
       this.spinnerService.requestEnded();
-      this._empService.setData({ type: 'EDIT', data: results });
+      this._empService.setData({ type: 'EDIT', data: results });      
       this._empService.shouldFetchData = true;
       this.router.navigate(['/topnavbar/Emp-editaddEmpcontroller']);
     });
 
   }
+
   viewEmployee(id: number) {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
@@ -89,20 +90,18 @@ export class EmployeecontrollerComponent implements OnInit {
       next: (res) => {
         this.spinnerService.requestEnded();
 
-        this._coreService.openSnackBar('Employee deleted!', 'done');
-        this.fetchtableData();
+        Swal.fire('Done!','Employee Data Deleted Successfully!','success').then((response)=>{
+          if(response.isConfirmed){
+            this.fetchtableData();
+          }
+        });      
       },
       error: console.log,
     });
   }
 
-
-
-
   ///////////////////
   apiResponseData: any;
-
-
   displayedColumns: string[] = [
     'employeeCode',
     'employeeName',

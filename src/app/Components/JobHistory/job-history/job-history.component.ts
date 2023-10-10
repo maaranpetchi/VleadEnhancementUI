@@ -12,6 +12,7 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { environment } from 'src/Environments/environment';
 import { catchError } from 'rxjs';
 import { error } from 'jquery';
+import * as FileSaver from 'file-saver';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-job-history',
@@ -45,8 +46,6 @@ export class JobHistoryComponent implements OnInit {
   ) { }
 
   displayedColumns: string[] = [
-    'selected',
-    'id',
     'jobnumber',
     'estqueryDate',
     'department',
@@ -65,7 +64,7 @@ export class JobHistoryComponent implements OnInit {
 
 
 
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource<any>([]); // Replace YourDataType with the actual type of your data
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -159,12 +158,12 @@ export class JobHistoryComponent implements OnInit {
         this.spinnerService.requestEnded();
         return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })).subscribe(response => {
-          this.spinnerService.requestEnded();
-          this.dataSource.data = response.jobMovement;
-          this.recordCount = response.jobMovement.length;
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-       
+        this.spinnerService.requestEnded();
+        this.dataSource.data = response.jobMovement;
+        this.recordCount = response.jobMovement.length;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+
       })
     }
   };
@@ -198,6 +197,42 @@ export class JobHistoryComponent implements OnInit {
       width: '80vw',
       data: data
     })
+  }
+
+
+  // Function to export table data as CSV
+  exportToCsv() {
+    // Check if there is no data in the table
+    if (this.dataSource.data.length === 0) {
+      Swal.fire('Alert', 'No Records in the table', 'info');
+      return;
+    }
+
+    const header = ['JobNumber', 'Est Job/Query Date', 'Department', 'Client', 'Client Status', 'JobStatus', 'Project Code', 'FileName', 'File Inward Mode', 'File Recevied Date', 'Process', 'Status', 'Comments To Client'];
+
+    // Access the data array from the MatTableDataSource
+    const csvData = this.dataSource.data.map(row => {
+      return [
+        row.jobId,
+        row.estJobDate,
+        row.description,
+        row.name,
+        row.customerJobType,
+        row.jobStatusDescription,
+        row.projectCode,
+        row.fileName,
+        row.fileInwardType,
+        row.fileReceivedDate,
+        row.processName,
+        row.status,
+        row.commentsToClient
+      ].join(',');
+    });
+
+    const csv = [header.join(','), ...csvData].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    FileSaver.saveAs(blob, 'Job-History.csv');
   }
 
 }

@@ -131,11 +131,11 @@ queriesToClient(){
     this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
   });  
 }
+//query
 queryResponse(){
   this.spinnerService.requestStarted();
   this.http.get<any>(environment.apiURL+`Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
     this.spinnerService.requestEnded();
-
     this.dataSource = data.queryResponseJobs;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

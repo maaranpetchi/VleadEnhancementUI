@@ -18,7 +18,7 @@
                     (QuoteJobsCount ? QuoteJobsCount:0) +(BulkJobsCount ? BulkJobsCount:0) + (BulkUploadJobsCount ?
                     BulkUploadJobsCount:0) }})</h3>
                 <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
-                    <mat-tab label="{{ 'Queries To Client (' + (freshJobsCount ? freshJobsCount:0) + ')' }}">
+                    <mat-tab label="{{ 'Fresh Jobs (' + (freshJobsCount ? freshJobsCount:0) + ')' }}">
                     </mat-tab>
                     <mat-tab label="{{ 'Revision Jobs (' + (RevisionJobsCount ? RevisionJobsCount:0) + ')' }}">
                     </mat-tab>

@@ -299,8 +299,8 @@
         </div>
       </div>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext style="float:right">Next</button>
+        <button class="btn btn-primary" matStepperPrevious>Back</button>
+        <button class="btn btn-primary" matStepperNext style="float:right">Next</button>
       </div>
     </mat-step>
 
@@ -336,7 +336,7 @@
           <div class="col">
             <mat-form-field appearance="fill">
               <mat-label>Address1</mat-label>
-              <input type="" matInput placeholder="Address1" [(ngModel)]="permanentAddress1" name="permanentAddress1">
+              <input type="text" matInput placeholder="Address1" [(ngModel)]="permanentAddress1" name="permanentAddress1">
             </mat-form-field>
           </div>
 
@@ -376,6 +376,13 @@
             <!-- <input type="checkbox" [(ngModel)]="copyAddress" (change)="onCheckboxChange($event)"><p>Temporary address is same as permanent</p> -->
           </div>
         </div>
+        <div class="row">
+          <div class="col" >
+            <div class="col" style="float:right">
+              <mat-checkbox [(ngModel)]="copyAddress" (change)="onCheckboxChange($event)">Permanent address same as present address</mat-checkbox>
+          </div>
+          </div>
+        </div>
 
 
         <div class="row">
@@ -405,7 +412,7 @@
           <div class="col">
             <mat-form-field appearance="fill">
               <mat-label>Emergency Mobile number<span style="color: red;">*</span></mat-label>
-              <input matInput placeholder="mob no" [(ngModel)]="emergencyMobilenumber" name="emergencyMobilenumber">
+              <input matInput placeholder="mob no" type="number"[(ngModel)]="emergencyMobilenumber" name="emergencyMobilenumber">
             </mat-form-field>
           </div>
 
@@ -449,6 +456,7 @@
             </mat-form-field>
             <br>
             <button class="btn btn-primary" (click)="showForm()">Add New Role</button>
+      
             <form *ngIf="formVisible" (ngSubmit)="newRoleSubmit()">
               <label for="name">Role Name:</label>
               <input class="form-control" type="text" id="name" name="name" [(ngModel)]="newRole">
@@ -466,11 +474,12 @@
           </div>
         </div>
       </div>
+      <br>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext style="float:right" *ngIf="submitButton" (click)="onSubmit()">Submit</button>
-        <button mat-button matStepperNext style="float:right" *ngIf="updateButton" (click)="onUpdate()">Update</button>
-        <button mat-button matStepperNext style="float:right" *ngIf="homeButton" (click)="onHome()">Home</button>
+        <button class="btn btn-primary" matStepperPrevious>Back</button>
+        <button class="btn btn-success" style="float:right" *ngIf="submitButton" (click)="onSubmit()">Submit</button>
+        <button class="btn btn-success" style="float:right" *ngIf="updateButton" (click)="onUpdate()">Update</button>
+        <button class="btn btn-primary" style="float:right" *ngIf="homeButton" (click)="onHome()">Home</button>
       </div>
     </mat-step>
 

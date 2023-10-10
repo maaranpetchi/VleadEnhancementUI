@@ -9,13 +9,10 @@ cursor:pointer;
 
 
 body{
-  overflow-x: hidden;
+  overflow-x: scroll;
 }
 .Row {
   display: table-row;
-}
-.green-text {
-  color: green;
 }
 
 .Cell {
@@ -79,6 +76,9 @@ body{
       ". . ."
       ". . .";
 }
+
+
+
 
 .status {
   width: 17vw;

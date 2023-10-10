@@ -305,7 +305,6 @@ export class QualityallocationtableComponent implements OnInit {
     ).subscribe({
       next: (queries) => {
         
-        this.spinner.requestEnded();
         this.dataSource = new MatTableDataSource(queries.queryPendingJobs);
         this.dataSource.paginator = this.paginator1;
         this.dataSource.sort = this.sort;

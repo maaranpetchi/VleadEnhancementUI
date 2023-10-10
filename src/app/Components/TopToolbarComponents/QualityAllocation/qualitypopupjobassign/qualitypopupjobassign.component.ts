@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import saveAs from 'file-saver';
 import { error } from 'jquery';
 import { environment } from 'src/Environments/environment';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 
@@ -55,8 +56,12 @@ export class QualitypopupjobassignComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
-    private loginservice: LoginService
+    private loginservice: LoginService,
+    private spinnerservice:SpinnerService,
+    private dialogRef: MatDialogRef<QualitypopupjobassignComponent>
   ) {
+    console.log(data,"InjectedData");
+    
   }
   displayedJobColumns: string[] = [
     'movedFrom',
@@ -199,7 +204,7 @@ export class QualitypopupjobassignComponent implements OnInit {
       employeeId: this.loginservice.getUsername(),
       remarks: this.remarks,
       isBench: true,
-      jobId: this.data.jobId,
+      jobId:this.data.jobId,
       value: 0,
       amount: 0,
       stitchCount: 0,
@@ -217,12 +222,12 @@ export class QualitypopupjobassignComponent implements OnInit {
           customerId: this.data.customerId,
           departmentId:  this.data.departmentId,
           estimatedTime: this.estimatedTime,
-          jId: this.data.jId,
+          jId: this.data.jid,
           tranMasterId: this.data.tranMasterId,
           Comments: '',
           TimeStamp: '',
           SelectedEmployees: '',
-          JobId: '',
+          JobId: this.data.jobId,
           FileInwardType: '',
           CommentsToClient: '',
           CategoryDesc: '',
@@ -247,7 +252,10 @@ export class QualitypopupjobassignComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
+    this.spinnerservice.requestStarted();
     this.http.post<any>(apiUrl, saveData).subscribe((response) => {
+      this.spinnerservice.requestEnded();
+
       if (response.success === true) {
         Swal.fire('Done!', response.message, 'success');
       } else if (response.success === false) {
@@ -296,8 +304,11 @@ export class QualitypopupjobassignComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
+    this.spinnerservice.requestStarted();
     this.http.post<any>(environment.apiURL + 'Allocation/changeEstimatedTime', estTimeData).subscribe(
       (response) => {
+        this.spinnerservice.requestEnded();
+
           if (response.success === true) {
             Swal.fire('Done!', response.message, 'success');
           } else if (response.success === false) {
@@ -314,7 +325,9 @@ export class QualitypopupjobassignComponent implements OnInit {
 
   }
 
-
+  close(){
+    this.dialogRef.close()
+  }
   // workFiles(id:number){
   //   const folder = this.data.find(f => f.id === id);
 

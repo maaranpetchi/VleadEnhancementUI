@@ -539,7 +539,7 @@ displayedColumnsvisibility: any = {
   }
 
 
-//Changes
+//Changes in quality allocation
 
   estTimeinput: any[] = [];
 

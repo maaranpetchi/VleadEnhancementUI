@@ -46,6 +46,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     private spinnerService: SpinnerService,
     public dialogRef: MatDialogRef<JobAssignedDetailsPopupComponent>
   ) {
+    
   }
 
   displayedJobColumns: string[] = [
@@ -130,6 +131,8 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : 0).subscribe(
       (response: any) => {
         this.jobCommonDetails = response;
+        console.log(this.jobCommonDetails,"JobCommonDetails");
+        
         this.dataJobSource = response;
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
         this.dataJobSource.paginator = this.paginator;
@@ -182,9 +185,12 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
 
     const fileUrl =
       environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
+      this.spinnerService.requestStarted();
 
     // Use HttpClient to make a GET request to fetch the zip file
     this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.spinnerService.requestEnded();
+
       this.saveFile(response);
     });
   }
@@ -209,7 +215,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
   workFiles(id: number): void {
     let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
-
+this.spinnerService.requestStarted();
     this.http
       .get(environment.apiURL + `Allocation/getFileNames/${path}`)
       .subscribe((response: any) => {
@@ -223,6 +229,8 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
                 url
             )
             .subscribe((response: any) => {
+              this.spinnerService.requestEnded();
+
               saveAs(
                 new Blob([response.data], { type: 'application/octet-stream' }),
                 url

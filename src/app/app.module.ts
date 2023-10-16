@@ -24,6 +24,8 @@ import { VendorService } from './Services/Vendor/vendor.service';
 import { ProductionQuotationComponent } from './Components/TopToolbarComponents/ProductionAllocation/production-quotation/production-quotation.component';
 import { QuotationPopupComponent } from './Components/TopToolbarComponents/ProductionAllocation/quotation-popup/quotation-popup.component';
 import { AttendanceIndexComponent } from './Components/Attendance/attendance-index/attendance-index.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,

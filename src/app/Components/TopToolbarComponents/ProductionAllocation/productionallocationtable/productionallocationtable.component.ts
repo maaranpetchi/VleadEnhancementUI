@@ -40,7 +40,7 @@ export class ProductionallocationtableComponent implements OnInit {
     selected: true,
     jobId: true,
     allocatedJobId: true,
-    quatationJobId:true,
+    quatationJobId: true,
     employee: true,
     estjob: true,
     fileName: true,
@@ -64,7 +64,7 @@ export class ProductionallocationtableComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   pendingJobsCount: any;
   exchangeHeader: any;
-  exmployeeEstTime:any
+  exmployeeEstTime: any
   freshJobsCount: number;
   revisionJobsCount: number;
   reworkJobsCount: number;
@@ -179,14 +179,14 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getScopeValues/${this.loginservice.getUsername()}`
+        `Allocation/getScopeValues/${this.loginservice.getUsername()}`
       )
       .subscribe((scopedata) => {
         this.scopes = scopedata.scopeDetails;
         this.scopes.sort((a, b) => a.name.localeCompare(b.name)); // Sort the scopes based on the 'name' property
       });
   }
-  filterValue:any=null;
+  filterValue: any = null;
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
@@ -210,7 +210,7 @@ export class ProductionallocationtableComponent implements OnInit {
 
 
   setEmployeeAll(completed: boolean, item: any) {
- 
+
     if (completed == true) {
       if (item.jId != null)
         this.selectedEmployee.push({
@@ -285,9 +285,9 @@ export class ProductionallocationtableComponent implements OnInit {
   //   this.dataSource.data = temparray;
   //   this.selectedQuery=this.selection.selected;
   // }
-    setExchangeHeader(){
-      this.selection.selected.forEach((x:any)=>x.allocatedEstimatedTime=this.exchangeHeader);
-    }
+  setExchangeHeader() {
+    this.selection.selected.forEach((x: any) => x.allocatedEstimatedTime = this.exchangeHeader);
+  }
   benchChecked: boolean = false;
   onBenchCheckboxChange(event: any) {
     this.benchChecked = event.checked;
@@ -298,12 +298,12 @@ export class ProductionallocationtableComponent implements OnInit {
     try {
       const username = parseInt(this.loginservice.getUsername());
       const processId = parseInt(this.loginservice.getProcessId());
-  
+
       const allocationJobs$ = this.http.get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${username}/${processId}/1/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${username}/${processId}/1/0`
       );
-  
+
       allocationJobs$
         .pipe(
           catchError((error) => {
@@ -327,13 +327,13 @@ export class ProductionallocationtableComponent implements OnInit {
             );
             this.dataEmployeeSource.paginator = this.paginator2;
             this.dataEmployeeSource.sort = this.sort;
-  
+
             this.employeeCount = freshJobs.allocationJobs.employeeCount;
             this.QueryJobDate = freshJobs.allocationJobs.queryJobDate;
             this.CustomerJobType = freshJobs.allocationJobs.customerJobType;
             this.StatusId = freshJobs.allocationJobs.statusId;
             this.JobStatusId = freshJobs.allocationJobs.jobStatusId;
-  
+
             // Return an observable with the processed data
             return forkJoin([allocationJobs$]);
           })
@@ -353,9 +353,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/2/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/2/0`
       )
       .subscribe({
         next: (revisionJobs) => {
@@ -382,9 +382,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/3/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/3/0`
       )
       .subscribe({
         next: (reworkJobs) => {
@@ -411,9 +411,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/4/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/4/0`
       )
       .subscribe({
         next: (allocaetdJobs) => {
@@ -446,9 +446,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
         next: (queries) => {
@@ -473,9 +473,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/0`
+        `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
         next: (queryResposne) => {
@@ -504,9 +504,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/5/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
       )
       .subscribe({
         next: (errorJobs) => {
@@ -531,9 +531,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
       )
       .subscribe({
         next: (quotationJobs) => {
@@ -551,7 +551,7 @@ export class ProductionallocationtableComponent implements OnInit {
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          
+
           console.log(err);
         },
       });
@@ -587,7 +587,7 @@ export class ProductionallocationtableComponent implements OnInit {
       });
   }
   onKeyPress(job: any) {
-      this.afterCellEdit(job);
+    this.afterCellEdit(job);
   }
   afterCellEdit(rowEntity: any) {
 
@@ -631,13 +631,13 @@ export class ProductionallocationtableComponent implements OnInit {
   }
 
   getProductionJob(data: any) {
-    
+
 
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
       height: '450px',
       data: data,
-      
+
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -675,7 +675,7 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     });
   }
-  getQuatationJobId(data:any){
+  getQuatationJobId(data: any) {
     const dialogRef = this._dialog.open(ProductionQuotationComponent, {
       width: '100%',
       height: '850px',
@@ -706,15 +706,15 @@ export class ProductionallocationtableComponent implements OnInit {
 
   selectedJobs: any[] = [];
   onSubmit() {
-    this.selection.selected.forEach(x=>this.setAll(x));
+    this.selection.selected.forEach(x => this.setAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
-     this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
 
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployee.length;
-   
+
 
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
@@ -725,14 +725,14 @@ export class ProductionallocationtableComponent implements OnInit {
           }
           else {
             console.log();
-            
+
             for (var i = 0; i < selectedJobCount; i++) {
-                if (this.selectedJobs[i].allocatedEstimatedTime == undefined || this.selectedJobs[i].allocatedEstimatedTime == "" || this.selectedJobs[i].allocatedEstimatedTime == 0) {
-                    // alert('Please enter Estimated Time for Selected Job');
-            Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
-                    
-                    return;
-                }
+              if (this.selectedJobs[i].allocatedEstimatedTime == undefined || this.selectedJobs[i].allocatedEstimatedTime == "" || this.selectedJobs[i].allocatedEstimatedTime == 0) {
+                // alert('Please enter Estimated Time for Selected Job');
+                Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
+
+                return;
+              }
             }
             this.postJobs();
           }
@@ -754,13 +754,13 @@ export class ProductionallocationtableComponent implements OnInit {
         Swal.fire('Info!', 'Please select Job and Employees!', 'info');
 
         // alert('Please select Job and Employeesss');
-        
-        
+
+
       }
     } else {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedEmployeeCount > 1) {
-        Swal.fire('Info!', 'Please select one Employee!', 'info');
+          Swal.fire('Info!', 'Please select one Employee!', 'info');
 
           // alert('Please select one Employee!');
           return;
@@ -773,7 +773,7 @@ export class ProductionallocationtableComponent implements OnInit {
         // $('#alertPopup').modal('show');
       }
     }
-    
+
   }
 
   ScopeId: any;
@@ -786,7 +786,7 @@ export class ProductionallocationtableComponent implements OnInit {
       id: 0,
       processId: this.loginservice.getProcessId(),
       statusId: 1,
-      selectedScopeId: this.ScopeId?this.ScopeId:0,
+      selectedScopeId: this.ScopeId ? this.ScopeId : 0,
       autoUploadJobs: true,
       employeeId: this.loginservice.getUsername(),
       remarks: 'string',
@@ -809,7 +809,7 @@ export class ProductionallocationtableComponent implements OnInit {
       departmentId: 0,
       updatedUTC: '2023-06-22T11:47:25.193Z',
       categoryDesc: 'string',
-      allocatedEstimatedTime:this.exchangeHeader ,
+      allocatedEstimatedTime: this.exchangeHeader,
       tranId: 0,
       fileInwardType: 'string',
       timeStamp: '',
@@ -854,8 +854,8 @@ export class ProductionallocationtableComponent implements OnInit {
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-        Swal.fire('Info!', 'Following Job Ids are assigne to same Employee!', 'info');
-            
+            Swal.fire('Info!', 'Following Job Ids are assigne to same Employee!', 'info');
+
             // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
         }
@@ -869,86 +869,90 @@ export class ProductionallocationtableComponent implements OnInit {
     let AttachedFiles = [];
     this.selectedJobs = processMovement.SelectedRows;
     this.selectedEmployee = processMovement.SelectedEmployees;
+    this.spinnerService.requestStarted();
     this.http
       .post(environment.apiURL + 'Allocation/processMovement', processMovement)
-      .subscribe((response:any) => {
+      .subscribe((response: any) => {
+        this.spinnerService.requestEnded();
         confirmationMessage = response;
         if (response.success === false) {
-        Swal.fire('Info!', 'Error the job assigned!', 'info');
-        }else if(response.success === true){
+          Swal.fire('Info!', 'Error the job assigned!', 'info');
+          this.spinnerService.resetSpinner();
+        } else if (response.success === true) {
           Swal.fire(
             'Done!',
             'Job assigned successfully!',
             'success'
           )
+          this.spinnerService.resetSpinner();
           // this.http
           // .post(environment.apiURL + 'Allocation/processMovement', processMovement)
           // .subscribe((result) => {
-            // confirmationMessage = result;
-            if (AttachedFiles.length > 0) {
-              var fd = new FormData();
-              for (let i = 0; i < AttachedFiles.length; i++) {
-                fd.append('file', AttachedFiles[i]);
-              }
-              let file = {
-                orderId: 0,
-                isClientOrder: 0,
-                processId: 0,
-                statusId: 0,
-                sourcePath: 'string',
-                dynamicFolderPath: 'string',
-                folderPath: 'string',
-                fileName: 'string',
-                fileCount: 0,
-                wfmId: 0,
-                wftId: 0,
-                orignalPath: 'string',
-                orignalDynamicPath: 'string',
-                jobId: 'string',
-                isProcessWorkFlowTranInserted: 0,
-                isCopyFiles: 0,
-                pid: 0,
-                fakeProcessId: 0,
-                fakeStatusId: 0,
-                fakeDynamicFolderPath: 'string',
-                jobFileName: 'string',
-                files: ['string'],
-                message: 'string',
-                creditMessage: 'string',
-                clientName: 'string',
-                clientId: 0,
-              };
-              this.spinnerService.requestStarted();
-              this.http
-                .post(environment.apiURL + 'JobOrder/openFolder', file)
-                .subscribe({
-                  next: (data) => {
-                    this.spinnerService.requestEnded();
-                    AttachedFiles = [];
-                    
-                  },
-                  error: (err) => {
-                    this.spinnerService.resetSpinner();
-                    console.log(err);
-                  }
-                })
+          // confirmationMessage = result;
+          if (AttachedFiles.length > 0) {
+            var fd = new FormData();
+            for (let i = 0; i < AttachedFiles.length; i++) {
+              fd.append('file', AttachedFiles[i]);
             }
+            let file = {
+              orderId: 0,
+              isClientOrder: 0,
+              processId: 0,
+              statusId: 0,
+              sourcePath: 'string',
+              dynamicFolderPath: 'string',
+              folderPath: 'string',
+              fileName: 'string',
+              fileCount: 0,
+              wfmId: 0,
+              wftId: 0,
+              orignalPath: 'string',
+              orignalDynamicPath: 'string',
+              jobId: 'string',
+              isProcessWorkFlowTranInserted: 0,
+              isCopyFiles: 0,
+              pid: 0,
+              fakeProcessId: 0,
+              fakeStatusId: 0,
+              fakeDynamicFolderPath: 'string',
+              jobFileName: 'string',
+              files: ['string'],
+              message: 'string',
+              creditMessage: 'string',
+              clientName: 'string',
+              clientId: 0,
+            };
+            this.spinnerService.requestStarted();
+            this.http
+              .post(environment.apiURL + 'JobOrder/openFolder', file)
+              .subscribe({
+                next: (data) => {
+                  this.spinnerService.requestEnded();
+                  AttachedFiles = [];
+
+                },
+                error: (err) => {
+                  this.spinnerService.resetSpinner();
+                  console.log(err);
+                }
+              })
+          }
           // });
           this.router.navigate(["topnavbar/production"]);
           this.refreshPage();
         }
-    (error) => {
-      console.error('Error occurred during API call:', error);
-      this.spinnerService.resetSpinner();
-      Swal.fire(
-        'Done!',
-        'Job assigned Failed!',
-        'error'
-      )
-    }
+        (error) => {
+          console.error('Error occurred during API call:', error);
+          this.spinnerService.resetSpinner();
+          Swal.fire(
+            'Done!',
+            'Job assigned Failed!',
+            'error'
+          )
+        }
       });
 
- 
+
   }
   refreshPage() {
     this.freshJobs();
@@ -968,35 +972,35 @@ export class ProductionallocationtableComponent implements OnInit {
     if (this.isAllSelected()) {
       this.selection.clear();
     }
-    else if(this.filterValue){
-    this.selection.clear();
-      this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach(x => this.selection.select(x));
     } else {
       this.dataSource.data.forEach(row => this.selection.select(row));
     }
- 
+
   }
   setAll(item: any) {
-  
-      if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-      if (item.employeeId == null) item.employeeId = 0;
-      if (item.estimatedTime == null) item.estimatedTime = 0;
-      this.selectedQuery.push({
-        ...item,
-        CategoryDesc: '',
-        Comments: '',
-        CommentsToClient: '',
-        Remarks: '',
-        SelectedEmployees: [],
-        SelectedRows: [],
-      });
+
+    if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
+    if (item.employeeId == null) item.employeeId = 0;
+    if (item.estimatedTime == null) item.estimatedTime = 0;
+    this.selectedQuery.push({
+      ...item,
+      CategoryDesc: '',
+      Comments: '',
+      CommentsToClient: '',
+      Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+    });
   }
 
 
   //textcolor
   getCellClass(data) {
     return {
-      'text-color-green':data.employeeCount === 1,
+      'text-color-green': data.employeeCount === 1,
       'text-color-brown': data.queryJobDate !== null,
       'text-color-blue': data.employeeCount > 1,
       'text-color-DeepSkyBlue': data.customerJobType === 'Trial',

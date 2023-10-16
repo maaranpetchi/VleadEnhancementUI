@@ -1,6 +1,6 @@
 
 .mat-elevation-z8{
-    overflow-x: scroll;
+    overflow: scroll;
   }
   .clickable-link {
     cursor: pointer;
@@ -40,13 +40,9 @@
   .exchangeheader{
     width: 20px;;
   }
-
-  .mat-elevation-z8{
-    overflow-x: scroll;
-  }
   .clickable-link {
     cursor: pointer;
-  }z
+  }
 
   .table-container {
     height:50vh; /* Set the maximum height for the table container */

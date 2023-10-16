@@ -1,16 +1,12 @@
 <div class="main-body">
   <div class="container">
     <div class="card-body" id="AllocationJobs">
-      <!-- Selected Job Table -->
-
       <div class="selectedJobTable mt-4">
         <div class="mat-elevation-z8">
           <div class="table-container">
             <table mat-table [dataSource]="dataSource" matSort id="custom-table"
               class="table table-sm table-responsive table table-bordered text-center">
-              <!--Checkbox to select the values-->
               <ng-container matColumnDef="selected">
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Select </th> -->
                 <mat-header-cell *matHeaderCellDef>
                   <mat-checkbox (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
@@ -23,13 +19,6 @@
                   </mat-checkbox>
                 </mat-cell>
               </ng-container>
-              <!-- <ng-container matColumnDef="selected">
-              <th mat-sort-header mat-header-cell *matHeaderCellDef> Select </th>
-              <td mat-cell *matCellDef="let element"> <mat-checkbox
-                  (change)="setAllJobs($event.checked,element)"></mat-checkbox> </td>
-
-            </ng-container> -->
-              <!-- Job ID Column -->
               <ng-container matColumnDef="jobId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -63,11 +52,8 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef>Artist </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.artistName }} </td>
               </ng-container>
-
-              <!-- Job Name Column -->
               <ng-container matColumnDef="estjob">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -77,10 +63,8 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> EST Job/Query Date </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.estJobDate }} </td>
               </ng-container>
-
               <ng-container matColumnDef="querydate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -90,11 +74,8 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> EST Job/Query Date </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.jobDate }} </td>
               </ng-container>
-              
-              <!-- Client Column -->
               <ng-container matColumnDef="client">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -104,10 +85,8 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Client Query </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.shortName }} </td>
               </ng-container>
-              <!-- Customer Satisfaction Column -->
               <ng-container matColumnDef="customerClassification">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -117,10 +96,8 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Customer Classification </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.customerClassification }} </td>
               </ng-container>
-              <!-- File Name Column -->
               <ng-container matColumnDef="fileName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -130,10 +107,8 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> File Name </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.fileName }} </td>
               </ng-container>
-              <!-- File Inward Mode Column -->
               <ng-container matColumnDef="fileInwardMode">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   <div class="header-wrapper">
@@ -143,7 +118,6 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> File Inward Mode </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.fileInwardType }} </td>
               </ng-container>
               <ng-container matColumnDef="jobstatus">
@@ -155,7 +129,6 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Job Staus </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.jobStatusDescription }} </td>
               </ng-container>
               <ng-container matColumnDef="projectcode">
@@ -167,7 +140,6 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> ProjectCode </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.projectCode }} </td>
               </ng-container>
               <ng-container matColumnDef="status">
@@ -179,7 +151,6 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Status </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.name }} </td>
               </ng-container>
               <ng-container matColumnDef="scope">
@@ -191,7 +162,6 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> Scope </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.scopeDesc }} </td>
               </ng-container>
               <ng-container matColumnDef="esttime">
@@ -203,7 +173,6 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> EST Time </th> -->
                 <td mat-cell *matCellDef="let job" (click)="job.editing = true">
                   <ng-container *ngIf="!job.editing; else editMode">
                     {{ job.estimatedTime }}
@@ -223,15 +192,10 @@
                     </div>
                   </div>
                 </th>
-                <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> DeliveryDate </th> -->
                 <td mat-cell *matCellDef="let job"> {{ job.dateofDelivery }} </td>
               </ng-container>
-              <!-- Table Header -->
-                <!-- Table Header -->
-                <tr mat-header-row *matHeaderRowDef="visibility()"></tr>
-
-                <!-- Table Rows -->
-                <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
+              <tr mat-header-row *matHeaderRowDef="visibility()"></tr>
+              <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
             </table>
           </div>
           <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]"
@@ -246,31 +210,41 @@
               <h3 style="font-family: 'Times New Roman', Times, serif;color:#ff9710df">Assigned To:</h3>
               <div class="table-container">
                 <table mat-table [dataSource]="dataEmployeeSource" id="custom-table" matSort
-                  class="table table-sm  table-responsive table table-bordered text-center">
-                  <!--Checkbox to select the values-->
+                  class="table table-sm table-responsive table table-bordered text-center">
                   <ng-container matColumnDef="selected">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef> Select </th>
+                    <th mat-sort-header mat-header-cell *matHeaderCellDef>
+                      <div class="header-wrapper">
+                        <div class="department-name text-start">Select </div>
+
+                      </div>
+                    </th>
                     <td mat-cell *matCellDef="let element"> <mat-checkbox
                         (change)="setEmployeeAll($event.checked,element)"></mat-checkbox> </td>
                   </ng-container>
-                  <!-- Job ID Column -->
                   <ng-container matColumnDef="employee">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       <div class="header-wrapper">
                         <div class="department-name text-start">Employee </div>
                         <div class="filter-input">
-                          <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                          <input matInput (keyup)="applyEmployeeFilter($event)" placeholder="Filter" #input>
                         </div>
                       </div>
                     </th>
                     <td mat-cell *matCellDef="let job">
-                      <a class="text-primary clickable-link" (click)="openEmployeeDialog(job)">{{ job.employeeName }}
+                      <a class="text-primary clickable-link" (click)="openEmployeeDialog(job)">{{ job.employeenameWithCode }}
                       </a>
                     </td>
                   </ng-container>
                   <!-- Customer Satisfaction Column -->
                   <ng-container matColumnDef="shift">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef>Shift </th>
+                    <th mat-sort-header mat-header-cell *matHeaderCellDef>
+                      <div class="header-wrapper">
+                        <div class="department-name text-start">Shift </div>
+                        <div class="filter-input">
+                          <input matInput (keyup)="applyEmployeeFilter($event)" placeholder="Filter" #input>
+                        </div>
+                      </div>
+                    </th>
                     <td mat-cell *matCellDef="let job"> {{ job.shiftName }} </td>
                   </ng-container>
                   <!-- Table Header -->

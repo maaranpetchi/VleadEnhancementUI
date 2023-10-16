@@ -199,8 +199,16 @@
                 </div>
               </div>
             </th>
-            <!-- <th mat-sort-header mat-header-cell *matHeaderCellDef> EstTime </th> -->
-            <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.allocatedEstimatedTime }} </td>
+            <td mat-cell *matCellDef="let job" class="text-center" (click)="job.editing = true">
+              <ng-container *ngIf="!job.editing; else editMode">
+                {{ job.allocatedEstimatedTime }}
+              </ng-container>
+              <ng-template #editMode>
+                <input matInput [(ngModel)]="job.allocatedEstimatedTime" type="number" style="width: 70px;"
+                  (ngModelChange)="afterCellEdit(job)" (blur)="job.editing = false" />
+              </ng-template>
+            </td>
+            <!-- <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job" class="text-center"> {{ job.allocatedEstimatedTime }} </td> -->
           </ng-container>
           <ng-container matColumnDef="deliverydate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>

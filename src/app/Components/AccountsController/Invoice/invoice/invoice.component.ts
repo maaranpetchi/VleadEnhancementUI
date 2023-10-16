@@ -251,8 +251,14 @@ export class InvoiceComponent implements OnInit {
       this.spinnerService.requestEnded();
 
       Swal.fire(
+        '',
         results.stringList,
-      )
+        'success'
+      ).then((response)=>{
+        if(response.isConfirmed){
+          this.ngOnInit()
+        }
+      })
     }
     )
   }

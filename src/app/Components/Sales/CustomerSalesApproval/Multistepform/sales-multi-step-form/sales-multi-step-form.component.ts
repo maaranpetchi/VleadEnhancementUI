@@ -53,6 +53,8 @@ export class SalesMultiStepFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiResponseData = this.sharedDataService.getData();
+    console.log(this.apiResponseData,"APIResponseData");
+    
     this.fetchUpdateData();
     this.getCustomervsscopeDepartments();
     this.getCustomerDatainForm();

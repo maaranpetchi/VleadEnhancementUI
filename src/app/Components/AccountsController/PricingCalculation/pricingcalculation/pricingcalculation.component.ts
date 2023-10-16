@@ -12,6 +12,7 @@ import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-pricingcalculation',
@@ -21,6 +22,21 @@ import Swal from 'sweetalert2/src/sweetalert2.js';
 export class PricingcalculationComponent implements OnInit {
   getClientId: any[] = [];
 
+  selection = new SelectionModel<any>(true, []); // Create a selection model for row selection
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
 
   constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private loginservice: LoginService, private spinnerService: SpinnerService) { }
 
@@ -107,51 +123,43 @@ export class PricingcalculationComponent implements OnInit {
 
   openDialog() {
     let clientid = 0;
-    if (this.selectedInvoices.length == 0) {
-      Swal.fire(
-        'Alert!',
-        'Please Select the Items!',
-        'warning'
-      )
-
-    }
-    else {
-      let temporaryarray: any[] = [];
+ 
+     
       clientid = parseInt(this.myForm?.value.ClientId ? this.myForm?.value.ClientId : "0")
-      temporaryarray = this.selectedInvoices.map(x => {
+      let temporaryarray: any[] = this.selection.selected.map(selectedRow => {
         return {
-          "jobId": x.jobId,
-          "shortName": x.shortName,
-          "scopeId": x.scopeId,
-          "scopeDesc": "string",
-          "clientId": x.clientId,
-          "billingCycleType": x.billingCycleType,
-          "dateofUpload": x.dateofUpload,
+          "jobId": selectedRow.jobId,
+          "shortName": selectedRow.shortName,
+          "scopeId": selectedRow.scopeId,
+          "scopeDesc": "",
+          "clientId": selectedRow.clientId,
+          "billingCycleType": selectedRow.billingCycleType,
+          "dateofUpload": selectedRow.dateofUpload,
           "createdBy": this.loginservice.getUsername(),
-          "departmentId": x.departmentId,
+          "departmentId": selectedRow.departmentId,
           "tranId": 0,
-          "id": x.id,
-          "jId": x.jId,
+          "id": selectedRow.id,
+          "jId": selectedRow.jId,
           "pricingTypeId": 0,
           "getInvoice": [],
 
-          "fileReceivedDate": x.fileReceivedDate,
-          "isBillable": x.isBillable,
-          "specialPrice": x.specialPrice,
-          "estimatedTime": x.estimatedTime,
+          "fileReceivedDate": selectedRow.fileReceivedDate,
+          "isBillable": selectedRow.isBillable,
+          "specialPrice": selectedRow.specialPrice ? selectedRow.specialPrice:0,
+          "estimatedTime": selectedRow.estimatedTime,
           "isWaiver": true,
           "jobStatusId": 0
         }
       })
 
       let result: any = {
-        "jobId": "string",
-        "shortName": "string",
+        "jobId": "",
+        "shortName": "",
         "scopeId": 0,
-        "scopeDesc": "string",
+        "scopeDesc": "",
         "clientId": this.myForm.value?.ClientId,
-        "billingCycleType": "string",
-        "dateofUpload": "2023-04-06T08:51:10.069Z",
+        "billingCycleType": "",
+        "dateofUpload": new Date().toISOString,
         "createdBy": this.loginservice.getUsername(),
         "departmentId": 0,
         "tranId": 0,
@@ -167,7 +175,7 @@ export class PricingcalculationComponent implements OnInit {
         "jobStatusId": 0
       }
       this.onInvoiceCalculation(result)
-    }
+    
 
   }
 

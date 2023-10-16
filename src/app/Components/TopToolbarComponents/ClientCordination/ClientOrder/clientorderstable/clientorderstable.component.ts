@@ -151,9 +151,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
       })
 
@@ -192,9 +192,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
       })
 
@@ -227,9 +227,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
       })
 
@@ -262,9 +262,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
       })
 
@@ -297,9 +297,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
       })
 
@@ -332,9 +332,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
       })
 
@@ -366,9 +366,9 @@ export class ClientorderstableComponent implements OnInit {
 
         console.error('API Error:', error);
 
- 
 
-return Swal.fire('Alert','Error occured','error');
+
+        return Swal.fire('Alert', 'Error occured', 'error');
       })
 
     ).subscribe(queryforsp => {
@@ -436,7 +436,7 @@ return Swal.fire('Alert','Error occured','error');
 
     if (event.key === 'Enter') {
       this.openPopup(enteredNumber, job);
- 
+
     }
   }
 
@@ -450,7 +450,11 @@ return Swal.fire('Alert','Error occured','error');
         'Alert!',
         'Select Division!',
         'info'
-      )
+      ).then((response) => {
+        if (response.isConfirmed) {
+          this.ngOnInit();
+        }
+      })
     }
     else {
       let GetAllvalues = data;
@@ -602,9 +606,9 @@ return Swal.fire('Alert','Error occured','error');
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -642,185 +646,194 @@ return Swal.fire('Alert','Error occured','error');
 
   multiconvert() {
     //added co if starts 
+    if (this.selectdivision == 0) {
+      Swal.fire(
+        'Alert!',
+        'Select Division!',
+        'info'
+      ).then((response) => {
+        if (response.isConfirmed) {
+          this.ngOnInit();
+        }
+      })
+    }
+    else {
+      let Gridwithmultiplefilesname: any[] = [];
+      for (var i = 0; i < this.selectedproduction.length; i++) {
+        let GetAllvalues = this.selectedproduction[i];
+        let GetAddList =
+        {
+          FileName: GetAllvalues.fileName,
+          PoNo: GetAllvalues.poNo,
+          PODate: GetAllvalues.poDate,
+          Remarks: GetAllvalues.instruction,
+          SalesPersonName: GetAllvalues.salesPersonName,
+          JobStatusId: GetAllvalues.jobStatusId,
+          TransactionId: GetAllvalues.transactionType,
+          DepartmentId: GetAllvalues.workType,
+          ClientId: GetAllvalues.clientId,
+          EmployeeId: this.loginservice.getUsername(),
+          FileReceivedDate: GetAllvalues.fileReceivedDate,
+          ClientOrderId: GetAllvalues.orderId,
+          CCId: GetAllvalues.ccId,//
+          CCEmailId: GetAllvalues.ccEmailId,//
+          FileInwardTypeId: GetAllvalues.fileInwardTypeId,//
+          DivisionId: this.getselecteddivisions(),// //
+          getAllValues: [],
+          ApparelLogoLocation: 'apparel',
+          poNo: "",
+          clientName: "",
+          clientJobId: "",
+          jobStatusDescription: "",
+          username: "",
+          clientSalesPerson: "",
+          customerName: "",
+          temp: "",
+          style: "",
+          projectCode: "",
+          teamCode: "",
+          schoolName: "",
+          ground: "",
+          gender: "",
+          fileInwardMode: "",
+          jobDescription: "",
+          color: "",
+          logoDimensionWidth: "",
+          logoDimensionsLength: "",
+          apparelLogoLocation: "",
+          imprintColors1: "",
+          imprintColors2: "",
+          imprintColors3: "",
+          virtualProof: "st",
 
-    let Gridwithmultiplefilesname: any[] = [];
-    for (var i = 0; i < this.selectedproduction.length; i++) {
-      let GetAllvalues = this.selectedproduction[i];
-      let GetAddList =
-      {
-        FileName: GetAllvalues.fileName,
-        PoNo: GetAllvalues.poNo,
-        PODate: GetAllvalues.poDate,
-        Remarks: GetAllvalues.instruction,
-        SalesPersonName: GetAllvalues.salesPersonName,
-        JobStatusId: GetAllvalues.jobStatusId,
-        TransactionId: GetAllvalues.transactionType,
-        DepartmentId: GetAllvalues.workType,
-        ClientId: GetAllvalues.clientId,
-        EmployeeId: this.loginservice.getUsername(),
-        FileReceivedDate: GetAllvalues.fileReceivedDate,
-        ClientOrderId: GetAllvalues.orderId,
-        CCId: GetAllvalues.ccId,//
-        CCEmailId: GetAllvalues.ccEmailId,//
-        FileInwardTypeId: GetAllvalues.fileInwardTypeId,//
-        DivisionId: this.getselecteddivisions(),// //
-        getAllValues: [],
-        ApparelLogoLocation: 'apparel',
-        poNo: "",
-        clientName: "",
-        clientJobId: "",
-        jobStatusDescription: "",
-        username: "",
-        clientSalesPerson: "",
-        customerName: "",
-        temp: "",
-        style: "",
-        projectCode: "",
-        teamCode: "",
-        schoolName: "",
-        ground: "",
-        gender: "",
-        fileInwardMode: "",
-        jobDescription: "",
-        color: "",
-        logoDimensionWidth: "",
-        logoDimensionsLength: "",
-        apparelLogoLocation: "",
-        imprintColors1: "",
-        imprintColors2: "",
-        imprintColors3: "",
-        virtualProof: "st",
+          customerJobType: "",
 
-        customerJobType: "",
+          viewDatas: [],
 
-        viewDatas: [],
+        }
 
+        Gridwithmultiplefilesname.push(GetAddList);
+      }
+      let senddata = {
+        "id": 0,
+        "dateofReceived": "2023-05-12T07:08:03.495Z",
+        "clientName": "",
+        "clientJobId": "",
+        "fileName": "",
+        "jobStatusDescription": "",
+        "username": "",
+        "salesPersonName": "",
+        "clientSalesPerson": "",
+        "customerName": "",
+        "temp": "",
+        "style": "",
+        "projectCode": "",
+        "teamCode": "",
+        "schoolName": "",
+        "ground": "",
+        "gender": "",
+        "fileInwardMode": "",
+        "status": true,
+        "fileReceivedDate": "2023-05-12T07:08:03.495Z",
+        "jobDescription": "",
+        "jobStatusId": 0,
+        "departmentId": 0,
+        "divisionId": 0,
+        "employeeId": 0,
+        "clientId": 0,
+        "remarks": "",
+        "poNo": "",
+        "fileInwardTypeId": 0,
+        "color": "",
+        "logoDimensionWidth": "",
+        "logoDimensionsLength": "",
+        "apparelLogoLocation": "",
+        "imprintColors1": "",
+        "imprintColors2": "",
+        "imprintColors3": "",
+        "virtualProof": "s",
+        "dateofUpload": "2023-05-12T07:08:03.495Z",
+        "dateofClose": "2023-05-12T07:08:03.495Z",
+        "customerJobType": "",
+        "jobDate": "2023-05-12T07:08:03.495Z",
+        "clientOrderId": 0,
+        "viewDatas": [
+          {
+            "id": 0,
+            "department": "",
+            "clientStatus": "",
+            "dateofReceived": "2023-05-12T07:08:03.495Z",
+            "clientName": "",
+            "clientJobId": "",
+            "fileName": "",
+            "jobStatusDescription": "",
+            "username": "",
+            "salesPersonName": "",
+            "customerName": "",
+            "temp": "",
+            "style": "",
+            "projectCode": "",
+            "teamCode": "",
+            "schoolName": "",
+            "ground": "",
+            "gender": "",
+            "fileInwardMode": "",
+            "status": true,
+            "dateofUpload": "",
+            "priority": "",
+            "clientSalesPerson": "",
+            "poNo": "",
+            "dateofDelivery": "",
+            "division": "",
+            "uploadedBy": 0
+          }
+        ],
+        "createdBy": 0,
+        "poDate": "2023-05-12T07:08:03.495Z",
+        "ccId": 0,
+        "ccEmailId": "",
+        "dateofDelivery": "2023-05-12T07:08:03.495Z",
+        "getAllValues": Gridwithmultiplefilesname
+      };
+      let joborderconverted = {
+        GetAllValues: Gridwithmultiplefilesname,
       }
 
-      Gridwithmultiplefilesname.push(GetAddList);
-    }
-    let senddata = {
-      "id": 0,
-      "dateofReceived": "2023-05-12T07:08:03.495Z",
-      "clientName": "",
-      "clientJobId": "",
-      "fileName": "",
-      "jobStatusDescription": "",
-      "username": "",
-      "salesPersonName": "",
-      "clientSalesPerson": "",
-      "customerName": "",
-      "temp": "",
-      "style": "",
-      "projectCode": "",
-      "teamCode": "",
-      "schoolName": "",
-      "ground": "",
-      "gender": "",
-      "fileInwardMode": "",
-      "status": true,
-      "fileReceivedDate": "2023-05-12T07:08:03.495Z",
-      "jobDescription": "",
-      "jobStatusId": 0,
-      "departmentId": 0,
-      "divisionId": 0,
-      "employeeId": 0,
-      "clientId": 0,
-      "remarks": "",
-      "poNo": "",
-      "fileInwardTypeId": 0,
-      "color": "",
-      "logoDimensionWidth": "",
-      "logoDimensionsLength": "",
-      "apparelLogoLocation": "",
-      "imprintColors1": "",
-      "imprintColors2": "",
-      "imprintColors3": "",
-      "virtualProof": "s",
-      "dateofUpload": "2023-05-12T07:08:03.495Z",
-      "dateofClose": "2023-05-12T07:08:03.495Z",
-      "customerJobType": "",
-      "jobDate": "2023-05-12T07:08:03.495Z",
-      "clientOrderId": 0,
-      "viewDatas": [
-        {
-          "id": 0,
-          "department": "",
-          "clientStatus": "",
-          "dateofReceived": "2023-05-12T07:08:03.495Z",
-          "clientName": "",
-          "clientJobId": "",
-          "fileName": "",
-          "jobStatusDescription": "",
-          "username": "",
-          "salesPersonName": "",
-          "customerName": "",
-          "temp": "",
-          "style": "",
-          "projectCode": "",
-          "teamCode": "",
-          "schoolName": "",
-          "ground": "",
-          "gender": "",
-          "fileInwardMode": "",
-          "status": true,
-          "dateofUpload": "",
-          "priority": "",
-          "clientSalesPerson": "",
-          "poNo": "",
-          "dateofDelivery": "",
-          "division": "",
-          "uploadedBy": 0
-        }
-      ],
-      "createdBy": 0,
-      "poDate": "2023-05-12T07:08:03.495Z",
-      "ccId": 0,
-      "ccEmailId": "",
-      "dateofDelivery": "2023-05-12T07:08:03.495Z",
-      "getAllValues": Gridwithmultiplefilesname
-    };
-    let joborderconverted = {
-      GetAllValues: Gridwithmultiplefilesname,
-    }
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).pipe(
 
-    this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).pipe(
+        catchError((error) => {
 
-      catchError((error) => {
+          this.spinnerService.requestEnded();
 
+          console.error('API Error:', error);
+
+
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+
+        })
+
+      ).subscribe(convertdata => {
         this.spinnerService.requestEnded();
 
-        console.error('API Error:', error);
-
- 
-
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
-
-      })
-
-    ).subscribe(convertdata => {
-      this.spinnerService.requestEnded();
-
-      let JobId = convertdata.jobId;
-      if (JobId == `File Name Already Exist!` || JobId == "Previous Job is not closed for the File Name and Client!") {
-        alert(JobId);
-      }
-      else {
-        Swal.fire(
-          'Done!',
-          'Bulk Converted Successfully!',
-          'success'
-        ).then((result) => {
-          if (result.isConfirmed) {
-            window.location.reload();
-          }
-        })
-      }
-    },
-      error => {
-        this.spinnerService.resetSpinner();
-      })
+        let JobId = convertdata.jobId;
+        if (JobId == `File Name Already Exist!` || JobId == "Previous Job is not closed for the File Name and Client!") {
+          alert(JobId);
+        }
+        else {
+          Swal.fire(
+            'Done!',
+            'Bulk Converted Successfully!',
+            'success'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
+          })
+        }
+      });
+    }
 
   }
 

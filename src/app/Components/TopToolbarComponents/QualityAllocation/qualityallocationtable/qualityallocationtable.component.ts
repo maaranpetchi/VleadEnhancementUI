@@ -105,15 +105,12 @@ export class QualityallocationtableComponent implements OnInit {
     return result;
   }
 
-
-//////////////////////////////////////////////
-
-displayedColumnsvisibility: any = {
+  displayedColumnsvisibility: any = {
     'selected': true,
     'jobId': true,
     'employees': false,
     'artist': true,
-    'querydate':false,
+    'querydate': false,
     'estjob': true,
     'client': true,
     'customerClassification': true,
@@ -127,15 +124,6 @@ displayedColumnsvisibility: any = {
     'deliverydate': true,
   };
 
-
-
-
-
-
-
-
-
-
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -148,12 +136,10 @@ displayedColumnsvisibility: any = {
     private loginservice: LoginService,
     private _dialog: MatDialog,
     private spinner: SpinnerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    //maintable
     this.freshJobs();
-    //Employeetable
   }
 
   filterValue: any = null;
@@ -286,9 +272,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/1/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -316,9 +302,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/2/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/2/0`
       )
       .subscribe({
         next: (revisionJobs) => {
@@ -346,9 +332,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/3/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/3/0`
       )
 
       .subscribe({
@@ -376,9 +362,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/4/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/4/0`
       )
       .subscribe({
         next: (allocaetdJobs) => {
@@ -406,34 +392,34 @@ displayedColumnsvisibility: any = {
     this.displayedColumnsvisibility.estjob = false;
 
     this.http
-    .get<any>(
-      environment.apiURL +
+      .get<any>(
+        environment.apiURL +
         `Allocation/getQueryPendingJobs/${parseInt(
           this.loginservice.getUsername()
         )}/${parseInt(this.loginservice.getProcessId())}/0`
-    ).subscribe({
-      next: (queries) => {
-        
-        this.dataSource = new MatTableDataSource(queries.queryPendingJobs);
-        this.dataSource.paginator = this.paginator1;
-        this.dataSource.sort = this.sort;
-      },
-      error: (err) => {
-        this.spinner.resetSpinner();
-        console.log(err);
-      },
-    });
+      ).subscribe({
+        next: (queries) => {
+
+          this.dataSource = new MatTableDataSource(queries.queryPendingJobs);
+          this.dataSource.paginator = this.paginator1;
+          this.dataSource.sort = this.sort;
+        },
+        error: (err) => {
+          this.spinner.resetSpinner();
+          console.log(err);
+        },
+      });
 
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/5/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
       )
       .subscribe({
         next: (queries) => {
-          
+
           this.spinner.requestEnded();
           this.dataEmployeeSource = new MatTableDataSource(queries.employees);
           this.dataEmployeeSource.paginator = this.paginator2;
@@ -455,9 +441,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/6/0`
+        `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/6/0`
       )
       .subscribe({
         next: (queryResposne) => {
@@ -487,9 +473,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
       )
       .subscribe({
         next: (errorJobs) => {
@@ -515,9 +501,9 @@ displayedColumnsvisibility: any = {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/8/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/8/0`
       )
       .subscribe({
         next: (quotationJobs) => {
@@ -539,7 +525,7 @@ displayedColumnsvisibility: any = {
   }
 
 
-//Changes in quality allocation
+  //Changes in quality allocation
 
   estTimeinput: any[] = [];
 
@@ -595,7 +581,7 @@ displayedColumnsvisibility: any = {
   }
   data: any;
   onSubmit(data: any) {
- 
+
     this.selection.selected.forEach((x) => this.setAllJobs(x));
 
     if (this.selectedQuery.length > 0) {
@@ -740,7 +726,7 @@ displayedColumnsvisibility: any = {
             Swal.fire(
               'Info!',
               'Following Job Ids are assigned to same Employee',
-              'info' 
+              'info'
             );
             // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
@@ -777,7 +763,7 @@ displayedColumnsvisibility: any = {
       this.http
         .post<any>(
           environment.apiURL +
-            `/${orderId}/0/${processId}/${statusId}/1/${processId}/${statusId}`,
+          `/${orderId}/0/${processId}/${statusId}/1/${processId}/${statusId}`,
           processMovement
         )
         .subscribe((response) => {

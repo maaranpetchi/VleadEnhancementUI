@@ -876,7 +876,7 @@ export class ProductionallocationtableComponent implements OnInit {
         this.spinnerService.requestEnded();
         confirmationMessage = response;
         if (response.success === false) {
-          Swal.fire('Info!', 'Error the job assigned!', 'info');
+          Swal.fire('Info!', 'Error the job assign!', 'info');
           this.spinnerService.resetSpinner();
         } else if (response.success === true) {
           Swal.fire(

@@ -361,10 +361,6 @@ export class PricingComponent implements OnInit {
           Price: this.selectedCountPrice,
         };
       }
-      // $('#ddlCurrentStaff').val('');
-      // $('#countfrom').val('');
-      // $('#countto').val('');
-      // $('#countprice').val('');
       this.ViewFileCountTable.push(filecountdata);
       this.ViewFileCountTable = this.AddedRecord;
       this.ScopeBasedRateBasedFileCountTable = true;
@@ -403,12 +399,12 @@ export class PricingComponent implements OnInit {
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
         fromDate: this.selectedfromDate,
-        toDate: '2023-08-03T06:48:55.900Z',
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
-        weFromDate: '2023-08-03T06:48:55.900Z',
-        weToDate: '2023-08-03T06:48:55.900Z',
+        weFromDate: this.selectedfromDate,
+        weToDate: this.selectedfromDate,
         id: 0,
         addCountDatas: [],
       };
@@ -435,8 +431,8 @@ export class PricingComponent implements OnInit {
         scopeId:this.selectedScope,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
-        fromDate: '2023-08-03T06:48:55.900Z',
-        toDate: '2023-08-03T06:48:55.900Z',
+        fromDate: this.selectedfromDate,
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
@@ -468,8 +464,8 @@ export class PricingComponent implements OnInit {
         scopeId: 0,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
-        fromDate: '2023-08-03T06:48:55.900Z',
-        toDate: '2023-08-03T06:48:55.900Z',
+        fromDate: this.selectedfromDate,
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
@@ -501,8 +497,8 @@ export class PricingComponent implements OnInit {
         scopeId: 0,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
-        fromDate: '2023-08-03T06:48:55.900Z',
-        toDate: '2023-08-03T06:48:55.900Z',
+        fromDate: this.selectedfromDate,
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
@@ -538,8 +534,8 @@ export class PricingComponent implements OnInit {
         scopeId: 0,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
-        fromDate: '2023-08-03T06:48:55.900Z',
-        toDate: '2023-08-03T06:48:55.900Z',
+        fromDate: this.selectedfromDate,
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
@@ -571,8 +567,8 @@ export class PricingComponent implements OnInit {
         scopeId: 0,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
-        fromDate: '2023-08-03T06:48:55.900Z',
-        toDate: '2023-08-03T06:48:55.900Z',
+        fromDate: this.selectedfromDate,
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
@@ -604,13 +600,13 @@ export class PricingComponent implements OnInit {
         scopeId: 0,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
-        fromDate: '2023-08-03T06:48:55.900Z',
-        toDate: '2023-08-03T06:48:55.900Z',
+        fromDate: this.selectedfromDate,
+        toDate: this.selectedfromDate,
         designation: 'string',
         cusShortName: 'string',
         numberofArtist: 0,
         weFromDate: this.selectedfromDate,
-        weToDate: '2023-08-03T06:48:55.900Z',
+        weToDate: this.selectedfromDate,
         id: 0,
         addCountDatas: [],
       };

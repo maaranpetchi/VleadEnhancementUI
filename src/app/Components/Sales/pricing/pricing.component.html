@@ -133,44 +133,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <!-- <div class="form-group">
-              <div *ngIf="type2">
-                
-              </div> -->
-              <!-- <div *ngIf="type22">
-                
-              </div> -->
-            <!-- </div> -->
-            <!-- <div class="form-group" *ngIf="type6">
-            </div> -->
-            <!-- <div *ngIf="showeffective">
-              <div class="col-md-2 mt-2">
-                <h3>With Effect From</h3>
-              </div>
-              <div class="col-md-4 form-container">
-                <mat-form-field>
-                  <mat-label>MM-DD-YYYY</mat-label>
-                  <input matInput name="effectFormControl" [(ngModel)]="selectedfromDate" [ngModelOptions]="{standalone: true}" [matDatepicker]="startDatePicker"
-                    placeholder="Choose a date">
-                  <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                  <mat-datepicker #startDatePicker></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <div class="col-md-2 mt-2">
-                <h3> Job Status</h3>
-              </div>
-              <div class="col-md-4">
-                <mat-form-field>
-                  <mat-label>Select a filter</mat-label>
-                  <mat-select name="jobStatusFormControl" [(ngModel)]="selectedValueEfect" [ngModelOptions]="{standalone: true}">
-                    <mat-option>---Chose Pricing Type ---</mat-option>
-                    <mat-option *ngFor="let option of dropdownOptions" [value]="option.id">{{ option.jobStatusDescription
-                      }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div> -->
-            <!-- <div > -->
               <div class="col-md-2 mt-2" *ngIf="showstaffingcounttable">
                 <h3>With Effect From</h3>
               </div>
@@ -181,11 +143,7 @@
                     placeholder="Choose a date">
                   <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                   <mat-datepicker #startDatePicker></mat-datepicker>
-                </mat-form-field>             
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="effectFormControl.touched && effectFormControl.hasError('required')">
-                    Please select the Customer.
-                  </mat-error>    -->
+                </mat-form-field>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showstaffingcounttable">
                 <h3>  With Effect To</h3>
@@ -219,10 +177,6 @@
                     <mat-option *ngFor="let value of Scopes" [value]="value.id">{{ value.description }}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="scopeCountFormControl.touched && scopeCountFormControl.hasError('required')">
-                    Please select the Scope.
-                  </mat-error> -->
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttable">
                 <h3>From <span class="text-danger">*</span></h3>
@@ -549,15 +503,9 @@
               <button class="btn btn-danger actionbtn" (click)="RejectClick(customer.id)"> Delete</button>
             </td>
           </tr>
-          <!-- Row shown when there is no matching data. -->
-
         </tbody>
-
       </table>
-
     </div>
   </div>
-
 </body>
-
 </html>

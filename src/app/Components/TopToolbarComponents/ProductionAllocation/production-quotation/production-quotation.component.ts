@@ -18,7 +18,7 @@ import { catchError } from 'rxjs';
   templateUrl: './production-quotation.component.html',
   styleUrls: ['./production-quotation.component.scss']
 })
-export class ProductionQuotationComponent implements OnInit{
+export class ProductionQuotationComponent implements OnInit {
 
   jobCommonDetails: any;
   confirmationMessage: any;
@@ -34,7 +34,7 @@ export class ProductionQuotationComponent implements OnInit{
     private spinnerService: SpinnerService,
     private router: Router,
     public dialogRef: MatDialogRef<ProductionQuotationComponent>,
-    
+
     private _dialog: MatDialog,
   ) {
   }
@@ -156,53 +156,53 @@ export class ProductionQuotationComponent implements OnInit{
   // zipFiles(id: number){
   //   let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
   //   path = path.replace(/\\/g, '_');
-     
+
   //         this.http.get(environment.apiURL+'Allocation/DownloadZipFile?path='+`${path}`).subscribe((response:any) => {
   //           saveAs(new Blob([response.data], { type: "application/octet-stream" }), "test");
   //         })
-     
+
   // }
   zipFiles(): void {
-    let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
-     
-    const fileUrl = environment.apiURL+'Allocation/DownloadZipFile?path='+`${path}`; // Replace with the actual URL of your zip file
+
+    const fileUrl = environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
 
     // Use HttpClient to make a GET request to fetch the zip file
     this.http.get(fileUrl, { responseType: 'blob' }).subscribe(response => {
       this.saveFile(response);
     });
   }
-    private saveFile(blob: Blob) {
-      // Create a blob URL for the file
-      const url = window.URL.createObjectURL(blob);
-  
-      // Create a link element to trigger the download
-      const a = document.createElement('a');
-      a.href = url;
-      a.download =this.data.fileName; // Replace with the desired file name
-      document.body.appendChild(a);
-  
-      // Trigger the click event to start the download
-      a.click();
-  
-      // Clean up the blob URL and the link element
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    }
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.data.fileName; // Replace with the desired file name
+    document.body.appendChild(a);
+
+    // Trigger the click event to start the download
+    a.click();
+
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
   workFiles(id: number): void {
-    let path= this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
+    let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
     path = path.replace(/\\/g, '_');
 
     this.http
       .get(
         environment.apiURL +
-          `Allocation/getFileNames/${path}`
+        `Allocation/getFileNames/${path}`
       )
       .subscribe((response: any) => {
         const fileUrls: string[] = response.files;
         fileUrls.forEach((url) => {
-          this.http.get(environment.apiURL+'Allocation/downloadFilesTest/'+`${path}/`+url).subscribe((response:any) => {
+          this.http.get(environment.apiURL + 'Allocation/downloadFilesTest/' + `${path}/` + url).subscribe((response: any) => {
             saveAs(new Blob([response.data], { type: "application/octet-stream" }), url);
           })
         });
@@ -215,11 +215,11 @@ export class ProductionQuotationComponent implements OnInit{
   onSubmit() {
     if (this.selectedQureryStatus == 6) {
       this.processMovement();
-    } 
+    }
   }
 
   processMovement() {
-    const apiUrl = environment.apiURL + `Allocation/processMovement`;
+    // const apiUrl = environment.apiURL + `Allocation/processMovement`;
 
     let saveData = {
       id: 0,
@@ -278,47 +278,69 @@ export class ProductionQuotationComponent implements OnInit{
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     }
-    try{
     this.spinnerService.requestStarted();
-    this.http.post<any>(apiUrl, saveData).pipe(
-      catchError((error) => {
-        this.spinnerService.requestEnded();
-        console.error('API Error:', error);
-        return Swal.fire(
-          'Alert!',
-          'An error occurred while processing your request',
-          'error'
-        );
-      })
-    ).subscribe((response) => {
-      if (response.success === true) {
-        Swal.fire(
-          'Done!',
-          response.message,
-          'success'
-        )
-      }
-      else if (response.success === false) {
-        Swal.fire(
-          'Error!',
-          response.message,
-          'error'
-        )
-      }
-    });
-  }catch (error) {
-    this.spinnerService.resetSpinner();
-    console.error('API Error:', error);
-    Swal.fire(
-      'Alert!',
-      'An error occurred while processing your request',
-      'error'
-    );
+      this.http.post<any>(environment.apiURL + `Allocation/processMovement`, saveData)
+      .subscribe((response) => {
+          
+        if (response.success === true) {
+          this.spinnerService.requestEnded();
+          Swal.fire(
+            'Done!',
+            response.message,
+            'success'
+          )
+        }
+        else if (response.success === false) {
+          this.spinnerService.resetSpinner();
+          Swal.fire(
+            'Error!',
+            'An error occurred while processing your request',
+            'error'
+          )
+        }
+      });
+    // try {
+    //   this.spinnerService.requestStarted();
+    //   this.http.post<any>(environment.apiURL + `Allocation/processMovement`, saveData)
+    //     // .pipe(
+    //     // catchError((error) => {
+    //     //   this.spinnerService.requestEnded();
+    //     //   console.error('API Error:', error);
+    //     //   return Swal.fire(
+    //     //     'Alert!',
+    //     //     'An error occurred while processing your request',
+    //     //     'error'
+    //     //   );
+    //     // })
+    //     // )
+    //     .subscribe((response) => {
+          
+    //       if (response.success === true) {
+    //         this.spinnerService.requestEnded();
+    //         Swal.fire(
+    //           'Done!',
+    //           response.message,
+    //           'success'
+    //         )
+    //       }
+    //       else if (response.success === false) {
+    //         Swal.fire(
+    //           'Error!',
+    //           'An error occurred while processing your request',
+    //           'error'
+    //         )
+    //       }
+    //     });
+    // } catch (error) {
+    //   this.spinnerService.resetSpinner();
+    //   console.error('API Error:', error);
+    //   Swal.fire(
+    //     'Alert!',
+    //     'An error occurred while processing your request',
+    //     'error'
+    //   );
+    // }
   }
-  }
-
-
-  //////////////////Popupsubmit///////////////////
   getQueryDetailList() {
 
     this.http.get<any>(environment.apiURL + `Allocation/GetQuerySPDetailsForQA/${this.jobCommonDetails.jobCommonDetails.jid}`).subscribe(result => {
@@ -327,7 +349,7 @@ export class ProductionQuotationComponent implements OnInit{
   }
 
   postQueryData() {
-    
+
     if (this.selectedQureryStatus == 100) {
       var changeEstimatedTime = {
         EmployeeId: "",
@@ -498,17 +520,17 @@ export class ProductionQuotationComponent implements OnInit{
     }
   }
 
-  Quotation(data:any){
-    data={...data,statusId:19}
-      const dialogRef = this._dialog.open(QuotationPopupComponent, {
-        width: '60%',
-        height: '800px',
-        data:data
-      })
-      dialogRef.afterClosed().subscribe({
-        next: (val) => {
-        },
-      });
-    }
+  Quotation(data: any) {
+    data = { ...data, statusId: 19 }
+    const dialogRef = this._dialog.open(QuotationPopupComponent, {
+      width: '60%',
+      height: '800px',
+      data: data
+    })
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+      },
+    });
+  }
 
 }

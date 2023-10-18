@@ -506,7 +506,7 @@ if(val==true){
       "resignReasons":  this.resignReason ? this.resignReason:0 ,
       "dateOfResignation": this.dor ?  this.dor:'',
       "processCode": this.employeeProcess ? this.employeeProcess:0,
-      "result": this.outsource ? this.outsource : '',
+      "result": this.outsource ? this.outsource : false,
       "roleDescription": "",
       "isOutsource": true,
       "empRolesList":empRoleList ? empRoleList:'',

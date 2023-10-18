@@ -279,7 +279,7 @@ export class ProductionQuotationComponent implements OnInit{
       isJobFilesNotTransfer: true,
     }
     try{
-    this.spinnerService.requestEnded();
+    this.spinnerService.requestStarted();
     this.http.post<any>(apiUrl, saveData).pipe(
       catchError((error) => {
         this.spinnerService.requestEnded();

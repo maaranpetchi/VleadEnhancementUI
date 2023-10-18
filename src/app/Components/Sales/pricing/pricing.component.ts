@@ -612,34 +612,35 @@ export class PricingComponent implements OnInit {
       };
     }
     this.spinner.requestStarted();
-    this.http
-      .post(environment.apiURL + `Pricing/AddPricingWithScope`, datas)
-      .subscribe((response:any) => {
-        this.spinner.requestEnded();
-        this.jobStatusFormControl = response;
-        if(response && response.stringList ==="Pricing Added Successfully"){
-          Swal.fire(
-            'Done!',
-            response.stringList,
-            'success'
-          ).then((result) => {
-            if (result.isConfirmed) {
-              window.location.reload();
+    try {
+      this.http
+        .post(environment.apiURL + `Pricing/AddPricingWithScope`, datas)
+        .subscribe((response: any) => {
+          this.spinner.requestEnded();
+          this.jobStatusFormControl = response;
+          if (response && response.stringList === "Pricing Added Successfully") {
+            Swal.fire(
+              'Done!',
+              response.stringList,
+              'success'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            });
           }
-          })
-        }
-        else{
-          Swal.fire(
-            'Error!',
-            response.stringList,
-            'error'
-          ).then((result) => {
-            if (result.isConfirmed) {
-              window.location.reload();
-          }
-          })
+        })} catch (error) {
+      // Handle other unexpected errors
+      Swal.fire(
+        'Error!',
+        'An unexpected error occurred',
+        'error'
+      ).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
         }
       });
+    }
   }
 
 

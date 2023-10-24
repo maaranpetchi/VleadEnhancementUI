@@ -12,12 +12,21 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { ProductionallocationtableComponent } from '../productionallocationtable/productionallocationtable.component';
+
+
+
+
 @Component({
   selector: 'app-job-assigned-details-popup',
   templateUrl: './job-assigned-details-popup.component.html',
   styleUrls: ['./job-assigned-details-popup.component.scss'],
 })
+
+
 export class JobAssignedDetailsPopupComponent implements OnInit {
+  @ViewChild(ProductionallocationtableComponent) ProductionallocationtableComponent: ProductionallocationtableComponent;
+
   jobCommonDetails: any;
   confirmationMessage: any;
   QueryDetailsList: any;
@@ -325,6 +334,8 @@ this.spinnerService.requestStarted();
         Swal.fire('Done!', response.message, 'success').then((response)=>{
           if(response.isConfirmed){
             this.dialogRef.close();
+            this.ngOnInit();
+
           }
         });
       } else if (response.success === false) {
@@ -410,6 +421,7 @@ this.spinnerService.requestStarted();
             ).then((result) => {
               if (result.isConfirmed) {
                 this.dialogRef.close();
+
               }
             });
           } else if (response.success === false) {

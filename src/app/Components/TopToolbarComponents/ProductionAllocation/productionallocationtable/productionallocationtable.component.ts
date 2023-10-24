@@ -631,8 +631,6 @@ export class ProductionallocationtableComponent implements OnInit {
   }
 
   getProductionJob(data: any) {
-
-
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
       height: '450px',
@@ -711,26 +709,19 @@ export class ProductionallocationtableComponent implements OnInit {
       this.selectedJobs = this.selectedQuery;
     }
     this.spinnerService.requestStarted();
-
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployee.length;
-
-
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount > 1) {
             Swal.fire('Info!', 'Please select one Employee!', 'info');
-            // alert('Please select one Employee!');
           }
           else {
-            console.log();
-
             for (var i = 0; i < selectedJobCount; i++) {
               if (this.selectedJobs[i].allocatedEstimatedTime == undefined || this.selectedJobs[i].allocatedEstimatedTime == "" || this.selectedJobs[i].allocatedEstimatedTime == 0) {
-                // alert('Please enter Estimated Time for Selected Job');
                 Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
-
+              this.spinnerService.requestEnded();
                 return;
               }
             }
@@ -744,7 +735,7 @@ export class ProductionallocationtableComponent implements OnInit {
               this.selectedEmployee[i].estTime == 0
             ) {
               Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
-              // alert('Please enter Estimated Time for Selected Employee');
+              this.spinnerService.requestEnded();
               return;
             }
           }
@@ -752,27 +743,22 @@ export class ProductionallocationtableComponent implements OnInit {
         }
       } else {
         Swal.fire('Info!', 'Please select Job and Employees!', 'info');
-
-        // alert('Please select Job and Employeesss');
-
-
+        this.spinnerService.requestEnded();
       }
     } else {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedEmployeeCount > 1) {
           Swal.fire('Info!', 'Please select one Employee!', 'info');
-
-          // alert('Please select one Employee!');
+          this.spinnerService.requestEnded();
           return;
         }
         this.postJobs();
       } else {
         Swal.fire('Info!', 'Please select Job and Employee!', 'info');
-
-        // alert('Please select Job and Employee');
-        // $('#alertPopup').modal('show');
+        this.spinnerService.requestEnded();
       }
     }
+    
 
   }
 

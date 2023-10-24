@@ -255,6 +255,7 @@ this.spinnerService.requestStarted();
   }
 
   processMovement() {
+    this.spinnerService.requestStarted();
     const apiUrl = environment.apiURL + `Allocation/processMovement`;
     let saveData = {
       id: 0,
@@ -313,8 +314,6 @@ this.spinnerService.requestStarted();
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    this.spinnerService.requestStarted();
-    try {
     this.http.post<any>(apiUrl, saveData).pipe(
       catchError((error) => {
         this.spinnerService.requestEnded();
@@ -323,23 +322,19 @@ this.spinnerService.requestStarted();
       })
     ).subscribe((response) => {
       if (response.success === true) {
-        Swal.fire('Done!', response.message, 'success');
+        Swal.fire('Done!', response.message, 'success').then((response)=>{
+          if(response.isConfirmed){
+            this.dialogRef.close();
+          }
+        });
       } else if (response.success === false) {
         Swal.fire('Error!', response.message, 'error');
       }
     });
   }
-  catch (error) {
-    this.spinnerService.resetSpinner();
-    console.error('API Error:', error);
-    Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-  } finally {
-    this.spinnerService.resetSpinner();
-    // Perform any cleanup or finalization here
-  }
-  }
 
   changeEstTime() {
+    this.spinnerService.requestStarted();
     let estTimeData = {
       id: 0,
       processId: this.data.processId,
@@ -396,7 +391,6 @@ this.spinnerService.requestStarted();
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-    this.spinnerService.requestStarted();
     try {
     this.http
       .post<any>(environment.apiURL + 'Allocation/processMovement', estTimeData).pipe(

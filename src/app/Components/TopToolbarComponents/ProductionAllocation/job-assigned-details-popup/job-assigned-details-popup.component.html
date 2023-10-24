@@ -165,36 +165,45 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="remarksdata">
-    <div class="col-md-4">Remarks <span class="text-danger">*</span></div>
-    <div class="col-md-4">
-      <div class="querydropdown">
-        <mat-form-field>
-          <textarea matInput placeholder="Remarks" [(ngModel)]="remarks"></textarea>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-  <div class="row" *ngIf="EstimatedTime">
-    <div class="col-md-4">Estimated Time</div>
-    <div class="col-md-4">
+<!-- ... previous HTML code ... -->
+
+<div class="row" *ngIf="remarksdata">
+  <div class="col-md-4">Remarks <span class="text-danger">*</span></div>
+  <div class="col-md-4">
+    <div class="querydropdown">
       <mat-form-field>
-        <matInput [(ngModel)]="estimatedTime"></matInput>
+        <textarea matInput placeholder="Remarks" [(ngModel)]="remarks" name="remarks"></textarea>
       </mat-form-field>
     </div>
-    <!-- <div class="col-md-2"> Estimated Time (estimatedTime)</div> -->
   </div>
-  <div class="row" *ngIf="EmployeData">
-    <div class="col-md-4">Employees</div>
-    <div class="col-md-4">
+</div>
+
+<div class="row" *ngIf="EstimatedTime">
+  <div class="col-md-4">Estimated Time</div>
+  <div class="col-md-4">
+    <div class="querydropdown">
+      <mat-form-field>
+        <input matInput [(ngModel)]="estimatedTime" name="estimatedTime" type="text">
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="EmployeData">
+  <div class="col-md-4">Employees</div>
+  <div class="col-md-4">
+    <div class="querydropdown">
       <mat-form-field>
         <mat-label>Scope</mat-label>
-        <mat-select [(ngModel)]="selectedScope">
+        <mat-select [(ngModel)]="selectedScope" name="selectedScope">
           <mat-option *ngFor="let scope of Scopes" [value]="scope.id">{{ scope.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
   </div>
+</div>
+
+<!-- ... rest of your HTML code ... -->
 
 
   <div class="mb-5 text-center">

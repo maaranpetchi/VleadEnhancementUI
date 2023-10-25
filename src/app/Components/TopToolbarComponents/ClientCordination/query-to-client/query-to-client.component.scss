@@ -8,10 +8,33 @@
   width: 25%;
 }
 #table-container {
-  height: 50vh; /* Set a fixed height of 50% of the viewport height */
+  height: 69vh; /* Set a fixed height of 50% of the viewport height */
   overflow-y: auto;  
 }
 #custom-table {
   width: 75%; /* Set the table width to 75% of its container */
   border-collapse: collapse; /* Optional: Collapse borders between table cells */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

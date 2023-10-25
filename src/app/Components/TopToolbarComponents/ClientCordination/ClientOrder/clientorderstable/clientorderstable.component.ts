@@ -877,7 +877,6 @@ export class ClientorderstableComponent implements OnInit {
 
   //select///
 
-
   selection = new SelectionModel<any>(true, []);
 
   filterValue: any = null;

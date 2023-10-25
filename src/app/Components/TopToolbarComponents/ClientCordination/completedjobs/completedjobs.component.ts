@@ -11,6 +11,7 @@ import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { error } from 'jquery';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { SelectionModel } from '@angular/cdk/collections';
 @Component({
   selector: 'app-completedjobs',
   templateUrl: './completedjobs.component.html',
@@ -70,38 +71,37 @@ export class CompletedjobsComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
 
   remarkValue: string = '';
   //to save the checkbox value
+
+  // setAll(completed: boolean, item: any) {
+
+  //   if (completed == true) {
+  //     this.selectedQuery.push({ ...item, Comments: '', CategoryDesc: '', SelectedRows: [], CommentsToClient: '', SelectedEmployees: [] })
+  //   }
+  //   else {
+
+  //     if (this.selectedQuery.find(x => x.id == item.id)) {
+  //       this.selectedQuery = this.selectedQuery.filter(x => {
+  //         if (x.id != item.id) {
+  //           return item
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
+  postdatabulk: any[] = [];
+
+  selectedJobs: any[] = [];
   selectedQuery: any[] = [];
 
-  setAll(completed: boolean, item: any) {
-    
-    if (completed == true) {
-      this.selectedQuery.push({ ...item, Comments: '', CategoryDesc: '', SelectedRows: [], CommentsToClient: '', SelectedEmployees: [] })
-    }
-    else {
-
-      if (this.selectedQuery.find(x => x.id == item.id)) {
-        this.selectedQuery = this.selectedQuery.filter(x => {
-          if (x.id != item.id) {
-            return item
-          }
-        })
-      }
-    }
-  }
-  postdatabulk: any[] = [];
   bulkUpload() {
     this.spinnerService.requestStarted();
+    this.selection.selected.forEach(x => this.setAll(x));
+    if (this.selectedQuery.length > 0) {
+      this.selectedJobs = this.selectedQuery;
+    }
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
       this.spinnerService.requestEnded();
       this.postdatabulk = data.clientDetails.resultCompletedJobsList;
@@ -129,7 +129,7 @@ export class CompletedjobsComponent implements OnInit {
       "jId": 0,
       "estimatedTime": 0,
       "tranMasterId": 0,
-      "SelectedRows": this.selectedQuery,
+      "SelectedRows": this.selectedJobs,
       "selectedEmployees": [],
       "departmentId": 0,
       "updatedUTC": "2023-05-18T11:26:56.846Z",
@@ -159,7 +159,7 @@ export class CompletedjobsComponent implements OnInit {
           'success'
         ).then((result) => {
           if (result.isConfirmed) {
-            this.getCompletedJobData();
+            this.ngOnInit();
           }
         })
       }
@@ -189,5 +189,44 @@ export class CompletedjobsComponent implements OnInit {
     });
   }
 
+  ///Select///
+  selection = new SelectionModel<any>(true, []);
+  filterValue: any = null;
 
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach(x => this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+  }
+  setAll(item: any) {
+    this.selectedQuery.push({
+      ...item,
+      "Comments": item.Comments ? item.Comments : '',
+      'CategoryDesc': item.CategoryDesc ? item.CategoryDesc : '',
+      'SelectedRows': item.SelectedRows ? item.SelectedRows : [],
+      'CommentsToClient': item.CommentsToClient ? item.CommentsToClient : '',
+      'SelectedEmployees': item.SelectedEmployees ? item.SelectedEmployees : []
+    });
+  }
 }

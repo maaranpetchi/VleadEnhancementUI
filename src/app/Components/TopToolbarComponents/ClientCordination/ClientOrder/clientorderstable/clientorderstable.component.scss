@@ -20,8 +20,12 @@ overflow-x: auto;
 }
 
 #table-container {
-  height:50vh; /* Set the maximum height for the table container */
-  overflow-y: auto; /* Enable vertical scrolling */
+  height: 69vh; /* Set a fixed height of 50% of the viewport height */
+  overflow-y: auto;  
+}
+#custom-table {
+  width: 75%; /* Set the table width to 75% of its container */
+  border-collapse: collapse; /* Optional: Collapse borders between table cells */
 }
 
 table {
@@ -32,7 +36,7 @@ table {
 th, td {
   padding: 8px;
   border: 1px solid #ddd;
-  text-align: left;
+  text-align: center;
 }
 
 th {
@@ -46,4 +50,3 @@ th {
   align-items: center;
   justify-content: center;
 }
-  

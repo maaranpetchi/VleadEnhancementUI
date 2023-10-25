@@ -16,6 +16,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-clientorderstable',
@@ -133,13 +134,14 @@ export class ClientorderstableComponent implements OnInit {
   }
 
 
-  employeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+  // employeeFilter(event: Event): void {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
 
   fetchdivision() {
     this.spinnerService.requestStarted();
@@ -165,22 +167,22 @@ export class ClientorderstableComponent implements OnInit {
 
   //to save the checkbox values
   selectedproduction: any[] = [];
-  setAll(completed: boolean, item: any) {
+  // setAll(completed: boolean, item: any) {
 
-    if (completed == true) {
-      this.selectedproduction.push(item)
-    }
-    else {
+  //   if (completed == true) {
+  //     this.selectedproduction.push(item)
+  //   }
+  //   else {
 
-      if (this.selectedproduction.find(x => x.id == item.id)) {
-        this.selectedproduction = this.selectedproduction.filter(x => {
-          if (x.id != item.id) {
-            return item
-          }
-        })
-      }
-    }
-  }
+  //     if (this.selectedproduction.find(x => x.id == item.id)) {
+  //       this.selectedproduction = this.selectedproduction.filter(x => {
+  //         if (x.id != item.id) {
+  //           return item
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
 
   bindingjobs() {
     this.spinnerService.requestStarted();
@@ -643,8 +645,15 @@ export class ClientorderstableComponent implements OnInit {
         })
     }
   } // added co if ends
+  selectedJobs: any[] = [];
+  selectedQuery: any[] = [];
 
   multiconvert() {
+    this.selection.selected.forEach(x => this.setAll(x));
+    if (this.selectedQuery.length > 0) {
+      this.selectedJobs = this.selectedQuery;
+    }
+
     //added co if starts 
     if (this.selectdivision == 0) {
       Swal.fire(
@@ -793,7 +802,7 @@ export class ClientorderstableComponent implements OnInit {
         "ccId": 0,
         "ccEmailId": "",
         "dateofDelivery": "2023-05-12T07:08:03.495Z",
-        "getAllValues": Gridwithmultiplefilesname
+        "GetAllValues": this.selectedJobs
       };
       let joborderconverted = {
         GetAllValues: Gridwithmultiplefilesname,
@@ -866,6 +875,89 @@ export class ClientorderstableComponent implements OnInit {
     });
   }
 
+  //select///
+
+
+  selection = new SelectionModel<any>(true, []);
+
+  filterValue: any = null;
+  employeeFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach(x => this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+  }
+  setAll(item: any) {
+    this.selectedQuery.push({
+      ...item,
+      "FileName": item.fileName ?item.fileName:'',
+      "PoNo": item.poNo ? item.poNo:"",
+      "PODate": item.poDate ? item.poDate:'',
+      "Remarks": item.instruction ?item.instruction:"",
+      "SalesPersonName": item.salesPersonName ? item.salesPersonName:'',
+      "JobStatusId": item.jobStatusId ? item.jobStatusId:0,
+      "TransactionId": item.transactionType ? item.transactionType:0,
+      "DepartmentId": item.workType ? item.workType:0,
+      "ClientId": item.clientId ? item.clientId:0,
+      "EmployeeId": this.loginservice.getUsername(),
+      "FileReceivedDate": item.fileReceivedDate ? item.fileReceivedDate:'',
+      "ClientOrderId": item.orderId ? item.orderId:0,
+      "CCId": item.ccId ? item.ccId:0,//
+      "CCEmailId": item.ccEmailId ? item.ccEmailId:0,//
+      "FileInwardTypeId": item.fileInwardTypeId ? item.fileInwardTypeId:0,//
+      "DivisionId": this.getselecteddivisions() ? this.getselecteddivisions():0,// //
+      "getAllValues": [],
+      "ApparelLogoLocation": 'apparel',
+      "clientName": "",
+      "clientJobId": "",
+      "jobStatusDescription": "",
+      "username": "",
+      "clientSalesPerson": "",
+      "customerName": "",
+      "temp": "",
+      "style": "",
+      "projectCode": "",
+      "teamCode": "",
+      "schoolName": "",
+      "ground": "",
+      "gender": "",
+      "fileInwardMode": "",
+      "jobDescription": "",
+      "color": "",
+      "logoDimensionWidth": "",
+      "logoDimensionsLength": "",
+      "apparelLogoLocation": "",
+      "imprintColors1": "",
+      "imprintColors2": "",
+      "imprintColors3": "",
+      "virtualProof": "st",
+
+      "customerJobType": "",
+
+      "viewDatas": [],
+    });
+  }
 
 
 }

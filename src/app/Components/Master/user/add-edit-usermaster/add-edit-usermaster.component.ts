@@ -52,7 +52,7 @@ export class AddEditUsermasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUsersById(this.data.id);
-    this.getMenuDetails();
+    
     
   }
 
@@ -77,6 +77,7 @@ export class AddEditUsermasterComponent implements OnInit {
         
       }
     );
+    
   }
   userRegistrationForm = this.builder.group({
     userType:'',
@@ -95,11 +96,14 @@ export class AddEditUsermasterComponent implements OnInit {
   showUserData(){
     this.isAdmin = false;
     this.isEmployee = true;
-    this.selectedMenu=[]
+    this.selectedMenu=this.employees.menuAccess.split('|').filter(x=>x!='').map(x=>+x);
     this.selectedMenuArray=[]
+    console.log("split",this.selectedMenu)
+    this.getMenuDetails();
   }
   menus:any[] = []
   getMenuDetails(){
+    console.log('MenuDetails')
     this._empService.getMenu().subscribe(
     (data: any) => {
       this.menus = data;

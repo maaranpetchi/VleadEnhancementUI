@@ -58,7 +58,7 @@
 								<mat-label>{{menu.name}}</mat-label>
 							</div>
 							<div *ngIf="!menu.hasSubMenu">
-								<mat-checkbox formControlName="checkboxMenu" [checked]="selectedMenu.indexOf(menu.id) > -1"
+								<mat-checkbox [checked]="selectedMenu.indexOf(menu.id) > -1"
 									(change)="onMenuSelection($event, menu.id)">
 									{{menu.name}}
 								</mat-checkbox>

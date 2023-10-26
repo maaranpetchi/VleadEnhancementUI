@@ -43,6 +43,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   selectedJobStatusID: any;
   selectedJobStatusDescription: any;
   customerTatid: any;
+  ShortNamePayload: any;
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -58,12 +59,16 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.fetchUpdateData();
     this.getCustomervsscopeDepartments();
     this.getCustomerDatainForm();
-    this.GetTimeZoneList()
+     this.GetTimeZoneList()
+     this.getCountry();
+     this.getUserAddress();
   }
   constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
     this.getCustomerData();
     this.getDepartments();
-    this.getCountry();
+    // this.getCountry();
+    // this.GetStatesList();
+    // this.GetCitiesList();
   }
 
 
@@ -133,6 +138,14 @@ export class SalesMultiStepFormComponent implements OnInit {
     );
   }
 
+  getUserAddress(){
+      this.http.get<any>(environment.apiURL + `Customer/GetAllStateListbyCountryId?CountryId=${this.Country}`).subscribe(results => {
+        this.placeList = results;
+        this.http.get<any>(environment.apiURL + `Customer/GetAllCityListbyStateId?StateId=${this.State}`).subscribe(results => {
+          this.citiesList = results;
+        });
+      });
+  }
 
   //Countrydropdown
   getCountry() {
@@ -152,7 +165,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   jobstatus: any[] = [];
   //String intertpolation
 
-  editCustomerName = localStorage.getItem("CustomerName");
+  editCustomerName = '';
   //ngmodels to save the current value
   ShortName: '';
   CustomerClassificationId: '';
@@ -175,7 +188,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   Checklist: boolean = false;
   ModeofSales: any;
   CurrencyMode: any;
-  SelectedScope: any[] = [];
+  SelectedScope: any;
   SelectedCustType: string = '';
   selectedDept: any;
   SelectedJobStatus: any;
@@ -204,7 +217,6 @@ export class SalesMultiStepFormComponent implements OnInit {
   }
 
   GetTimeZoneList() {
-    console.log(this.City, "City");
     this.http.get<any>(environment.apiURL + `Customer/GetAllTimeZoneListbyCityId?CityId=${this.City}`).subscribe(results => {
       this.timezone = results[0].timeZone;
     });
@@ -218,7 +230,7 @@ export class SalesMultiStepFormComponent implements OnInit {
       "shortName": this.ShortName,
       "customerClassificationId": this.CustomerClassificationId,
       "creditDays": this.CreditDays,
-      "isBlacklisted": true,
+      "isBlacklisted": false,
       "isApproved": true,
       "blacklistedReasons": "",
       "department": [],
@@ -277,6 +289,9 @@ export class SalesMultiStepFormComponent implements OnInit {
       localStorage.setItem("ShortName", results.shortName);
       localStorage.setItem("CustomerName", results.name);
       localStorage.setItem("CusRegId123", this.apiResponseData.id);
+      this.editCustomerName = results.name;
+      this.ShortNamePayload = results.shortName
+
     })
     this.getTableData();
     this.getCustomervsscopeDepartments();
@@ -318,10 +333,10 @@ export class SalesMultiStepFormComponent implements OnInit {
   }
 
   deleteEmployee(id: number) {
-    this.spinnerService.requestStarted();
+
     this.http.get<any>(environment.apiURL + `CustomerMapping/RemoveCustomerScope?custScopeId=${id}`).subscribe({
       next: (res) => {
-        this.spinnerService.requestEnded();
+        
 
         this._coreService.openSnackBar('Employee deleted!', 'done');
         this.getTableData();
@@ -335,23 +350,26 @@ export class SalesMultiStepFormComponent implements OnInit {
 
 
   getTableData() {
+
     this.http.get<any>(environment.apiURL + `CustomerMapping/CustomerScopeByCusId?cusId=${this.apiResponseData.id}`).subscribe(results => {
+      
       this.dataSource = results;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
   addDataToTable() {
+    
     let payload = [{
       "id": 0,
-      "shortName": localStorage.getItem("ShortName"),
-      "name": localStorage.getItem("CustomerName"),
+      "shortName": this.ShortNamePayload,
+      "name": this.editCustomerName,
       "custId": this.apiResponseData.id,
-      "scopeId": this.selectedScopeID,
+      "scopeId": this.SelectedScope.scopeId,
       "deptId": this.selectedDept.id,
       "custName": "",
       "description": "",
-      "scopeName": this.selectedDeptDescription,
+      "scopeName": this.SelectedScope.ScopeName,
       "scopeGroupDescription": "",
       "scopeGroupId": 0,
       "deptName": this.selectedDept.description,
@@ -364,10 +382,12 @@ export class SalesMultiStepFormComponent implements OnInit {
       "updatedUTC": new Date().toISOString,
     }]
     this.spinnerService.requestStarted();
+
     this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerVsScope`, payload).subscribe(results => {
       this.dataSource = results
       this.spinnerService.requestEnded();
-      Swal.fire('Done', 'Data Added Successfully', 'success').then((respone) => {
+
+      Swal.fire('Done', results.message, 'success').then((respone) => {
         if (respone.isConfirmed) {
           this.selectedDept="";
           this.SelectedScope=[];
@@ -403,27 +423,34 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.getCustomerTatTable();
   }
   getjobstatus() {
+
     this.http.get<any>(environment.apiURL + `CustomerMapping/JobStatusByCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
       this.jobstatus = results;
+      
     });
   }
 
   getCustomerTatTable() {
+
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
       this.customertatdatasource = results;
       this.customerTatid = results[0].id;
       this.jobStatusDescription = results[0].jobStatusDescription;
+      
+
     });
   }
 
+
   addcustattable() {
+    this.spinnerService.requestStarted();
     let payload = [
       {
-        "jobStatusId": this.selectedJobStatusID,
+        "jobStatusId": this.SelectedJobStatus.jobStatusId,
         "customerId": this.apiResponseData.id,
         "tat": this.tatValue,
         "customerShortName": this.apiResponseData.shortName,
-        "jobStatusDescription": this.selectedJobStatusDescription,
+        "jobStatusDescription": this.SelectedJobStatus.jobStatusDescription,
         "createdBy": this.loginservice.getUsername(),
         "createdUTC": new Date().toISOString,
         "updatedBy": this.loginservice.getUsername(),
@@ -433,10 +460,13 @@ export class SalesMultiStepFormComponent implements OnInit {
     ]
     this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerTAT`, payload).subscribe(results => {
       this.customertatdatasource = results;
-      Swal.fire('Done', 'Data Added Successfully', 'success').then((respone) => {
+      this.spinnerService.requestEnded();
+      Swal.fire('Done', results.message, 'success').then((respone) => {
         if (respone.isConfirmed) {
+          this.SelectedJobStatus = '';
+          this.tatValue = ''
           this.getCustomerTatTable();
-
+        
         }
       })
     });
@@ -447,7 +477,6 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.http.get<any>(environment.apiURL + `CustomerMapping/RemoveCustomerTAT?custTATId=${id}`).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
-
         this._coreService.openSnackBar('Employee deleted!', 'done');
         this.getCustomerTatTable();
       }
@@ -461,12 +490,14 @@ export class SalesMultiStepFormComponent implements OnInit {
   uptcustat: boolean = false;
   addcustat: boolean = true;
   openEditForm() {
+
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
       this.jobStatusdisplay = true;
       this.jobstatusdropdown = false;
       this.addcustat = false;
       this.uptcustat = true;
       this.tatValue = results[0].tat;
+      
 
     });
 
@@ -498,12 +529,20 @@ export class SalesMultiStepFormComponent implements OnInit {
       "updatedUtc": new Date().toISOString,
       "isActive": true
     }
+
+    this.spinnerService.requestStarted();
+
     this.http.post<any>(environment.apiURL + `CustomerMapping/UpdateCustomerTATData`, payload).subscribe(results => {
       this.customertatdatasource = results;
-      this._coreService.openSnackBar("Data Updated Succesfully!");
-      this.getCustomerTatTable();
-      this.tatValue = "";
-      this.returnForm();
+      this.spinnerService.requestEnded();
+      Swal.fire('Done', 'Data Updated Successfully', 'success').then((respone) => {
+        if (respone.isConfirmed) {
+          this.getCustomerTatTable();
+          this.tatValue = "";
+          this.returnForm();
+        }
+      })
+    
     });
   }
 

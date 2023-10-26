@@ -13,7 +13,8 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 })
 export class IndexCustomerSalesApprovalComponent implements OnInit {
   @ViewChild(TabcustomertableComponent) TabcustomertableComponent: TabcustomertableComponent;
-  constructor(private http: HttpClient, private loginservice: LoginService) { }
+  constructor(private http: HttpClient, private loginservice: LoginService) {        
+  }
 
   DivisionApiData: any[];
   ngOnInit(): void {

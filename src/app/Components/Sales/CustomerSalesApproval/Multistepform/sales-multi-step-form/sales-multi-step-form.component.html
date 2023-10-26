@@ -353,16 +353,19 @@
                                         [(ngModel)]="CurrencyMode" placeholder="Currency Mode" required tabindex="2">
 
                                 </div>
+                                <div class="firstnext">
+                                    <button class="btn btn-success" style="float: right;" matStepperNext (click)="AppCustomerupdate()">Next</button>
+                                </div>
                             </div>
+
+                           
                         </div>
 
                     </div>
                 </div>
-
+              
             </div>
-            <div>
-                <button mat-button matStepperNext (click)="AppCustomerupdate()">Next</button>
-            </div>
+           
         </mat-step>
 
         <!-- Step 2: Software -->
@@ -404,9 +407,9 @@
                                     <label for="scope">Scope:</label>
                                     <mat-form-field appearance="fill">
                                         <mat-label>Scope</mat-label>
-                                        <mat-select multiple [(ngModel)]="SelectedScope"
+                                        <mat-select  [(ngModel)]="SelectedScope"
                                             (selectionChange)="onScopeChange()">
-                                            <mat-option *ngFor="let item of ScopeBillings" [value]="item">
+                                            <mat-option *ngFor="let item of ScopeBillings" [value]="{ scopeId: item.id, ScopeName: item.description }">
                                                 {{ item.description }}
                                             </mat-option>
                                         </mat-select>
@@ -426,7 +429,7 @@
                                     </select>
                                 </div>
                             </div>
-
+<br>
                             <div class="row" style="display:flex;text-align: center;justify-content: center;">
                                 <div class="col">
                                     <button type="button" class="btn btn-success" id="button-gap"
@@ -511,22 +514,22 @@
                                 </mat-table>
                                 <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
                             </div>
-
+                            <div class="secondnext">
+                                <button class="btn btn-primary" matStepperPrevious>Back</button>
+                                <button class="btn btn-success" matStepperNext style="float:right" (click)="nextbutton()">Next</button>
+                            </div>
                         </div>
 
 
                     </div>
                 </div>
             </div>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext style="float:right" (click)="nextbutton()">Next</button>
-            </div>
+        
         </mat-step>
 
 
-        <!--CustomerVSTAT-->
-        <mat-step [stepControl]="customerVsTAT">
+           <!--CustomerVSTAT-->
+           <mat-step [stepControl]="customerVsTAT">
             <ng-template matStepLabel>customer TAT</ng-template>
             <div>
                 <!-- Content for Software step goes here -->
@@ -548,9 +551,9 @@
                                     <!-- Don't forget to add the appropriate MatFormFieldModule and ReactiveFormsModule imports in your module file if they're not already present -->
                                     <mat-form-field appearance="fill">
                                         <mat-label for="jobstatus">Job Status:</mat-label>
-                                        <mat-select multiple [(ngModel)]="SelectedJobStatus"
+                                        <mat-select  [(ngModel)]="SelectedJobStatus"
                                             name="jobstatus"  (selectionChange)="onJobChange()">
-                                            <mat-option *ngFor="let item of jobstatus" [value]="item">
+                                            <mat-option *ngFor="let item of jobstatus" [value]="{ jobStatusId: item.id, jobStatusDescription: item.jobStatusDescription }">
                                                 {{ item.jobStatusDescription }}
                                             </mat-option>
                                         </mat-select>

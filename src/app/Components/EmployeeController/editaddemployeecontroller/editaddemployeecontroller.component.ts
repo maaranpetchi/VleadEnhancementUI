@@ -98,8 +98,8 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   submitButton: boolean = true;
   EmployeeEditName: boolean = false;
   fetchUpdateData() {
-    console.log(this.apiResponseData.emp,"ApiresponseData");
-    
+    console.log(this.apiResponseData.emp, "ApiresponseData");
+
     this.resignShow = true;
     this.submitButton = false;
     this.updateButton = true;
@@ -125,11 +125,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.reportingLeader1 = this.apiResponseData.emp.addressDetail.reportLeader1,
       this.reportingLeader2 = this.apiResponseData.emp.addressDetail.reportingLeader2,
 
-    this.employeehierarchy =  this.apiResponseData.emp.empHry.map(option => option.employeeId);
-      
-      console.log(this.employeehierarchy, "employeehierarchyoptions");
+      this.employeehierarchy = this.apiResponseData.emp.empHry.map(option => option.employeeId);
 
-      this.proficiency = this.apiResponseData.emp.addressDetail.profiencyId,
+    console.log(this.employeehierarchy, "employeehierarchyoptions");
+
+    this.proficiency = this.apiResponseData.emp.addressDetail.profiencyId,
       this.presentAddress1 = this.apiResponseData.emp.addressDetail.address1,
       this.permanentAddress1 = this.apiResponseData.emp.addressDetail.address11,
       this.presentAddress2 = this.apiResponseData.emp.addressDetail.address2,
@@ -166,12 +166,12 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   //DropDown assign 
   //1.personal
   departments: any[] = [];
-  selectedDepartment: any;
+  selectedDepartment: any = 0;
 
   destinations: any[] = [];
-  selectedDestination: any;
+  selectedDestination: any = 0;
 
-  resignReason:any;
+  resignReason: any;
   Resigndropdownvalues: any[] = [];
 
 
@@ -196,21 +196,21 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   martialStatus: any;
   gender: any;
   BloodGroup: any;
-  internetAvailable:string = "";
+  internetAvailable: string = "";
   outsource: boolean = false;
-  internetType:string = "";
+  internetType: string = "";
   ServiceProvider: any;
   systemlaptop: string = "";
   systemconfiguration: string = "";
 
   //2.PRODUCT
-  reportingManager1: any;
-  reportingManager2: any;
+  reportingManager1: any=0;
+  reportingManager2: any=0;
   reporting: String = ''
-  reportingLeader1: any;
-  reportingLeader2: any;
+  reportingLeader1: any=0;
+  reportingLeader2: any=0;
   employeehierarchy: any[] = [];
-  proficiency: string = '';
+  proficiency: number = 0;
   //3.Communication
   presentAddress1: string = ''
   permanentAddress1: string = ''
@@ -219,9 +219,9 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   presentaddress3: string = ''
   permanentaddress3: string = ''
   phonenum: any;
-  mobileNumber: any;
+  mobileNumber: any = 0;
   emergencyContactName: string = ''
-  emergencyMobilenumber: string = ''
+  emergencyMobilenumber: any = 0
   officialemailaddress: string = ''
   employeeRoles: any[] = [];
   employeeProcess: any[] = [];
@@ -250,7 +250,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.rl1options = productDropdownResponse;
       this.rl2options = productDropdownResponse;
       this.EmployeeHierarchyOptions = productDropdownResponse;
-      
+
     });
   }
 
@@ -341,224 +341,273 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
 
   onSubmit() {
-    let empRoleList = this.employeeRoles.map((item) => {      
-      return {
-        "roleId": item.id ? item.id : '',
-        "roleDescription": item.description ? item.description:'',
-        // "createdBy": item.createdBy ? item.createdBy : '',
-        // "updatedBy": item.updatedBy? item.updatedBy:''
-      }
-    });
-    let empHierarchyList = this.employeehierarchy.map(item => {
-      return {
-        "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
-        "subEmpName": item.employeeName ? item.employeeName : '',
-        // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
-      };
-    });
+    if (
+      this.employeeCode === "" ||
+      this.employeeName === "" ||
+      this.selectedDepartment === 0 ||
+      this.dob === "" ||
+      this.doj === "" ||
+      this.martialStatus === "" ||
+      this.gender === "" ||
+      this.selectedDestination === 0 ||
+      this.BloodGroup === "" ||
+      this.internetAvailable === "" ||
+      this.systemlaptop === "" ||
+      this.proficiency === 0 ||
+      this.presentAddress1 === "" ||
+      this.mobileNumber === 0 ||
+      this.emergencyContactName === "" ||
+      this.emergencyMobilenumber === 0 ||
+      this.personalEmail === ""
+    ) {
+      // Display alert message if any of the fields is empty
+      Swal.fire('Info', 'Please fill the mandatory fields', 'info')
 
-    let payload = {
-      "employeeId":0,
-      "employeeCode": this.employeeCode,
-      "employeeName": this.employeeName,
-      "departmentId": this.selectedDepartment,
-      "designationId": this.selectedDestination ? this.selectedDestination : '',
-      "dateOfJoining": this.doj,
-      "dateOfBirth": this.dob,
-      "bloodGroup": this.BloodGroup ? this.BloodGroup : '',
-      "gender": this.gender ? this.gender : '',
-      "maritalStatus": this.martialStatus ? this.martialStatus : '',
-      "companyId": 0,
-      "profiencyId": this.proficiency,
-      "emergencyContactName": this.emergencyContactName,
-      "emergencyContactNo": this.emergencyMobilenumber,
-      "email": this.officialemailaddress ? this.officialemailaddress : '',
-      "personalEmail": this.personalEmail,
-      "createdUTC": new Date().toISOString,
-      "createdBy": 0,
-      "updatedUTC": new Date().toISOString,
-      "updatedBy": 0,
-      "reportingManager1": this.reportingManager1 ? this.reportingManager1 : '',
-      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1 : '',
-      "reportingManager2": this.reportingManager2 ? this.reportingManager2 : '',
-      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2 : '',
-      "address1": this.presentAddress1 ? this.presentAddress1 : '',
-      "address2": this.presentAddress2 ? this.presentAddress2 : '',
-      "address3": this.presentaddress3 ? this.presentaddress3 : '',
-      "address11": this.permanentAddress1 ? this.permanentAddress1 : '',
-      "address22": this.permanentAddress2 ? this.permanentAddress2 : '',
-      "address33": this.permanentaddress3 ? this.permanentaddress3 : '',
-      "locationId": 0,
-      "locationId1": 0,
-      "addressType": "",
-      "mobileNo": this.mobileNumber,
-      "phoneNo": this.phonenum ? this.phonenum : '',
-      "resignReasons": 0,
-      "dateOfResignation": this.dor,
-      "processCode":
-        this.employeeProcess ? this.employeeProcess : '',
-      "result": this.outsource ? this.outsource : false,
-      "roleDescription": "",
-      "isOutsource": true,
-      "empRolesList": empRoleList,
-      "empHierarchyList": empHierarchyList,
-      "isInternetConnection": this.internetAvailable ? this.internetAvailable:'',
-      "isSystem": this.systemlaptop,
-      "netWorkType": this.internetType ? this.internetType : '',
-      "serviceProvider": this.ServiceProvider ? this.ServiceProvider : '',
-      "systemConfig": this.systemconfiguration ? this.systemconfiguration : '',
     }
-    this.spinnerservice.requestStarted();
-    this.http.post<any>(environment.apiURL + `Employee/AddEmployee`, payload).pipe(catchError((error) => {
-      this.spinnerservice.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (val: any) => {
-        this.spinnerservice.requestEnded();
-if(val==true){
-        Swal.fire(
-          'Done!',
-          'Employee Added Succesfully',
-          'success'
-        ).then((respone) => {
-          if (respone.isConfirmed) {
-            this.router.navigate(['/topnavbar/Emp-Empcontroller']);
-          }
-        })
-      }
-      else{
-        Swal.fire(
-          'ALert!',
-          'Employee Not Added Succesfully',
-          'info'
-        ).then((respone) => {
-          if (respone.isConfirmed) {
-            this.router.navigate(['/topnavbar/Emp-Empcontroller']);
-          }
-        })
-      }
-      },
-      error: (err: any) => {
-        Swal.fire(
-          'Error!',
-          'Error Occured',
-          'error'
-        )
-        console.error(err);
-      },
-    });
+    else {
 
+      let empRoleList = this.employeeRoles.map((item) => {
+        return {
+          "roleId": item.id ? item.id : '',
+          "roleDescription": item.description ? item.description : '',
+          // "createdBy": item.createdBy ? item.createdBy : '',
+          // "updatedBy": item.updatedBy? item.updatedBy:''
+        }
+      });
+      let empHierarchyList = this.employeehierarchy.map(item => {
+        return {
+          "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
+          "subEmpName": item.employeeName ? item.employeeName : '',
+          // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+        };
+      });
+
+      let payload = {
+        "employeeId": 0,
+        "employeeCode": this.employeeCode,
+        "employeeName": this.employeeName,
+        "departmentId": this.selectedDepartment,
+        "designationId": this.selectedDestination ? this.selectedDestination : '',
+        "dateOfJoining": this.doj,
+        "dateOfBirth": this.dob,
+        "bloodGroup": this.BloodGroup ? this.BloodGroup : '',
+        "gender": this.gender ? this.gender : '',
+        "maritalStatus": this.martialStatus ? this.martialStatus : '',
+        "companyId": 0,
+        "profiencyId": this.proficiency,
+        "emergencyContactName": this.emergencyContactName,
+        "emergencyContactNo": this.emergencyMobilenumber,
+        "email": this.officialemailaddress ? this.officialemailaddress : '',
+        "personalEmail": this.personalEmail,
+        "createdUTC": new Date().toISOString,
+        "createdBy": 0,
+        "updatedUTC": new Date().toISOString,
+        "updatedBy": 0,
+        "reportingManager1": this.reportingManager1 ? this.reportingManager1 : 0,
+        "reportLeader1": this.reportingLeader1 ? this.reportingLeader1 : 0,
+        "reportingManager2": this.reportingManager2 ? this.reportingManager2 : 0,
+        "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2 : 0,
+        "address1": this.presentAddress1 ? this.presentAddress1 : '',
+        "address2": this.presentAddress2 ? this.presentAddress2 : '',
+        "address3": this.presentaddress3 ? this.presentaddress3 : '',
+        "address11": this.permanentAddress1 ? this.permanentAddress1 : '',
+        "address22": this.permanentAddress2 ? this.permanentAddress2 : '',
+        "address33": this.permanentaddress3 ? this.permanentaddress3 : '',
+        "locationId": 0,
+        "locationId1": 0,
+        "addressType": "",
+        "mobileNo": this.mobileNumber,
+        "phoneNo": this.phonenum ? this.phonenum : '',
+        "resignReasons": 0,
+        "dateOfResignation": this.dor,
+        "processCode":
+          this.employeeProcess ? this.employeeProcess : '',
+        "result": this.outsource ? this.outsource : false,
+        "roleDescription": "",
+        "isOutsource": this.outsource ? this.outsource : false,
+        "empRolesList": empRoleList,
+        "empHierarchyList": empHierarchyList,
+        "isInternetConnection": this.internetAvailable ? this.internetAvailable : '',
+        "isSystem": this.systemlaptop,
+        "netWorkType": this.internetType ? this.internetType : '',
+        "serviceProvider": this.ServiceProvider ? this.ServiceProvider : '',
+        "systemConfig": this.systemconfiguration ? this.systemconfiguration : '',
+      }
+      this.spinnerservice.requestStarted();
+      this.http.post<any>(environment.apiURL + `Employee/AddEmployee`, payload).pipe(catchError((error) => {
+        this.spinnerservice.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
+        next: (val: any) => {
+          this.spinnerservice.requestEnded();
+          if (val == true) {
+            Swal.fire(
+              'Done!',
+              'Employee Added Succesfully',
+              'success'
+            ).then((respone) => {
+              if (respone.isConfirmed) {
+                this.router.navigate(['/topnavbar/Emp-Empcontroller']);
+              }
+            })
+          }
+          else {
+            Swal.fire(
+              'ALert!',
+              'Employee Not Added Succesfully',
+              'info'
+            ).then((respone) => {
+              if (respone.isConfirmed) {
+                this.router.navigate(['/topnavbar/Emp-Empcontroller']);
+              }
+            })
+          }
+        },
+        error: (err: any) => {
+          Swal.fire(
+            'Error!',
+            'Error Occured',
+            'error'
+          )
+          console.error(err);
+        },
+      });
+    }
   }
 
   onUpdate() {
-    
-    let empRoleList = this.employeeRoles.map((item) => {      
-      return {
-        "roleId": item.id ? item.id : '',
-        "roleDescription": item.description ? item.description:'',
-        // "createdBy": item.createdBy ? item.createdBy : '',
-        // "updatedBy": item.updatedBy? item.updatedBy:''
-      }
-    });
-    let empHierarchyList = this.employeehierarchy.map(item => {
-      return {
-        "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
-        "subEmpName": item.employeeName ? item.employeeName : '',
-        // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
-      };
-    });
-    let payload = {
-      "employeeId": this.apiResponseData.emp.addressDetail.employeeId ? this.apiResponseData.emp.addressDetail.employeeId:0,
-      "employeeCode": this.employeeCode ? this.employeeCode:'',
-      "employeeName": this.employeeName ? this.employeeName:'',
-      "departmentId": this.selectedDepartment ? this.selectedDepartment:0,
-      "designationId": this.selectedDestination ? this.selectedDestination:0,
-      "dateOfJoining": this.doj ? this.doj:'',
-      "dateOfBirth": this.dob ? this.dob:'',
-      "bloodGroup": this.BloodGroup ? this.BloodGroup:0,
-      "gender": this.gender ? this.gender:0,
-      "maritalStatus": this.martialStatus ? this.martialStatus:0,
-      "companyId": 0,
-      "profiencyId": this.proficiency ? this.proficiency:'',
-      "emergencyContactName": this.emergencyContactName ? this.emergencyContactName:'',
-      "emergencyContactNo": this.emergencyMobilenumber ? this.emergencyMobilenumber:'',
-      "email": this.officialemailaddress ? this.officialemailaddress:'',
-      "personalEmail": this.personalEmail ? this.personalEmail:'',
-      "createdUTC": new Date().toISOString,
-      "createdBy": 0,
-      "updatedUTC": new Date().toISOString,
-      "updatedBy": 0,
-      "reportingManager1": this.reportingManager1 ? this.reportingManager1:0,
-      "reportLeader1": this.reportingLeader1 ? this.reportingLeader1:0,
-      "reportingManager2": this.reportingManager2 ? this.reportingManager2:0,
-      "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2:0,
-      "address1": this.presentAddress1 ? this.presentAddress1:'',
-      "address2": this.presentAddress2 ? this.presentAddress2:'',
-      "address3": this.presentaddress3 ? this.presentaddress3:'',
-      "address11": this.permanentAddress1 ? this.permanentAddress1:'',
-      "address22": this.permanentAddress2 ? this.permanentAddress2:'',
-      "address33": this.permanentaddress3 ? this.permanentaddress3:'',
-      "locationId": 0,
-      "locationId1": 0,
-      "addressType": "",
-      "mobileNo":this.mobileNumber ? this.mobileNumber:'',
-      "phoneNo": this.phonenum ? this.phonenum:'',
-      "resignReasons":  this.resignReason ? this.resignReason:0 ,
-      "dateOfResignation": this.dor ?  this.dor:'',
-      "processCode": this.employeeProcess ? this.employeeProcess:0,
-      "result": this.outsource ? this.outsource : false,
-      "roleDescription": "",
-      "isOutsource": true,
-      "empRolesList":empRoleList ? empRoleList:'',
-      "empHierarchyList": empHierarchyList ? empHierarchyList:0 ,
-      "isInternetConnection": this.internetAvailable ? this.internetAvailable:'',
-      "isSystem": this.systemlaptop ? this.systemlaptop:false,
-      "netWorkType": this.internetType ? this.internetType:0,
-      "serviceProvider": this.ServiceProvider ? this.ServiceProvider:0,
-      "systemConfig": this.systemconfiguration ? this.systemconfiguration:0,
-    }
-    this.spinnerservice.requestStarted();
-    this.http.post<any>(environment.apiURL + `Employee/EditEmployee`, payload).pipe(
-      catchError((error) => {
-        this.spinnerservice.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-      })
+    if (
+      this.employeeCode === "" ||
+      this.employeeName === "" ||
+      this.selectedDepartment === 0 ||
+      this.dob === "" ||
+      this.doj === "" ||
+      this.martialStatus === "" ||
+      this.gender === "" ||
+      this.selectedDestination === 0 ||
+      this.BloodGroup === "" ||
+      this.internetAvailable === "" ||
+      this.systemlaptop === "" ||
+      this.proficiency === 0 ||
+      this.presentAddress1 === "" ||
+      this.mobileNumber === 0 ||
+      this.emergencyContactName === "" ||
+      this.emergencyMobilenumber === 0 ||
+      this.personalEmail === ""
+    ) {
+      // Display alert message if any of the fields is empty
+      Swal.fire('Info', 'Please fill the mandatory fields', 'info')
 
-    ).subscribe({
-      next: (val: any) => {
-        this.spinnerservice.requestEnded();
-        if(val == true){
-        Swal.fire(
-          'Updated!',
-          'Employee updated successfully',
-          'success'
-        ).then((update) => {
-          if (update.isConfirmed) {
-            this.router.navigate(['/topnavbar/Emp-Empcontroller'])
-          }
-        });
+    }
+    else {
+      let empRoleList = this.employeeRoles.map((item) => {
+        return {
+          "roleId": item.id ? item.id : '',
+          "roleDescription": item.description ? item.description : '',
+          // "createdBy": item.createdBy ? item.createdBy : '',
+          // "updatedBy": item.updatedBy? item.updatedBy:''
+        }
+      });
+      let empHierarchyList = this.employeehierarchy.map(item => {
+        return {
+          "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
+          "subEmpName": item.employeeName ? item.employeeName : '',
+          // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
+        };
+      });
+      let payload = {
+        "employeeId": this.apiResponseData.emp.addressDetail.employeeId ? this.apiResponseData.emp.addressDetail.employeeId : 0,
+        "employeeCode": this.employeeCode ? this.employeeCode : '',
+        "employeeName": this.employeeName ? this.employeeName : '',
+        "departmentId": this.selectedDepartment ? this.selectedDepartment : 0,
+        "designationId": this.selectedDestination ? this.selectedDestination : 0,
+        "dateOfJoining": this.doj ? this.doj : '',
+        "dateOfBirth": this.dob ? this.dob : '',
+        "bloodGroup": this.BloodGroup ? this.BloodGroup : 0,
+        "gender": this.gender ? this.gender : 0,
+        "maritalStatus": this.martialStatus ? this.martialStatus : 0,
+        "companyId": 0,
+        "profiencyId": this.proficiency ? this.proficiency : '',
+        "emergencyContactName": this.emergencyContactName ? this.emergencyContactName : '',
+        "emergencyContactNo": this.emergencyMobilenumber ? this.emergencyMobilenumber : '',
+        "email": this.officialemailaddress ? this.officialemailaddress : '',
+        "personalEmail": this.personalEmail ? this.personalEmail : '',
+        "createdUTC": new Date().toISOString,
+        "createdBy": 0,
+        "updatedUTC": new Date().toISOString,
+        "updatedBy": 0,
+        "reportingManager1": this.reportingManager1 ? this.reportingManager1 : 0,
+        "reportLeader1": this.reportingLeader1 ? this.reportingLeader1 : 0,
+        "reportingManager2": this.reportingManager2 ? this.reportingManager2 : 0,
+        "reportingLeader2": this.reportingLeader2 ? this.reportingLeader2 : 0,
+        "address1": this.presentAddress1 ? this.presentAddress1 : '',
+        "address2": this.presentAddress2 ? this.presentAddress2 : '',
+        "address3": this.presentaddress3 ? this.presentaddress3 : '',
+        "address11": this.permanentAddress1 ? this.permanentAddress1 : '',
+        "address22": this.permanentAddress2 ? this.permanentAddress2 : '',
+        "address33": this.permanentaddress3 ? this.permanentaddress3 : '',
+        "locationId": 0,
+        "locationId1": 0,
+        "addressType": "",
+        "mobileNo": this.mobileNumber ? this.mobileNumber : '',
+        "phoneNo": this.phonenum ? this.phonenum : '',
+        "resignReasons": this.resignReason ? this.resignReason : 0,
+        "dateOfResignation": this.dor ? this.dor : '',
+        "processCode": this.employeeProcess ? this.employeeProcess : 0,
+        "result": this.outsource ? this.outsource : false,
+        "roleDescription": "",
+        "isOutsource": true,
+        "empRolesList": empRoleList ? empRoleList : '',
+        "empHierarchyList": empHierarchyList ? empHierarchyList : 0,
+        "isInternetConnection": this.internetAvailable ? this.internetAvailable : '',
+        "isSystem": this.systemlaptop ? this.systemlaptop : false,
+        "netWorkType": this.internetType ? this.internetType : 0,
+        "serviceProvider": this.ServiceProvider ? this.ServiceProvider : 0,
+        "systemConfig": this.systemconfiguration ? this.systemconfiguration : 0,
       }
-      else{
-        Swal.fire(
-          'Alert!',
-          'Employee not updated successfully',
-          'info'
-        ).then((update) => {
-          if (update.isConfirmed) {
-            this.router.navigate(['/topnavbar/Emp-Empcontroller'])
+      this.spinnerservice.requestStarted();
+      this.http.post<any>(environment.apiURL + `Employee/EditEmployee`, payload).pipe(
+        catchError((error) => {
+          this.spinnerservice.requestEnded();
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+        })
+
+      ).subscribe({
+        next: (val: any) => {
+          this.spinnerservice.requestEnded();
+          if (val == true) {
+            Swal.fire(
+              'Updated!',
+              'Employee updated successfully',
+              'success'
+            ).then((update) => {
+              if (update.isConfirmed) {
+                this.router.navigate(['/topnavbar/Emp-Empcontroller'])
+              }
+            });
           }
-        });
-      }
-      },
-      error: (err: any) => {
-        Swal.fire(
-          'Error!',
-          'Error Occured',
-          'error'
-        )
-        console.error(err);
-      },
-    });
+          else {
+            Swal.fire(
+              'Alert!',
+              'Employee not updated successfully',
+              'info'
+            ).then((update) => {
+              if (update.isConfirmed) {
+                this.router.navigate(['/topnavbar/Emp-Empcontroller'])
+              }
+            });
+          }
+        },
+        error: (err: any) => {
+          Swal.fire(
+            'Error!',
+            'Error Occured',
+            'error'
+          )
+          console.error(err);
+        },
+      });
+    }
   }
 
 

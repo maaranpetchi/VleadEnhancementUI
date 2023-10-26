@@ -38,7 +38,7 @@
         <div class="row">
           <div class="col-6">
             <mat-form-field appearance="fill">
-              <mat-label>Department</mat-label>
+              <mat-label>Department <span style="color: red;">*</span></mat-label>
               <mat-select [(ngModel)]="selectedDepartment" name="department">
                 <mat-option *ngFor="let department of departments" [value]="department.id">
                   {{ department.description }}
@@ -411,7 +411,7 @@
           </div>
           <div class="col">
             <mat-form-field appearance="fill">
-              <mat-label>Emergency Mobile number<span style="color: red;">*</span></mat-label>
+              <mat-label>Emergency Contact No<span style="color: red;">*</span></mat-label>
               <input matInput placeholder="mob no" type="number"[(ngModel)]="emergencyMobilenumber" name="emergencyMobilenumber">
             </mat-form-field>
           </div>

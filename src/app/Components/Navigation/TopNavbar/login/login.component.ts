@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
@@ -37,12 +37,26 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private cookieService: CookieService,
     private spinnerService: SpinnerService,
-    private http: HttpClient
+    private http: HttpClient,
+    private renderer: Renderer2
   ) { }
+
+  
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.setBodyMinHeight();
+  }
+  setBodyMinHeight() {
+    this.renderer.setStyle(document.body, 'min-height', '100vh');
+  }
+
+
 
   labelState = 'default';
 
   ngOnInit() {
+    this.renderer.setStyle(document.body, 'min-height', '100vh');
+
     this.showUsernameField = false;
     this.showPasswordField = false;
   }

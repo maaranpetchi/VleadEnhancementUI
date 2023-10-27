@@ -27,81 +27,90 @@ export class UpdateSkillSetComponent implements OnInit {
     }
   }
 
-  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empservice: EmployeevsskillsetService,private loginservice:LoginService) { }
+  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empservice: EmployeevsskillsetService, private loginservice: LoginService) { }
 
   employeeSkill: any;
-  selectedProficiency:any
+  selectedProficiency: any
   fetchUpdateData() {
     this.employeeSkill = this.apiResponseData.skillSetName
     this.selectedProficiency = this.apiResponseData.proficiencyLevel
   }
 
-  updateForm(){
-    let payload={
-      "id": this.apiResponseData.id,
-      "employeeId": this.apiResponseData.employeeId ,
-      "employeeCode": this.apiResponseData.employeeCode ,
-      "employeeName": this.apiResponseData.employeeName,
-      "divisionId": this.apiResponseData.divisionId,
-      "workingStatus": this.apiResponseData.workingStatus,
-      "skillsetId": this.apiResponseData.skillSetId,
-      "proficiencyLevel": this.selectedProficiency ?  this.selectedProficiency : this.apiResponseData.proficiencyLevel ,
-      "isDeleted": true,
-      "createdBy": this.loginservice.getUsername(),
-      "createdUtc": new Date().toISOString,
-      "updatedBy": 0,
-      "updatedUtc":  new Date().toISOString,
-      "skillset": {
-        "id": this.apiResponseData.skillSetId,
-        "description": this.apiResponseData.skillSetName,
-        "isDeleted": true,
-        "createdBy": 0,
-        "createdUtc": new Date().toISOString,
-        "updatedBy": 0,
-        "updatedUtc": new Date().toISOString
-      }
-    }
-this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL+`EmployeeVsSkillset/UpdateEmployeeSkill`,payload).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next:(response) =>{
-        this.spinnerService.requestEnded();
-     if(response.message == true){
+  updateForm() {
+    if (this.selectedProficiency == "") {
       Swal.fire(
-        'Done!',
-        'Updated Data Successfully!',
-        'success'
-      ).then((result)=>{
-        if (result.isConfirmed) {
-          this.router.navigate(['/topnavbar/indexskillset']);
-      }
-  
-      })
-     }
-     else{
-      Swal.fire(
-        'Alert',
-        'Data not updated successfully',
-        'error'
+        'info!',
+        'Proficiency field is required!',
+        'info'
       )
     }
-    
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
+    else {
+      let payload = {
+        "id": this.apiResponseData.id,
+        "employeeId": this.apiResponseData.employeeId,
+        "employeeCode": this.apiResponseData.employeeCode,
+        "employeeName": this.apiResponseData.employeeName,
+        "divisionId": this.apiResponseData.divisionId,
+        "workingStatus": this.apiResponseData.workingStatus,
+        "skillsetId": this.apiResponseData.skillSetId,
+        "proficiencyLevel": this.selectedProficiency ? this.selectedProficiency : this.apiResponseData.proficiencyLevel,
+        "isDeleted": true,
+        "createdBy": this.loginservice.getUsername(),
+        "createdUtc": new Date().toISOString,
+        "updatedBy": 0,
+        "updatedUtc": new Date().toISOString,
+        "skillset": {
+          "id": this.apiResponseData.skillSetId,
+          "description": this.apiResponseData.skillSetName,
+          "isDeleted": true,
+          "createdBy": 0,
+          "createdUtc": new Date().toISOString,
+          "updatedBy": 0,
+          "updatedUtc": new Date().toISOString
+        }
       }
-    })
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `EmployeeVsSkillset/UpdateEmployeeSkill`, payload).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
+        next: (response) => {
+          this.spinnerService.requestEnded();
+          if (response.message == true) {
+            Swal.fire(
+              'Done!',
+              'Updated Data Successfully!',
+              'success'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                this.router.navigate(['/topnavbar/indexskillset']);
+              }
+
+            })
+          }
+          else {
+            Swal.fire(
+              'Alert',
+              'Data not updated successfully',
+              'info'
+            )
+          }
+
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner(); // Reset spinner on error
+          Swal.fire(
+            'Error!',
+            'An error occurred !.',
+            'error'
+          );
+        }
+      })
+    }
   }
 
 
-  CancelButton(){
+  CancelButton() {
     this.router.navigate(['/topnavbar/indexskillset']);
   }
 }

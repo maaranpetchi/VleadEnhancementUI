@@ -13,7 +13,7 @@
                             <div class="row">
                                 <div class="col">
                                     <mat-form-field>
-                                        <mat-label>Department</mat-label>
+                                        <mat-label>Department<span style="color: red;">*</span></mat-label>
                                         <mat-select [(ngModel)]="selectedDepartment" name="department">
                                             <mat-option *ngFor="let department of dept" [value]="department.id">{{
                                                 department.name }}</mat-option>
@@ -24,8 +24,8 @@
 
                             <div class="row">
                                 <div class="col">
-                                    <mat-form-field>
-                                        <mat-label>Customer Short Name</mat-label>
+                                    <mat-form-field style="width: 40%;">
+                                        <mat-label>Customer Short Name<span style="color: red;">*</span></mat-label>
                                         <mat-select [(ngModel)]="selectedCustomer" name="shortname">
                                             <mat-option *ngFor="let customer of customers" [value]="customer.id">{{
                                                 customer.shortName

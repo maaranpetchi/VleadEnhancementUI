@@ -32,8 +32,8 @@ export class AddchecklistComponent implements OnInit {
     { id: 2, name: 'Digitizing' }
   ];
 
-  selectedDepartment: number;
-  selectedCustomer: number;
+  selectedDepartment: number=0;
+  selectedCustomer: number=0;
   checklistDescription: string;
 
   customers: any[] = [];
@@ -78,42 +78,57 @@ export class AddchecklistComponent implements OnInit {
   }
 
   onFormSubmit() {
-    if (this.data) {
-      this.UpdateCheckList();
-    } else {
-      let payload = {
-        "customerId": this.selectedCustomer,
-        "departmentId": this.selectedDepartment,
-        "description": this.checklistDescription,
-        "employeeId": this.loginservice.getUsername()
-      }
-      this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + `CustomerVsChecklist/CreateChecklist`, payload).subscribe(results => {
-        this.spinnerService.requestEnded();
-        Swal.fire(
-          'Done!',
-          "Added Successfully",
-          'success'
-        ).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigate(['/topnavbar/CustomerVsChecklist']);
-        }
-
-        this.dialogRef.close();
-        })
-        
-       
-      }, (error) => {
-        Swal.fire(
-          'Error!',
-          'Error occurred',
-          'error'
-        )
-
-
-        this.spinnerService.resetSpinner();
-      });
+    const requiredFields: string[] = [];
+    if (!this.selectedCustomer) {
+        requiredFields.push('Customer');
     }
+    if (!this.selectedDepartment) {
+        requiredFields.push('Department');
+    }
+  
+
+    if (requiredFields.length === 0) {
+      if (this.data) {
+        this.UpdateCheckList();
+      } else {
+        let payload = {
+          "customerId": this.selectedCustomer,
+          "departmentId": this.selectedDepartment,
+          "description": this.checklistDescription,
+          "employeeId": this.loginservice.getUsername()
+        }
+        this.spinnerService.requestStarted();
+        this.http.post<any>(environment.apiURL + `CustomerVsChecklist/CreateChecklist`, payload).subscribe(results => {
+          this.spinnerService.requestEnded();
+          Swal.fire(
+            'Done!',
+            results.cvCList,
+            'success'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigate(['/topnavbar/CustomerVsChecklist']);
+          }
+  
+          this.dialogRef.close();
+          })
+        }, (error) => {
+          Swal.fire(
+            'Error!',
+            'Error occurred',
+            'error'
+          )
+          this.spinnerService.resetSpinner();
+        });
+      }
+    
+    } else {
+        // Show validation error message with missing field names
+        const missingFields = requiredFields.join(', ');
+        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+    }
+
+
+ 
   }
 
 
@@ -121,9 +136,6 @@ export class AddchecklistComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get(environment.apiURL + `CustomerVsChecklist/GetChecklistDetails?id=${this.data.data.id}`).subscribe((data: any) => {
       this.spinnerService.requestEnded();
-      
-
-
       let UploadPayload = {
         "id": this.data.data.id,
         "customerId": this.selectedCustomer,
@@ -270,9 +282,9 @@ export class AddchecklistComponent implements OnInit {
           this.dialogRef.close();}
           else{
             Swal.fire(
-              'Error!',
-              'Employee Not updated!',
-              'error'
+              'info!',
+              'No Changes Occured!',
+              'info'
             ).then((result) => {
               if (result.isConfirmed) {
                 this.router.navigate(['/topnavbar/CustomerVsChecklist']);

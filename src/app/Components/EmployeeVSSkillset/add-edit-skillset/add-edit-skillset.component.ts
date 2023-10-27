@@ -114,65 +114,123 @@ export class AddEditSkillsetComponent implements OnInit {
   tableData: any[] = [];
   tableDisplay: boolean = false
   addItem() {
+    const requiredFields: string[] = [];
+    if (!this.selectedEmployeeCode) {
+        requiredFields.push('Employee Code');
+    }
+    if (!this.selectedDivision) {
+        requiredFields.push('Division');
+    }
+    if (!this.selectedWorkingStatus) {
+        requiredFields.push('Working Status');
+    }
+    if (!this.selectedScope) {
+        requiredFields.push('Scope');
+    }
+    if (!this.selectedProficiency) {
+        requiredFields.push('Proficiency Level');
+    }
 
-    if (this.selectedScope && this.selectedProficiency) {
+    if (requiredFields.length === 0) {
       this.tableDisplay = true;
       const skillsetId = this.selectedScope
       const skill = this.scopeOptions.find(scope => scope.id === this.selectedScope)?.description || '';
       const ProficiencyLevel = this.selectedProficiency;
       this.tableData.push({ skillsetId, skill, ProficiencyLevel, AddCountpara: [], EmployeeCode: '', EmployeeName: '', WorkingStatus: '', });
-      this.selectedScope = null;
+      // this.selectedScope = null;
       this.getSelectedProficiency = this.selectedProficiency;
-      this.selectedProficiency = '';
+      // this.selectedProficiency = '';
+    
+    } else {
+        // Show validation error message with missing field names
+        const missingFields = requiredFields.join(', ');
+        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
+
   }
 
   removeItem(index: number) {
     this.tableData.splice(index, 1);
+      this.selectedScope = null;
+      this.selectedProficiency = '';
   }
 
 
   onSubmit() {
 
-    let payload = {
-      "employeeId": this.selectedEmployeeCode.employeeId,
-      "employeeCode": this.selectedEmployeeCode.employeeCode,
-      "employeeName": this.selectedEmployeeName,
-      "divisionId": this.selectedDivision,
-      "workingStatus": this.selectedWorkingStatus,
-      "skillsetId": 0,
-      "proficiencyLevel": this.getSelectedProficiency,
-      "createdBy": this.loginservice.getUsername(),
-      "updatedBy": this.loginservice.getUsername(),
-      "addCountpara": this.tableData
-
+    const requiredFields: string[] = [];
+    if (!this.selectedEmployeeCode) {
+        requiredFields.push('Employee Code');
     }
-    this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + `EmployeeVsSkillset/CreateEmployeeSkillset`, payload).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (response) => {
-        this.spinnerService.requestEnded();
+    if (!this.selectedDivision) {
+        requiredFields.push('Division');
+    }
+    if (!this.selectedWorkingStatus) {
+        requiredFields.push('Working Status');
+    }
+    if (!this.selectedScope) {
+        requiredFields.push('Scope');
+    }
+    if (!this.selectedProficiency) {
+        requiredFields.push('Proficiency Level');
+    }
 
-        Swal.fire(
-          'Done!',
-          response.evSList,
-          'success'
-        ).then((result)=>{
-          if (result.isConfirmed) {
-            this.router.navigate(['/topnavbar/indexskillset']);
-        }
-        })
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
+    if (requiredFields.length === 0) {
+
+  
+      let payload = {
+        "employeeId": this.selectedEmployeeCode.employeeId,
+        "employeeCode": this.selectedEmployeeCode.employeeCode,
+        "employeeName": this.selectedEmployeeName,
+        "divisionId": this.selectedDivision,
+        "workingStatus": this.selectedWorkingStatus,
+        "skillsetId": 0,
+        "proficiencyLevel": this.getSelectedProficiency,
+        "createdBy": this.loginservice.getUsername(),
+        "updatedBy": this.loginservice.getUsername(),
+        "addCountpara": this.tableData
+  
       }
-    })
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `EmployeeVsSkillset/CreateEmployeeSkillset`, payload).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
+        next: (response) => {
+          this.spinnerService.requestEnded();
+  
+          if(response.evSList ==="Already Exists"){
+            Swal.fire(
+              'info!',
+              response.evSList,
+              'info'
+            ).then((result)=>{
+              if (result.isConfirmed) {
+                this.router.navigate(['/topnavbar/indexskillset']);
+            }
+            })
+          }
+          else{
+  
+          Swal.fire(
+            'Done!',
+            response.evSList,
+            'success'
+          ).then((result)=>{
+            if (result.isConfirmed) {
+              this.router.navigate(['/topnavbar/indexskillset']);
+          }
+          })
+        }
+      }
+      })
+    } else {
+        // Show validation error message with missing field names
+        const missingFields = requiredFields.join(', ');
+        Swal.fire('Validation Error', `Please fill in the following required fields: ${missingFields}.`, 'error');
+    }
+
+
+
   }
 }

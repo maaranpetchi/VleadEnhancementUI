@@ -64,7 +64,7 @@ export class IndexchecklistComponent implements OnInit {
 
   openEditForm(data: any) {
     const dialogRef = this._dialog.open(AddchecklistComponent, {
-      height: '60vh',
+      height: '70vh',
       width: '50vw',
       data: {
         type: "edit",

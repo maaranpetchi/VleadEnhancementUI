@@ -28,12 +28,8 @@
                     }}</mat-option>
                 </mat-select>
               </mat-form-field>
-              <!-- Show validation message if the department is not selected -->
-              <!-- <mat-error *ngIf="userRegistrationForm.controls['departmentFormControl'].touched && userRegistrationForm.controls['departmentFormControl'].hasError('required')">
-                Please select the department.
-              </mat-error> -->
-              <mat-error *ngIf="departmentFormControl.touched && departmentFormControl.hasError('required')">
-                Please select the department.
+              <mat-error *ngIf="userRegistrationForm.get('departmentFormControl')?.hasError('required') && userRegistrationForm.get('departmentFormControl')?.touched">
+                Please select the Department.
               </mat-error>
             </div>
             <div class="col-md-2 mt-2">
@@ -42,15 +38,14 @@
             <div class="col-md-4">
               <mat-form-field>
                 <mat-label>Select a filter</mat-label>
-                <mat-select [(ngModel)]="selectedPricing" (selectionChange)="onPricingTypeChange(selectedPricing)" [ngModelOptions]="{standalone: true}">
+                <mat-select [formControl]="pricingFormControl" [(ngModel)]="selectedPricing" (selectionChange)="onPricingTypeChange(selectedPricing)">
                   <mat-option>---Chose Pricing Type ---</mat-option>
                   <mat-option *ngFor="let value of Pricings" [value]="value.id">{{ value.description }}</mat-option>
                 </mat-select>
               </mat-form-field>
-              <!-- Show validation message if the department is not selected -->
-              <!-- <mat-error *ngIf="pricingFormControl.touched && pricingFormControl.hasError('required')">
-                Please select the department.
-              </mat-error> -->
+              <mat-error *ngIf="userRegistrationForm.get('pricingFormControl')?.hasError('required') && userRegistrationForm.get('pricingFormControl')?.touched">
+                Please select the Pricing Type.
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2">
               Customer
@@ -58,16 +53,15 @@
             <div class="col-md-4">
               <mat-form-field>
                 <mat-label>Select a filter</mat-label>
-                <mat-select name="customersFormControl" [(ngModel)]="selectedCustomers" [ngModelOptions]="{standalone: true}"
+                <mat-select [formControl]="customersFormControl" [(ngModel)]="selectedCustomers" 
                   (selectionChange)="onCustomerChange()">
                   <mat-option>---Chose Customer---</mat-option>
                   <mat-option *ngFor="let value of Customer" [value]="value.id">{{ value.shortName }}</mat-option>
                 </mat-select>
               </mat-form-field>
-              <!-- Show validation message if the department is not selected -->
-              <!-- <mat-error *ngIf="customersFormControl.touched && customersFormControl.hasError('required')">
+              <mat-error *ngIf="userRegistrationForm.get('customersFormControl')?.hasError('required') && userRegistrationForm.get('customersFormControl')?.touched">
                 Please select the Customer.
-              </mat-error> -->
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2" *ngIf="notshowntodigi">
               Scope
@@ -75,11 +69,14 @@
             <div class="col-md-4" *ngIf="notshowntodigi">
               <mat-form-field>
                 <mat-label>Select a filter</mat-label>
-                <mat-select [(ngModel)]="selectedScope"[ngModelOptions]="{standalone: true}">
+                <mat-select  [formControl]="scopeFormControl" [(ngModel)]="selectedScope">
                   <mat-option>---Chose Scope---</mat-option>
                   <mat-option *ngFor="let value of Scopes" [value]="value.id">{{ value.description }}</mat-option>
                 </mat-select>
               </mat-form-field>
+              <mat-error *ngIf="userRegistrationForm.get('scopeFormControl')?.hasError('required') && userRegistrationForm.get('scopeFormControl')?.touched">
+                Please select the Scope.
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2" *ngIf="type2">
               <h3>Additional Rate/Hour</h3>
@@ -87,8 +84,11 @@
             <div class="col-md-4" *ngIf="type2">
               <mat-form-field>
                 <mat-label>Additional Rate/Hour</mat-label>
-                <input type="text"name="additionalRateFormControl" [(ngModel)]="selectedAdditionalRate" [ngModelOptions]="{standalone: true}" matInput placeholder="Additional Rate/Hour">
+                <input type="text"  [formControl]="additionalRateFormControl" [(ngModel)]="selectedAdditionalRate"  matInput placeholder="Additional Rate/Hour">
               </mat-form-field>
+              <mat-error *ngIf="userRegistrationForm.get('additionalRateFormControl')?.hasError('required') && userRegistrationForm.get('additionalRateFormControl')?.touched">
+                Please select the Additional Rate/Hour.
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2" *ngIf="type22">
               <h3>Estimation Time <span class="text-danger">*</span></h3>
@@ -96,8 +96,11 @@
             <div class="col-md-4" *ngIf="type22">
               <mat-form-field>
                 <mat-label>To</mat-label>
-                <input type="text" name="estimatedTimeFormControl" [(ngModel)]="selectedEstTime" [ngModelOptions]="{standalone: true}" matInput placeholder="To">
+                <input type="text" [formControl]="estimatedTimeFormControl" [(ngModel)]="selectedEstTime" matInput placeholder="To">
               </mat-form-field>
+              <mat-error *ngIf="userRegistrationForm.get('estimatedTimeFormControl')?.hasError('required') && userRegistrationForm.get('estimatedTimeFormControl')?.touched">
+                Please select the >Estimation Time.
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2"  *ngIf="type6">
               <h3>Maximum Price <span class="text-danger">*</span></h3>
@@ -105,8 +108,11 @@
             <div class="col-md-4"  *ngIf="type6">
               <mat-form-field>
                 <mat-label>Maximum Price</mat-label>
-                <input type="text" name="maximumPriceFormControl" [(ngModel)]="selectedMaximumPrice" [ngModelOptions]="{standalone: true}" matInput placeholder="To" name="to">
+                <input type="text" [formControl]="maximumPriceFormControl" [(ngModel)]="selectedMaximumPrice" matInput placeholder="To" name="to">
               </mat-form-field>
+              <mat-error *ngIf="userRegistrationForm.get('maximumPriceFormControl')?.hasError('required') && userRegistrationForm.get('maximumPriceFormControl')?.touched">
+                Please select the Maximum Price.
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2" *ngIf="showeffective">
               <h3>With Effect From</h3>
@@ -114,11 +120,14 @@
             <div class="col-md-4 form-container" *ngIf="showeffective">
               <mat-form-field>
                 <mat-label>MM-DD-YYYY</mat-label>
-                <input matInput name="effectFormControl" [(ngModel)]="selectedfromDate" [ngModelOptions]="{standalone: true}" [matDatepicker]="startDatePicker"
+                <input matInput [formControl]="effectFormControl" [(ngModel)]="selectedfromDate"  [matDatepicker]="startDatePicker"
                   placeholder="Choose a date">
                 <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #startDatePicker></mat-datepicker>
               </mat-form-field>
+              <mat-error *ngIf="userRegistrationForm.get('effectFormControl')?.hasError('required') && userRegistrationForm.get('effectFormControl')?.touched">
+                Please select the With Effect From.
+              </mat-error>
             </div>
             <div class="col-md-2 mt-2" *ngIf="showeffective">
               <h3> Job Status</h3>
@@ -126,12 +135,15 @@
             <div class="col-md-4" *ngIf="showeffective">
               <mat-form-field>
                 <mat-label>Select a filter</mat-label>
-                <mat-select name="jobStatusFormControl" [(ngModel)]="selectedValueEfect" [ngModelOptions]="{standalone: true}">
+                <mat-select [formControl]="jobStatusFormControls" [(ngModel)]="selectedValueEfect" >
                   <mat-option>---Chose Pricing Type ---</mat-option>
                   <mat-option *ngFor="let option of dropdownOptions" [value]="option.id">{{ option.jobStatusDescription
                     }}</mat-option>
                 </mat-select>
               </mat-form-field>
+              <mat-error *ngIf="userRegistrationForm.get('jobStatusFormControls')?.hasError('required') && userRegistrationForm.get('jobStatusFormControls')?.touched">
+                Please select the Job Status.
+              </mat-error>
             </div>
               <div class="col-md-2 mt-2" *ngIf="showstaffingcounttable">
                 <h3>With Effect From</h3>
@@ -139,23 +151,29 @@
               <div class="col-md-4 form-container" *ngIf="showstaffingcounttable">
                 <mat-form-field>
                   <mat-label>MM-DD-YYYY</mat-label>
-                  <input matInput name="effectFormControl" [(ngModel)]="selectedEffectivefromDate" [ngModelOptions]="{standalone: true}" [matDatepicker]="startDatePicker"
+                  <input matInput [formControl]="effectFormControl" [(ngModel)]="selectedEffectivefromDate"  [matDatepicker]="startDatePicker"
                     placeholder="Choose a date">
                   <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                   <mat-datepicker #startDatePicker></mat-datepicker>
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('effectFormControl')?.hasError('required') && userRegistrationForm.get('effectFormControl')?.touched">
+                  Please select the With Effect From.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showstaffingcounttable">
-                <h3>  With Effect To</h3>
+                <h3>With Effect To</h3>
               </div>
               <div class="col-md-4" *ngIf="showstaffingcounttable">
                 <mat-form-field>
                   <mat-label>MM-DD-YYYY</mat-label>
-                  <input matInput name="effectToControl" [(ngModel)]="selectedEffectivetoDate" [ngModelOptions]="{standalone: true}" [matDatepicker]="starttoDatePicker"
+                  <input matInput [formControl]="effectToControl" [(ngModel)]="selectedEffectivetoDate"  [matDatepicker]="starttoDatePicker"
                     placeholder="Choose a date">
                   <mat-datepicker-toggle matSuffix [for]="starttoDatePicker"></mat-datepicker-toggle>
                   <mat-datepicker #starttoDatePicker></mat-datepicker>
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('effectToControl')?.hasError('required') && userRegistrationForm.get('effectToControl')?.touched">
+                  Please select the With Effect To.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="notshowntocount">
                 <h3>Price</h3>
@@ -163,8 +181,11 @@
               <div class="col-md-4" *ngIf="notshowntocount" >
                 <mat-form-field>
                   <mat-label>Price</mat-label>
-                  <input type="text" name="PriceFormControl" [(ngModel)]="selectedPrice" [ngModelOptions]="{standalone: true}" matInput placeholder="Price">
+                  <input type="text" [formControl]="PriceFormControl" [(ngModel)]="selectedPrice"  matInput placeholder="Price">
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('PriceFormControl')?.hasError('required') && userRegistrationForm.get('PriceFormControl')?.touched">
+                  Please select the Price.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttable">
                 <h3>Scope <span class="text-danger">*</span></h3>
@@ -172,11 +193,14 @@
               <div class="col-md-4" *ngIf="showcounttable">
                 <mat-form-field>
                   <mat-label>Select a filter</mat-label>
-                  <mat-select name="scopeCountFormControl" [(ngModel)]="selectedScope" [ngModelOptions]="{standalone: true}">
+                  <mat-select [formControl]="scopeCountFormControl" [(ngModel)]="selectedScope" >
                     <mat-option>---Chose Scope---</mat-option>
                     <mat-option *ngFor="let value of Scopes" [value]="value.id">{{ value.description }}</mat-option>
                   </mat-select>
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('scopeCountFormControl')?.hasError('required') && userRegistrationForm.get('scopeCountFormControl')?.touched">
+                  Please select the Scope.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttable">
                 <h3>From <span class="text-danger">*</span></h3>
@@ -184,12 +208,11 @@
               <div class="col-md-4" *ngIf="showcounttable">
                 <mat-form-field>
                   <mat-label>From</mat-label>
-                  <input type="text" name="countFromFormControl" [(ngModel)]="selectedFrom"  [ngModelOptions]="{standalone: true}" matInput placeholder="From">
+                  <input type="text" [formControl]="countFromFormControl" [(ngModel)]="selectedFrom"   matInput placeholder="From">
                 </mat-form-field>
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="countFromFormControl.touched && countFromFormControl.hasError('required')">
-                    Please select the From.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('countFromFormControl')?.hasError('required') && userRegistrationForm.get('countFromFormControl')?.touched">
+                  Please select the From Date.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttable">
                 <h3>To <span class="text-danger">*</span></h3>
@@ -197,12 +220,11 @@
               <div class="col-md-4" *ngIf="showcounttable">
                 <mat-form-field>
                   <mat-label>To</mat-label>
-                  <input type="text" name="countToFormControl" [(ngModel)]="selectedTo" [ngModelOptions]="{standalone: true}" matInput placeholder="To">
+                  <input type="text" [formControl]="countToFormControl" [(ngModel)]="selectedTo"  matInput placeholder="To">
                 </mat-form-field>
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="countToFormControl.touched && countToFormControl.hasError('required')">
-                    Please select the To.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('countToFormControl')?.hasError('required') && userRegistrationForm.get('countToFormControl')?.touched">
+                  Please select the To Date.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttable">
                 <h3> Price <span class="text-danger">*</span></h3>
@@ -210,12 +232,11 @@
               <div class="col-md-4" *ngIf="showcounttable">
                 <mat-form-field>
                   <mat-label>To</mat-label>
-                  <input type="text" name="countPriceFormControl" [(ngModel)]="newItem.selectedCountPrice" [ngModelOptions]="{standalone: true}" matInput placeholder="To" name="to">
+                  <input type="text" [formControl]="countPriceFormControl" [(ngModel)]="newItem.selectedCountPrice"  matInput placeholder="To" name="to">
                 </mat-form-field>
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="countPriceFormControl.touched && countPriceFormControl.hasError('required')">
-                    Please select the To.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('countPriceFormControl')?.hasError('required') && userRegistrationForm.get('countPriceFormControl')?.touched">
+                  Please select the Price.
+                </mat-error>
               </div>
               <div class="col-xs-2" *ngIf="showcounttable">
                 <div class="col-xs-2">
@@ -234,11 +255,14 @@
               <div class="col-md-4" *ngIf="showcounttabletime">
                 <mat-form-field>
                   <mat-label>Select a filter</mat-label>
-                  <mat-select name="scopeCountFormControl" [(ngModel)]="selectedScope" [ngModelOptions]="{standalone: true}">
+                  <mat-select [formControl]="scopeCountFormControl" [(ngModel)]="selectedScope" >
                     <mat-option>---Chose Scope---</mat-option>
                     <mat-option *ngFor="let value of Scopes" [value]="value.id">{{ value.description }}</mat-option>
                   </mat-select>
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('scopeCountFormControl')?.hasError('required') && userRegistrationForm.get('scopeCountFormControl')?.touched">
+                  Please select the Scope.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttabletime">
                 <h3>From <span class="text-danger">*</span></h3>
@@ -246,8 +270,11 @@
               <div class="col-md-4" *ngIf="showcounttabletime">
                 <mat-form-field>
                   <mat-label>From</mat-label>
-                  <input type="text" name="countFromFormControl" [(ngModel)]="selectedFrom" [ngModelOptions]="{standalone: true}" matInput placeholder="From">
+                  <input type="text" [formControl]="countFromFormControl" [(ngModel)]="selectedFrom"  matInput placeholder="From">
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('countFromFormControl')?.hasError('required') && userRegistrationForm.get('countFromFormControl')?.touched">
+                  Please select the From Date.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttabletime">
                 <h3>To <span class="text-danger">*</span></h3>
@@ -255,12 +282,11 @@
               <div class="col-md-4"*ngIf="showcounttabletime">
                 <mat-form-field>
                   <mat-label>To</mat-label>
-                  <input type="text" name="countToFormControl" [(ngModel)]="selectedTo" [ngModelOptions]="{standalone: true}" matInput placeholder="To">
+                  <input type="text" [formControl]="countToFormControl" [(ngModel)]="selectedTo"  matInput placeholder="To">
                 </mat-form-field>
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="countToFormControl.touched && countToFormControl.hasError('required')">
-                    Please select the To.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('countToFormControl')?.hasError('required') && userRegistrationForm.get('countToFormControl')?.touched">
+                  Please select the To Date.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showcounttabletime">
                 <h3> Price <span class="text-danger">*</span></h3>
@@ -268,42 +294,27 @@
               <div class="col-md-4" *ngIf="showcounttabletime">
                 <mat-form-field>
                   <mat-label>Price</mat-label>
-                  <input type="text" name="countPriceFormControl" [(ngModel)]="selectedCountPrice" [ngModelOptions]="{standalone: true}" matInput placeholder="To" name="to">
+                  <input type="text" [formControl]="countPriceFormControl" [(ngModel)]="selectedCountPrice"  matInput placeholder="To" name="to">
                 </mat-form-field>
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="countPriceFormControl.touched && countPriceFormControl.hasError('required')">
-                    Please select the To.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('countPriceFormControl')?.hasError('required') && userRegistrationForm.get('countPriceFormControl')?.touched">
+                  Please select the Price.
+                </mat-error>
               </div>
-              <!-- <div class="col-xs-2" *ngIf="showcounttabletime">
-                <div class="col-xs-2">
-                  <button mat-icon-button class="square-button " data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="Add Record!" color="success" (click)="CreateEstimatedTime()">
-                    <span class="add-icon-bg">
-                      <mat-icon class="add-icon">add_box</mat-icon>
-                    </span>
-                  </button>
-                  <button type="button"><a href="#" class="text-primary" (click)="back()">Cancel</a></button>
-                </div>
-    
-              </div> -->
               <div class="col-md-2 mt-2" *ngIf="showstaffingcount">
                 <h3>Designation</h3>
               </div>
               <div class="col-md-4" *ngIf="showstaffingcount">
                 <mat-form-field>
                   <mat-label>Select a filter</mat-label>
-                  <mat-select name="designationFormControl" [(ngModel)]="selectedDesignation" [ngModelOptions]="{standalone: true}" >
+                  <mat-select [formControl]="designationFormControl" [(ngModel)]="selectedDesignation"  >
                     <mat-option value="">-- Choose Designation --</mat-option>
                     <mat-option value="Senior">Senior</mat-option>
                     <mat-option value="Junior">Junior</mat-option>
                   </mat-select>
                 </mat-form-field>
-                
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="designationFormControl.touched && designationFormControl.hasError('required')">
-                    Please select the Designation.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('designationFormControl')?.hasError('required') && userRegistrationForm.get('designationFormControl')?.touched">
+                  Please select the Designation.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showstaffingcount">
                 <h3>With Effect From</h3>
@@ -311,31 +322,29 @@
               <div class="col-md-4 form-container" *ngIf="showstaffingcount">
                 <mat-form-field>
                   <mat-label>MM-DD-YYYY</mat-label>
-                  <input matInput name="effectFormControl" [(ngModel)]="selectedEffectivefromDate" [ngModelOptions]="{standalone: true}" [matDatepicker]="startDatePicker"
+                  <input matInput [formControl]="effectFormControl" [(ngModel)]="selectedEffectivefromDate"  [matDatepicker]="startDatePicker"
                     placeholder="Choose a date">
                   <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                   <mat-datepicker #startDatePicker></mat-datepicker>
                 </mat-form-field>             
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="effectFormControl.touched && effectFormControl.hasError('required')">
-                    Please select the Customer.
-                  </mat-error>    -->
+                <mat-error *ngIf="userRegistrationForm.get('effectFormControl')?.hasError('required') && userRegistrationForm.get('effectFormControl')?.touched">
+                  Please select the With Effect From.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showstaffingcount">
-                <h3>  With Effect To</h3>
+                <h3>With Effect To</h3>
               </div>
               <div class="col-md-4" *ngIf="showstaffingcount">
                 <mat-form-field>
                   <mat-label>MM-DD-YYYY</mat-label>
-                  <input matInput name="effectToControl" [(ngModel)]="selectedEffectivetoDate" [ngModelOptions]="{standalone: true}" [matDatepicker]="startToDatePicker"
+                  <input matInput [formControl]="effectToControl" [(ngModel)]="selectedEffectivetoDate"  [matDatepicker]="startToDatePicker"
                     placeholder="Choose a date">
                   <mat-datepicker-toggle matSuffix [for]="startToDatePicker"></mat-datepicker-toggle>
                   <mat-datepicker #startToDatePicker></mat-datepicker>
                 </mat-form-field>      
-                  <!-- Show validation message if the department is not selected -->
-                  <!-- <mat-error *ngIf="effectToControl.touched && effectToControl.hasError('required')">
-                    Please select the Customer.
-                  </mat-error> -->
+                <mat-error *ngIf="userRegistrationForm.get('effectToControl')?.hasError('required') && userRegistrationForm.get('effectToControl')?.touched">
+                  Please select the With Effect To.
+                </mat-error>
               </div>
               <div class="col-md-2 mt-2" *ngIf="showstaffingcount">
                 <h3> Price <span class="text-danger">*</span></h3>
@@ -343,21 +352,12 @@
               <div class="col-md-4" *ngIf="showstaffingcount">
                 <mat-form-field>
                   <mat-label>Price</mat-label>
-                  <input type="text" name="countPriceFormControl" [(ngModel)]="selectedCountPrice" [ngModelOptions]="{standalone: true}" matInput placeholder="To" name="to">
+                  <input type="text" [formControl]="countPriceFormControl" [(ngModel)]="selectedCountPrice"  matInput placeholder="To" name="to">
                 </mat-form-field>
+                <mat-error *ngIf="userRegistrationForm.get('countPriceFormControl')?.hasError('required') && userRegistrationForm.get('countPriceFormControl')?.touched">
+                  Please select the Price.
+                </mat-error>
               </div>
-              <!-- <div class="col-xs-2" *ngIf="showstaffingcount">
-                <div class="col-xs-2">
-                  <button mat-icon-button class="square-button " data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="Add Record!" color="success" (click)="CreateStaffing()">
-                    <span class="add-icon-bg">
-                      <mat-icon class="add-icon">add_box</mat-icon>
-                    </span>
-                  </button>
-                  <button type="button"><a href="#" class="text-primary" (click)="back()">Cancel</a></button>
-                </div>
-    
-              </div> -->
             <div class="col-md-12" *ngIf="ScopeBasedRateBasedFileCountTable">
               <table class="table table-hover">
                 <thead>

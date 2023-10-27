@@ -75,25 +75,44 @@ export class PricingComponent implements OnInit {
     private router:Router
   ) {}
   departmentFormControl = new FormControl('', Validators.required);
+  pricingFormControl = new FormControl('', Validators.required);
+  customersFormControl = new FormControl('', Validators.required);
+  scopeFormControl = new FormControl('', Validators.required);
+  additionalRateFormControl = new FormControl('', Validators.required);
+  estimatedTimeFormControl = new FormControl('', Validators.required);
+  maximumPriceFormControl = new FormControl('', Validators.required);
+  effectFormControl = new FormControl('', Validators.required);
+  jobStatusFormControls = new FormControl('', Validators.required);
+  effectToControl = new FormControl('', Validators.required);
+  PriceFormControl = new FormControl('', Validators.required);
+  scopeCountFormControl = new FormControl('', Validators.required);
+  countFromFormControl = new FormControl('', Validators.required);
+  countToFormControl = new FormControl('', Validators.required);
+  countPriceFormControl = new FormControl('', Validators.required);
+  designationFormControl = new FormControl('', Validators.required);
+
+
+
   ngOnInit(): void {
     this.loadDepartments();
     this.loadCustomer();
     this.userRegistrationForm = this.builder.group({
       departmentFormControl: this.departmentFormControl,
-      pricingFormControl: ['', Validators.required],
-      customersFormControl: ['', Validators.required],
-      additionalRateFormControl: ['', Validators.required],
-      estimatedTimeFormControl: ['', Validators.required],
-      maximumPriceFormControl: ['', Validators.required],
-      effectFormControl: ['', Validators.required],
-      jobStatusFormControl: ['', Validators.required],
-      effectToControl: ['', Validators.required],
-      PriceFormControl: ['', Validators.required],
-      scopeCountFormControl: ['', Validators.required],
-      countFromFormControl: ['', Validators.required],
-      countToFormControl: ['', Validators.required],
-      countPriceFormControl: ['', Validators.required],
-      designationFormControl: ['', Validators.required],
+      pricingFormControl: this.pricingFormControl,
+      customersFormControl: this.customersFormControl,
+      // scopeFormControl:this.scopeFormControl,
+      // additionalRateFormControl: this.additionalRateFormControl,
+      // estimatedTimeFormControl: this.estimatedTimeFormControl,
+      // maximumPriceFormControl: this.maximumPriceFormControl,
+      // effectFormControl: this.effectFormControl,
+      // jobStatusFormControl: this.jobStatusFormControl,
+      // effectToControl: this.effectToControl,
+      // PriceFormControl: this.PriceFormControl,
+      // scopeCountFormControl: this.scopeCountFormControl,
+      // countFromFormControl:this.countFromFormControl,
+      // countToFormControl: this.countToFormControl,
+      // countPriceFormControl: this.countPriceFormControl,
+      // designationFormControl: this.designationFormControl,
     });
   }
   onDepartmentChange(): void {
@@ -374,6 +393,12 @@ export class PricingComponent implements OnInit {
     this.ViewFileCountTable.splice(this.RemoveId, 1);
   }
   CreatePricing() {
+    this.userRegistrationForm.markAllAsTouched();
+    if (this.userRegistrationForm.invalid) {
+      for (const control of Object.keys(this.userRegistrationForm.controls)) {
+        this.userRegistrationForm.controls[control].markAsTouched();
+      }
+    } else{
     let datas: any;
     if (this.selectedPricing == 1 || this.selectedPricing == 9) {
       datas = {
@@ -642,6 +667,7 @@ export class PricingComponent implements OnInit {
       });
     }
   }
+}
 
 
 }

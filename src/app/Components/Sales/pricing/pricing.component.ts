@@ -284,6 +284,8 @@ export class PricingComponent implements OnInit {
         },
       });
   }
+
+  //loadScope
   loadScope() {
     this.http
       .get(

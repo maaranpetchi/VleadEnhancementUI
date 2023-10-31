@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
@@ -42,6 +42,16 @@ export class AddItassetsComponent implements OnInit {
     this.getSoftwareData();
     this.getTableData();
 
+    this.hardwareStepFormGroup = this.builder.group({
+      type: this.type,
+      location: this.location,
+      bayno: this.bayno,
+      pctype: this.pctype,
+      workingstatus: this.workingstatus,
+
+    });
+
+
     if (this.sharedDataService.shouldFetchData) {
       const data = this.sharedDataService.getData();
       this.apiResponseData = data.data;
@@ -49,13 +59,21 @@ export class AddItassetsComponent implements OnInit {
       this.sharedDataService.shouldFetchData = false;
     }
   }
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: ItassetsService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, private builder: FormBuilder,
+    private http: HttpClient, private _coreService: CoreService, private sharedDataService: ItassetsService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
 
   }
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['baynumber', 'software', 'softwarestatus', 'Action'];
+
+  type = new FormControl('', Validators.required);
+  location = new FormControl('', Validators.required);
+  bayno = new FormControl('', Validators.required);
+  workingstatus = new FormControl('', Validators.required);
+  pctype = new FormControl('', Validators.required);
+
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -63,7 +81,6 @@ export class AddItassetsComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   deleteEmployee(id: number) {
     let payload = {
       "id": id
@@ -86,7 +103,6 @@ export class AddItassetsComponent implements OnInit {
     this.hardwareStepFormGroup.reset();
     this.softwareStepFormGroup.reset();
   }
-
   fetchUpdateData() {
 
     let payload = {
@@ -134,43 +150,31 @@ export class AddItassetsComponent implements OnInit {
     });
 
   }
-
-
   //NgModel to save the values
   Type: string;
   BayNo: string;
   Location: string;
   baynodisable: boolean = false;
-
-
   PcName: string;
   PcType: any;
   HardwareData: any[] = [];
   PcTypeV: any;
-
   Monitor: string;
   MonitorSno: string;
   keyboard: string;
   keyboardSno: string;
-
   Roll: string;
   Division: string;
-
   Brand: string;
   Model: string;
-
   WarrantyDetails: string;
   RAM: string;
-
   Processor: string;
   Graphics: string;
-
   HDD: string;
   TAGNumber: string;
-
   MacAddress: string;
   OS: string;
-
   IPAddress: string;
   ServerType: any;
   GetSTD: GETSTD[] = [
@@ -178,7 +182,6 @@ export class AddItassetsComponent implements OnInit {
     { id: '2', description: "Virtual Server" }
   ];
   ServerTypeV: any;
-
   InvoiceDate: Date;
   InvoiceNumber: string;
   Mouse: string;
@@ -191,14 +194,10 @@ export class AddItassetsComponent implements OnInit {
   ];
   WorkingStatusV: any;
   //NgModel to save the values
-
-
   //second Form 
   SoftwareId: number[];
   SoftwareData: any[] = [];
   SoftwareStatus: number;
-
-
   //method to get the pctype dropdown
   getPcType() {
     this.http.get<any>(environment.apiURL + `ITAsset/nGetHardwareSoftware`).pipe(catchError((error) => {
@@ -208,7 +207,6 @@ export class AddItassetsComponent implements OnInit {
       this.HardwareData = results.hardwareData;
     });
   }
-
   getSoftwareData() {
     this.http.get<any>(environment.apiURL + `ITAsset/nGetHardwareSoftware`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
@@ -217,8 +215,6 @@ export class AddItassetsComponent implements OnInit {
       this.SoftwareData = results.softwareData;
     });
   }
-
-
   getTableData() {
     this.http.get<any>(environment.apiURL + `ITAsset/nGetTableITSAsset`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
@@ -227,7 +223,7 @@ export class AddItassetsComponent implements OnInit {
       this.dataSource = results.titsDetailList;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      
+
     });
   }
   //mrthod to show the instock in input field
@@ -245,59 +241,61 @@ export class AddItassetsComponent implements OnInit {
       this.baynodisable = false;
     }
   }
-
   firstAdd() {
-    let payloadupload = {
-      "id": 0,
-      "employeeId": this.loginservice.getUsername(),
-      "BayNumber": this.BayNo,
-      "Brand": this.Brand,
-      "Division": this.Division,
-      "EmployeeId": this.loginservice.getUsername(),
-      "Graphics": this.Graphics,
-      "HardwareId": "2",
-      "Hdd": this.HDD,
-      "InvoiceDate": this.InvoiceDate,
-      "InvoiceNumber": this.InvoiceNumber,
-      "IpAddress": this.IPAddress,
-      "Keyboard": this.keyboard,
-      "KeyboardSerialNumber": this.keyboardSno,
-      "Location": this.Location,
-      "MacAddress": this.MacAddress,
-      "Model": this.Model,
-      "Monitor": this.Monitor,
-      "MonitorSerialNumber": this.MonitorSno,
-      "Mouse": this.Mouse,
-      "MouseSerialNumber": this.MouseSNO,
-      "Os": this.OS,
-      "PcName": this.PcName,
-      "Processor": this.Processor,
-      "Ram": this.RAM,
-      "Roll": this.Roll,
-      "ServerTypeId": this.ServerType,
-      "TagNumber": this.TAGNumber,
-      "WarantyDetails": this.WarrantyDetails,
-      "WorkingStatusId": this.WorkingStatus,
-      "softwareId": [],
-      "softwareStatusId": 0,
-      "serverType": "",
-      "workingStatus": "",
-
+    this.hardwareStepFormGroup.markAllAsTouched();
+    if (this.hardwareStepFormGroup.invalid) {
+      for (const control of Object.keys(this.hardwareStepFormGroup.controls)) {
+        this.hardwareStepFormGroup.controls[control].markAsTouched();
+      }
     }
-    this.http.post<any>(environment.apiURL + `ITAsset/nSetITHData`, payloadupload).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe(results => {
-      this.id = results.ithDetailList.id;
-    });
+    else {
+      let payloadupload = {
+        "id": 0,
+        "employeeId": this.loginservice.getUsername(),
+        "BayNumber": this.BayNo ? this.BayNo : '',
+        "Brand": this.Brand ? this.Brand : '',
+        "Division": this.Division ? this.Division : '',
+        "EmployeeId": this.loginservice.getUsername(),
+        "Graphics": this.Graphics ? this.Graphics : '',
+        "HardwareId": "2",
+        "Hdd": this.HDD ? this.HDD : '',
+        "InvoiceDate": this.InvoiceDate ? this.InvoiceDate : '',
+        "InvoiceNumber": this.InvoiceNumber ? this.InvoiceNumber : '',
+        "IpAddress": this.IPAddress ? this.IPAddress : '',
+        "Keyboard": this.keyboard ? this.keyboard : '',
+        "KeyboardSerialNumber": this.keyboardSno ? this.keyboardSno : '',
+        "Location": this.Location ? this.Location : '',
+        "MacAddress": this.MacAddress ? this.MacAddress : '',
+        "Model": this.Model ? this.Model : '',
+        "Monitor": this.Monitor ? this.Monitor : '',
+        "MonitorSerialNumber": this.MonitorSno ? this.MonitorSno : '',
+        "Mouse": this.Mouse ? this.Mouse : '',
+        "MouseSerialNumber": this.MouseSNO ? this.MouseSNO : '',
+        "Os": this.OS ? this.OS : '',
+        "PcName": this.PcName ? this.PcName : '',
+        "Processor": this.Processor ? this.Processor : '',
+        "Ram": this.RAM ? this.RAM : '',
+        "Roll": this.Roll ? this.Roll : '',
+        "ServerTypeId": this.ServerType ? this.ServerType : '',
+        "TagNumber": this.TAGNumber ? this.TAGNumber : '',
+        "WarantyDetails": this.WarrantyDetails ? this.WarrantyDetails : '',
+        "WorkingStatusId": this.WorkingStatus ? this.WorkingStatus : '',
+        "softwareId": [],
+        "softwareStatusId": 0,
+        "serverType": "",
+        "workingStatus": "",
+
+      }
+      this.http.post<any>(environment.apiURL + `ITAsset/nSetITHData`, payloadupload).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe(results => {
+        this.id = results.ithDetailList.id;
+      });
+    }
   }
-
-
-  secondadd(){
-  
-
+  secondadd() {
     ///////////////////////////////////////////// PAYLAOD///////////////////////////////////////////////////
-
     let demoPayload = {
       "id": 0,
       "employeeId": this.loginservice.getUsername(),
@@ -308,7 +306,7 @@ export class AddItassetsComponent implements OnInit {
       "hardwareId": "2",
       "monitor": this.Monitor,
       "monitorSerialNumber": this.MonitorSno,
-      "keyboard":this.keyboard,
+      "keyboard": this.keyboard,
       "keyboardSerialNumber": this.keyboardSno,
       "roll": this.Roll,
       "division": this.Division,
@@ -339,14 +337,12 @@ export class AddItassetsComponent implements OnInit {
       "softwareId": [],
       "softwareStatusId": 0
     }
-    
+
     this.http.post<any>(environment.apiURL + `ITAsset/nUpdateITHData`, demoPayload).subscribe(results => {
       this._coreService.openSnackBar("Data updated successfully!");
       this.id = results.ithDetailList.id;
     });
   }
-
-
   softwareclick() {
 
     let AddPayload = {
@@ -391,14 +387,17 @@ export class AddItassetsComponent implements OnInit {
       "softwareStatusId": this.SoftwareStatus
     }
 
+    this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + `ITAsset/nSetITSData`, AddPayload).subscribe(results => {
-      this._coreService.openSnackBar(results.itsDetailList);
-      this.getTableData();
+      this.spinnerService.requestEnded();
+      Swal.fire('Done',results.itsDetailList,'success').then((response)=>{
+        if(response.isConfirmed){
+          this.getTableData();
+        }
+      })
 
     });
   }
-
-
   updateData() {
     let payload = {
       "id": this.apiResponseData.itheDetailList.id
@@ -453,17 +452,20 @@ export class AddItassetsComponent implements OnInit {
         this.spinnerService.requestEnded();
         return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })).subscribe(results => {
-        this.getTableData();
+        Swal.fire('Done!', 'Record Updated Successfully', 'success').then((response) => {
+          if (response.isConfirmed) {
+            this.getTableData();
 
+          }
+        })
       })
     });;
   }
-
-
-
-
-
   softwareSubmitclick() {
-Swal.fire('Done','Record added successfully','success')
+    Swal.fire('Done', 'Record added successfully', 'success').then((response)=>{
+      if(response.isConfirmed){
+        this.router.navigate(['topnavbar/ITAsset'])
+      }
+    })
   }
 }

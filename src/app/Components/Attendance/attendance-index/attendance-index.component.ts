@@ -43,7 +43,10 @@ export class AttendanceIndexComponent implements OnInit {
     'AttendanceStatus',
   ];
   btnimportAttendanceexcel() {
-
+    if (this.selectedFile.length === 0) {
+      Swal.fire('Alert!', 'Please select a file before importing.', 'info');
+      return;
+  }
     var fd = new FormData();
     for (let i = 0; i < this.selectedFile.length; i++) {
       fd.append('Files', this.selectedFile[i]);
@@ -93,6 +96,7 @@ export class AttendanceIndexComponent implements OnInit {
         'info'
 
       )
+      return;
     }
 
     let payload = {

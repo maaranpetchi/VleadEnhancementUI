@@ -21,7 +21,7 @@
                             </div>
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Invoice Number</mat-label>
+                                    <mat-label>Invoice Number<span style="color: red;">*</span></mat-label>
                                     <textarea matInput formControlName="invoiceNumber"></textarea>
                                 </mat-form-field>
                             </div>
@@ -38,7 +38,7 @@
                             </div>
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Invoice Value*</mat-label>
+                                    <mat-label>Invoice Value<span style="color: red;">*</span></mat-label>
                                     <input matInput type="number" formControlName="invoiceValue"
                                         (ngModelChange)="InvValueChng()">
                                 </mat-form-field>

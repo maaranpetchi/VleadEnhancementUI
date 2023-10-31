@@ -13,6 +13,7 @@
             <div class="customerProfile">
                 <div class="backgroundcolor">
                     <div class="panel-heading">
+                        
                         <div class="row">
                             <div class="col">
                                 <h2 class="panel-title" style="color:#fff;">
@@ -33,27 +34,33 @@
                     <div class="cards">
                         <mat-card class="example-card">
                             <mat-card-content>
+                                <form [formGroup]="jobFilesLocationForm" >
                              <div class="row">
                                 <div class="col">
                                     <mat-form-field>
                                         <mat-label>Customer</mat-label>
-                                        <mat-select [(ngModel)]="selectedClientId" name="customerId">
+                                        <mat-select [formControl]="customer"  [(ngModel)]="selectedClientId" name="customerId">
                                           <mat-option *ngFor="let customer of customers" [value]="customer.id">
                                             {{ customer.shortName }}
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
-                                      
+                                      <mat-error *ngIf="jobFilesLocationForm.get('customer')?.hasError('required') && jobFilesLocationForm.get('customer')?.touched">
+                                        * Please select the customer.
+                                      </mat-error>
                                 </div>
                                 <div class="col">
                                     <mat-form-field>
                                         <mat-label>Department</mat-label>
-                                        <mat-select [(ngModel)]="selectedDepartmentId" name="DepartmentId">
+                                        <mat-select [formControl]="department"  [(ngModel)]="selectedDepartmentId" name="DepartmentId">
                                           <mat-option *ngFor="let Department of Departments" [value]="Department.id">
                                             {{ Department.description }}
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
+                                      <mat-error *ngIf="jobFilesLocationForm.get('department')?.hasError('required') && jobFilesLocationForm.get('department')?.touched">
+                                        * Please select the department.
+                                      </mat-error>
                                 </div>
                              </div>
 
@@ -61,20 +68,25 @@
                                 <div class="col">
                                     <mat-form-field>
                                         <mat-label>Shared Path</mat-label>
-                                        <input matInput [(ngModel)]="FTPFilePath" name="FTPFilePath" placeholder="Enter FTP Path">
+                                        <input matInput [formControl]="ftpfilepath"  [(ngModel)]="FTPFilePath" name="FTPFilePath" placeholder="Enter FTP Path">
                                       </mat-form-field>
+                                      <mat-error *ngIf="jobFilesLocationForm.get('ftpfilepath')?.hasError('required') && jobFilesLocationForm.get('ftpfilepath')?.touched">
+                                        * Please fill the filepath.
+                                      </mat-error>
                                       
                                 </div>
                                 <div class="col">
                                     <mat-form-field appearance="fill" style="width: 200px;">
                                         <mat-label>Process</mat-label>
-                                        <mat-select [(ngModel)]="SelectedProcessName" required>
+                                        <mat-select [formControl]="selectedprocessname" [(ngModel)]="SelectedProcessName" required>
                                           <mat-option value="">All</mat-option>
                                           <mat-option value="Production">Production</mat-option>
                                           <mat-option value="Quality">Quality</mat-option>
                                         </mat-select>
                                       </mat-form-field>
-                                      
+                                      <mat-error *ngIf="jobFilesLocationForm.get('ftpfilepath')?.hasError('required') && jobFilesLocationForm.get('ftpfilepath')?.touched">
+                                        * Please fill the filepath.
+                                      </mat-error>
                                 </div>
                              </div>
                              <div class="button-container" style="display: flex; align-items: center; justify-content: center; gap: 20px; padding-right: 286px;">
@@ -82,8 +94,9 @@
                                 <button class="btn btn-success" *ngIf="UpdateVisible" (click)="UpdateCustomerContact()">Update</button>
                                 <button class="btn btn-primary" (click)="reset()" >Cancel</button>
                               </div>
-                            
+                            </form>
                             </mat-card-content>
+                            
 
                         </mat-card>
                     </div>

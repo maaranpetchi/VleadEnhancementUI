@@ -10,6 +10,7 @@ import { ScopechangeService } from 'src/app/Services/AccountController/ScopeChan
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { SelectionModel } from '@angular/cdk/collections';
 //MARTIAL INTERFACE
 interface Department {
   value: string;
@@ -64,58 +65,72 @@ export class ScopechangeComponent implements OnInit {
     });
   }
 
+
+  selectedJobs: any[] = [];
+
   onSubmit() {
-    let tempInvoices: any[] = []
-    tempInvoices = this.selectedInvoices.map(x => {
-      return {
-        // "fromDate": this.empForm?.value.fromdate,
-        // "toDate": this.empForm?.value.todate,
-        // "departmentId": this.empForm?.value.department,
-        // "clientId": this.empForm?.value.client,
-        // "scopeId": this.selectedScopeOption,
-        // "jobId": "string",
-        // "jId": x.jId,
-        ...x,
-        "changeScope": []
-      }
-    })
-    this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'CustomerMapping/ChangeScopeAPI', {
-      "fromDate": this.empForm?.value.fromdate,
-      "toDate": this.empForm?.value.todate,
-      "departmentId": this.empForm?.value.department,
-      "clientId": this.empForm?.value.client,
-      "scopeId": this.selectedScopeOption,
-      "jobId": "string",
-      "jId": 0,
-      "changeScope": tempInvoices
-    }).subscribe({
-      next: (results: any) => {
-        this.spinnerService.requestEnded();
+    this.selection.selected.forEach(x => this.setAll(x));
+    if (this.selectedQuery.length > 0) {
+      this.selectedJobs = this.selectedQuery;
+    }
+    else if (this.selectedScopeOption == "") {
 
-        Swal.fire(
-          'Done',
-          results.stringList,
-          'success'
-        ).then((result) => {
+      Swal.fire('Info', 'Choose the scope', 'info')
+      return;
+    }
+    else {
+      let tempInvoices: any[] = []
+      tempInvoices = this.selectedInvoices.map(x => {
+        return {
+          // "fromDate": this.empForm?.value.fromdate,
+          // "toDate": this.empForm?.value.todate,
+          // "departmentId": this.empForm?.value.department,
+          // "clientId": this.empForm?.value.client,
+          // "scopeId": this.selectedScopeOption,
+          // "jobId": "string",
+          // "jId": x.jId,
+          ...x,
+          "changeScope": []
+        }
+      })
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + 'CustomerMapping/ChangeScopeAPI', {
+        "fromDate": this.empForm?.value.fromdate,
+        "toDate": this.empForm?.value.todate,
+        "departmentId": this.empForm?.value.department,
+        "clientId": this.empForm?.value.client,
+        "scopeId": this.selectedScopeOption,
+        "jobId": "string",
+        "jId": 0,
+        "changeScope": tempInvoices
+      }).subscribe({
+        next: (results: any) => {
+          this.spinnerService.requestEnded();
 
-          if (result.isConfirmed) {
-            this.getJobOrderList();
-          }
+          Swal.fire(
+            'Done',
+            results.stringList,
+            'success'
+          ).then((result) => {
 
-        })
-        // Show success message popup
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !',
-          'error'
-        );
-      }
-    })
+            if (result.isConfirmed) {
+              this.getJobOrderList();
+            }
+
+          })
+          // Show success message popup
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner(); // Reset spinner on error
+          console.error(err);
+          Swal.fire(
+            'Error!',
+            'An error occurred !',
+            'error'
+          );
+        }
+      })
+    }
   }
 
 
@@ -131,21 +146,21 @@ export class ScopechangeComponent implements OnInit {
 
   selectedInvoices: any[] = [];
 
-  setAll(completed: boolean, item: any) {
-    if (completed == true) {
-      this.selectedInvoices.push(item)
-    }
-    else {
+  // setAll(completed: boolean, item: any) {
+  //   if (completed == true) {
+  //     this.selectedInvoices.push(item)
+  //   }
+  //   else {
 
-      if (this.selectedInvoices.find(x => x.jId == item.jId)) {
-        this.selectedInvoices = this.selectedInvoices.filter(x => {
-          if (x.jId != item.jId) {
-            return item
-          }
-        })
-      }
-    }
-  }
+  //     if (this.selectedInvoices.find(x => x.jId == item.jId)) {
+  //       this.selectedInvoices = this.selectedInvoices.filter(x => {
+  //         if (x.jId != item.jId) {
+  //           return item
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
 
   ngOnInit(): void {
 
@@ -172,13 +187,13 @@ export class ScopechangeComponent implements OnInit {
       }
     });
   }
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+  // applyFilter(event: Event): void {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
   getScopeList() {
     this.spinnerService.requestStarted();
     this.http.get(environment.apiURL + `CustomerMapping/DDLforScopeChange?departmentId=${this.empForm.value.department}&custId=${this.empForm.value.client}`).subscribe({
@@ -246,6 +261,49 @@ export class ScopechangeComponent implements OnInit {
       }
     })
     this.getScopeList();
+  }
+
+
+
+  //select///
+
+  selection = new SelectionModel<any>(true, []);
+
+  filterValue: any = null;
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    }
+    else if (this.filterValue) {
+      this.selection.clear();
+      this.dataSource.filteredData.forEach(x => this.selection.select(x));
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+  }
+  selectedQuery: any[] = [];
+
+  setAll(item: any) {
+    this.selectedQuery.push({
+      ...item,
+
+    });
   }
 
 

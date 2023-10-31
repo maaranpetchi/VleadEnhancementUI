@@ -21,11 +21,15 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="required">Type<span style="color:red;">*</span> </label>
-                                <select class="form-control" [(ngModel)]="Type" name="type" (change)="onTypeChange()">
+                                <select class="form-control" [formControl]="type" [(ngModel)]="Type" name="type" (change)="onTypeChange()">
                                     <option value="">-- Choose Type --</option>
                                     <option value="1">BayNumber</option>
                                     <option value="2">InStock</option>
                                 </select>
+
+                                <mat-error *ngIf="hardwareStepFormGroup.get('type')?.hasError('required') && hardwareStepFormGroup.get('type')?.touched">
+                                    Please select the type.
+                                  </mat-error>
                             </div>
                         </div>
 
@@ -35,16 +39,23 @@
                                 <label class="required">Bay No<span style="color:red;">*</span></label>
                             </div>
                             <div class="col">
-                                <input type="text" class="form-control" [(ngModel)]="BayNo" [disabled]="baynodisable"
+                                <input type="text" class="form-control" [formControl]="bayno" [(ngModel)]="BayNo" [disabled]="baynodisable"
                                     name="bayno" />
+
+                                    <mat-error *ngIf="hardwareStepFormGroup.get('bayno')?.hasError('required') && hardwareStepFormGroup.get('bayno')?.touched">
+                                        Please fill the baynumber.
+                                      </mat-error>
                             </div>
 
                             <div class="col">
                                 <label class="required">Location <span style="color:red;">*</span></label>
                             </div>
                             <div class="col">
-                                <textarea rows="3" type="text" class="form-control" [(ngModel)]="Location"
+                                <textarea rows="3" type="text" class="form-control" [formControl]="location" [(ngModel)]="Location"
                                     name="location"></textarea>
+                                    <mat-error *ngIf="hardwareStepFormGroup.get('location')?.hasError('required') && hardwareStepFormGroup.get('location')?.touched">
+                                        Please fill the location.
+                                      </mat-error>
                             </div>
                         </div>
                         <br>
@@ -59,11 +70,14 @@
                             <div class="col"><label class="required">PC Type<span style="color:red;">*</span></label>
                             </div>
                             <div class="col">
-                                <select class="form-control" [(ngModel)]="PcType" name="pctype">
+                                <select class="form-control" [formControl]="pctype" [(ngModel)]="PcType" name="pctype">
                                     <option value="">-- Choose PC Type --</option>
                                     <option *ngFor="let item of HardwareData" [value]="item.id"
                                         [selected]="item.description === PcTypeV">{{item.description}}</option>
                                 </select>
+                                <mat-error *ngIf="hardwareStepFormGroup.get('pctype')?.hasError('required') && hardwareStepFormGroup.get('pctype')?.touched">
+                                    Please fill the pc type.
+                                  </mat-error>
                             </div>
                         </div>
                         <br>
@@ -212,13 +226,17 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col"><label class="required">Working Status<span
+                            <div class="col-6"><label class="required">Working Status<span
                                         style="color:red;">*</span></label>
-                                <select class="form-control" [(ngModel)]="WorkingStatus" name="workingstatus">
+                                <select class="form-control" [formControl]="workingstatus" [(ngModel)]="WorkingStatus" name="workingstatus">
                                     <option value="">-- Choose Working status --</option>
                                     <option *ngFor="let item of GetWSD" [value]="item.id"
                                         [selected]="item.description === WorkingStatusV">{{item.description}}</option>
                                 </select>
+
+                                <mat-error *ngIf="hardwareStepFormGroup.get('workingstatus')?.hasError('required') && hardwareStepFormGroup.get('workingstatus')?.touched">
+                                    Please fill the workingstatus.
+                                  </mat-error>
                             </div>
                         </div>
 
@@ -226,8 +244,8 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <button mat-button matStepperNext (click)="data ? secondadd() : firstAdd()">Next</button>
+            <div style="float:right">
+                <button class="btn btn-success" matStepperNext (click)="data ? secondadd() : firstAdd()">Next</button>
             </div>
         </mat-step>
 

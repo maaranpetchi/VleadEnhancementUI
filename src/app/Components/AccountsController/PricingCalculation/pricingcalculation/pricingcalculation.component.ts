@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -38,7 +38,7 @@ export class PricingcalculationComponent implements OnInit {
         this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private loginservice: LoginService, private spinnerService: SpinnerService) { }
+  constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private loginservice: LoginService, private spinnerService: SpinnerService,private builder:FormBuilder) { }
 
   displayedColumns: string[] = [
     'selected',
@@ -88,7 +88,11 @@ export class PricingcalculationComponent implements OnInit {
 
   ngOnInit(): void {
     this.getClient();
-
+    this.myForm = this.builder.group({
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+      ClientId: this.ClientId,
+    });
   }
 
 
@@ -111,12 +115,11 @@ export class PricingcalculationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  myForm = new FormGroup({
+  myForm :FormGroup
 
-    fromDate: new FormControl("", Validators.required),
-    toDate: new FormControl("", Validators.required),
-    ClientId: new FormControl("", Validators.required)
-  });
+    fromDate= new FormControl("", Validators.required);
+    toDate= new FormControl("", Validators.required);
+    ClientId= new FormControl("", Validators.required)
 
 
 
@@ -192,19 +195,44 @@ export class PricingcalculationComponent implements OnInit {
     });
   }
   onSubmit() {
-    // Call the API to get the search results
-    this.spinnerService.requestStarted();
-    this.http.post<any>(environment.apiURL + 'Invoice/GetClientDetails', {
-      "clientId": this.myForm.value?.ClientId,
-      "fromDate": this.myForm.value?.fromDate,
-      "toDate": this.myForm.value?.toDate
-    }).subscribe((results: any) => {
-      this.spinnerService.requestEnded();
-      this.dataSource.data = results.getInvoice;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+    this.myForm.markAllAsTouched();
+    if (this.myForm.invalid) {
+      for (const control of Object.keys(this.myForm.controls)) {
+        this.myForm.controls[control].markAsTouched();
+      }
     }
-    )
+    else {
+       // Validate from date and to date
+       const fromDate = this.myForm.value.fromDate ? this.myForm.value.fromDate:'';
+       const toDate = this.myForm.value.toDate ? this.myForm.value.toDate:'';
+   
+       if (fromDate > toDate) {
+         Swal.fire({
+           icon: 'info',
+           title: 'Oops...',
+           text: 'From date cannot be greater than To date!',
+         });
+         return; // Stop further processing
+       }
+
+     
+   
+       // Rest of your code for API call and other actions
+   // Call the API to get the search results
+   this.spinnerService.requestStarted();
+   this.http.post<any>(environment.apiURL + 'Invoice/GetClientDetails', {
+     "clientId": this.myForm.value?.ClientId,
+     "fromDate": this.myForm.value?.fromDate,
+     "toDate": this.myForm.value?.toDate
+   }).subscribe((results: any) => {
+     this.spinnerService.requestEnded();
+     this.dataSource.data = results.getInvoice;
+     this.dataSource.sort = this.sort;
+     this.dataSource.paginator = this.paginator;
+   }
+   )
+    }
+     
   }
 
   onInvoiceCalculation(item: any) {

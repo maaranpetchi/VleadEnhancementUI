@@ -133,6 +133,17 @@ export class UpdatevendorComponent implements OnInit {
   }
   amtPaid: any;
   onSubmitDetails() {
+
+    const requiredFields: string[] = [];
+    if (!this.empForm.value.invoiceNumber) {
+        requiredFields.push('Invoice Number');
+    }
+    if (!this.empForm.value.invoiceValue) {
+        requiredFields.push('Invoice Value');
+    }
+    
+    
+    if (requiredFields.length === 0) {
     let payload = {
       "id": this.data.data.id,
       "vendorName": this.data.data.vendorName,
@@ -173,6 +184,12 @@ export class UpdatevendorComponent implements OnInit {
         })
       })
     });
+    
+    } else {
+        // Show validation error message with missing field names
+        const missingFields = requiredFields.join(', ');
+        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+    }
   }
 
 

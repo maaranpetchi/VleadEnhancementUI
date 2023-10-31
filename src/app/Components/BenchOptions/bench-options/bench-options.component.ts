@@ -114,38 +114,60 @@ export class BenchOptionsComponent implements OnInit {
 
     }
     else {
-
-      let Startbench = {
-        Status: this.Statusid,
-        EmployeeId: this.loginservice.getUsername(),
-        Remarks: this.Remarks,
+      const requiredFields: string[] = [];
+      if (!this.Statusid) {
+        requiredFields.push('Status');
+    }
+      if (!this.Remarks) {
+          requiredFields.push('Remark');
       }
-      this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=End`, Startbench).pipe(catchError((error) => {
-        this.spinnerService.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-      })).subscribe({next:(result) => {
-        this.spinnerService.requestEnded();
-
-        this.list = result;
-        if (result.data == true) {
-          this.Statusid = "";
-          this.Remarks = "";
-          this.disableWorkType = false;
-          this.disableWorkTypeEnd = true;
-          this._coreService.openSnackBar("End files successfully!")
+    
+      
+      
+      if (requiredFields.length === 0) {
+        let Startbench = {
+          Status: this.Statusid,
+          EmployeeId: this.loginservice.getUsername(),
+          Remarks: this.Remarks,
         }
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err); 
-        Swal.fire(
-          'Error!',
-          'An error occurred !',
-          'error'
-        );
+        this.spinnerService.requestStarted();
+        this.http.post<any>(environment.apiURL + `BenchOption/Startbench?Worktype=End`, Startbench).pipe(catchError((error) => {
+          this.spinnerService.requestEnded();
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+        })).subscribe({next:(result) => {
+          this.spinnerService.requestEnded();
+  
+          this.list = result;
+          if (result.data == true) {
+            this.Statusid = "";
+            this.Remarks = "";
+            this.disableWorkType = false;
+            this.disableWorkTypeEnd = true;
+            Swal.fire(
+              'Done!',
+              'End files successfully!',
+              'success'
+            );
+          }
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner(); // Reset spinner on error
+          console.error(err); 
+          Swal.fire(
+            'Info!',
+            'An error occurred !',
+            'info'
+          );
+        }
+        });
+      
+      } else {
+          // Show validation error message with missing field names
+          const missingFields = requiredFields.join(', ');
+          Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
       }
-      });
+
+    
       // else {
       //     alert('in else');
       // }

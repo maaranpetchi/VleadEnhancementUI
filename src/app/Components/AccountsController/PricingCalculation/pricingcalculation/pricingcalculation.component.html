@@ -32,6 +32,9 @@
                                                 [for]="startDatePicker"></mat-datepicker-toggle>
                                             <mat-datepicker #startDatePicker></mat-datepicker>
                                         </mat-form-field>
+                                        <mat-error *ngIf="myForm.get('fromDate')?.hasError('required') && myForm.get('fromDate')?.touched">
+                                            *Please choose start date.
+                                          </mat-error>
                                     </div>
                                     <div class="col">
                                         <mat-form-field>
@@ -42,6 +45,9 @@
                                                 [for]="endDatePicker"></mat-datepicker-toggle>
                                             <mat-datepicker #endDatePicker></mat-datepicker>
                                         </mat-form-field>
+                                        <mat-error *ngIf="myForm.get('toDate')?.hasError('required') && myForm.get('toDate')?.touched">
+                                            *Please choose end date.
+                                          </mat-error>
                                     </div>
                                     <div class="row">
                                         <div class="col">
@@ -54,6 +60,9 @@
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
+                                            <mat-error *ngIf="myForm.get('ClientId')?.hasError('required') && myForm.get('ClientId')?.touched">
+                                                *Please select the client.
+                                              </mat-error>
                                         </div>
 
                                         <div class="col">

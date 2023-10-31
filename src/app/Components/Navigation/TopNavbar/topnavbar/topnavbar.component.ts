@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { forEach } from 'jszip';
 
 
 @Component({
@@ -203,12 +204,13 @@ export class TopnavbarComponent implements OnInit {
       result = true;
     }
     if (!result) {
-      this.permission.forEach(x => {
-        if (inputarray.includes(x)) {
+      for (let index = 0; index < this.permission.length; index++) {
+        const element = this.permission[index];
+        if (inputarray.includes(element)) {
           result = true;
-
+          break;
         }
-      })
+      }
     }
     return result;
   }

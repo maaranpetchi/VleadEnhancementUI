@@ -34,11 +34,11 @@ export class PricingcalculationComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private loginservice: LoginService, private spinnerService: SpinnerService,private builder:FormBuilder) { }
+  constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private loginservice: LoginService, private spinnerService: SpinnerService, private builder: FormBuilder) { }
 
   displayedColumns: string[] = [
     'selected',
@@ -115,70 +115,70 @@ export class PricingcalculationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  myForm :FormGroup
+  myForm: FormGroup
 
-    fromDate= new FormControl("", Validators.required);
-    toDate= new FormControl("", Validators.required);
-    ClientId= new FormControl("", Validators.required)
+  fromDate = new FormControl("", Validators.required);
+  toDate = new FormControl("", Validators.required);
+  ClientId = new FormControl("", Validators.required)
 
 
 
 
   openDialog() {
     let clientid = 0;
- 
-     
-      clientid = parseInt(this.myForm?.value.ClientId ? this.myForm?.value.ClientId : "0")
-      let temporaryarray: any[] = this.selection.selected.map(selectedRow => {
-        return {
-          "jobId": selectedRow.jobId,
-          "shortName": selectedRow.shortName,
-          "scopeId": selectedRow.scopeId,
-          "scopeDesc": "",
-          "clientId": selectedRow.clientId,
-          "billingCycleType": selectedRow.billingCycleType,
-          "dateofUpload": selectedRow.dateofUpload,
-          "createdBy": this.loginservice.getUsername(),
-          "departmentId": selectedRow.departmentId,
-          "tranId": 0,
-          "id": selectedRow.id,
-          "jId": selectedRow.jId,
-          "pricingTypeId": 0,
-          "getInvoice": [],
 
-          "fileReceivedDate": selectedRow.fileReceivedDate,
-          "isBillable": selectedRow.isBillable,
-          "specialPrice": selectedRow.specialPrice ? selectedRow.specialPrice:0,
-          "estimatedTime": selectedRow.estimatedTime,
-          "isWaiver": true,
-          "jobStatusId": 0
-        }
-      })
 
-      let result: any = {
-        "jobId": "",
-        "shortName": "",
-        "scopeId": 0,
+    clientid = parseInt(this.myForm?.value.ClientId ? this.myForm?.value.ClientId : "0")
+    let temporaryarray: any[] = this.selection.selected.map(selectedRow => {
+      return {
+        "jobId": selectedRow.jobId,
+        "shortName": selectedRow.shortName,
+        "scopeId": selectedRow.scopeId,
         "scopeDesc": "",
-        "clientId": this.myForm.value?.ClientId,
-        "billingCycleType": "",
-        "dateofUpload": new Date().toISOString,
+        "clientId": selectedRow.clientId,
+        "billingCycleType": selectedRow.billingCycleType,
+        "dateofUpload": selectedRow.dateofUpload,
         "createdBy": this.loginservice.getUsername(),
-        "departmentId": 0,
+        "departmentId": selectedRow.departmentId,
         "tranId": 0,
-        "id": 0,
-        "jId": 0,
+        "id": selectedRow.id,
+        "jId": selectedRow.jId,
         "pricingTypeId": 0,
-        "getInvoice": temporaryarray,
-        "fileReceivedDate": "2023-04-06T08:51:10.069Z",
-        "isBillable": true,
-        "specialPrice": 0,
-        "estimatedTime": 0,
+        "getInvoice": [],
+
+        "fileReceivedDate": selectedRow.fileReceivedDate,
+        "isBillable": selectedRow.isBillable,
+        "specialPrice": selectedRow.specialPrice ? selectedRow.specialPrice : 0,
+        "estimatedTime": selectedRow.estimatedTime,
         "isWaiver": true,
         "jobStatusId": 0
       }
-      this.onInvoiceCalculation(result)
-    
+    })
+
+    let result: any = {
+      "jobId": "",
+      "shortName": "",
+      "scopeId": 0,
+      "scopeDesc": "",
+      "clientId": this.myForm.value?.ClientId,
+      "billingCycleType": "",
+      "dateofUpload": new Date().toISOString,
+      "createdBy": this.loginservice.getUsername(),
+      "departmentId": 0,
+      "tranId": 0,
+      "id": 0,
+      "jId": 0,
+      "pricingTypeId": 0,
+      "getInvoice": temporaryarray,
+      "fileReceivedDate": "2023-04-06T08:51:10.069Z",
+      "isBillable": true,
+      "specialPrice": 0,
+      "estimatedTime": 0,
+      "isWaiver": true,
+      "jobStatusId": 0
+    }
+    this.onInvoiceCalculation(result)
+
 
   }
 
@@ -202,37 +202,37 @@ export class PricingcalculationComponent implements OnInit {
       }
     }
     else {
-       // Validate from date and to date
-       const fromDate = this.myForm.value.fromDate ? this.myForm.value.fromDate:'';
-       const toDate = this.myForm.value.toDate ? this.myForm.value.toDate:'';
-   
-       if (fromDate > toDate) {
-         Swal.fire({
-           icon: 'info',
-           title: 'Oops...',
-           text: 'From date cannot be greater than To date!',
-         });
-         return; // Stop further processing
-       }
+      // Validate from date and to date
+      const fromDate = this.myForm.value.fromDate ? this.myForm.value.fromDate : '';
+      const toDate = this.myForm.value.toDate ? this.myForm.value.toDate : '';
 
-     
-   
-       // Rest of your code for API call and other actions
-   // Call the API to get the search results
-   this.spinnerService.requestStarted();
-   this.http.post<any>(environment.apiURL + 'Invoice/GetClientDetails', {
-     "clientId": this.myForm.value?.ClientId,
-     "fromDate": this.myForm.value?.fromDate,
-     "toDate": this.myForm.value?.toDate
-   }).subscribe((results: any) => {
-     this.spinnerService.requestEnded();
-     this.dataSource.data = results.getInvoice;
-     this.dataSource.sort = this.sort;
-     this.dataSource.paginator = this.paginator;
-   }
-   )
+      if (fromDate > toDate) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Oops...',
+          text: 'From date cannot be greater than To date!',
+        });
+        return; // Stop further processing
+      }
+
+
+
+      // Rest of your code for API call and other actions
+      // Call the API to get the search results
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + 'Invoice/GetClientDetails', {
+        "clientId": this.myForm.value?.ClientId,
+        "fromDate": this.myForm.value?.fromDate,
+        "toDate": this.myForm.value?.toDate
+      }).subscribe((results: any) => {
+        this.spinnerService.requestEnded();
+        this.dataSource.data = results.getInvoice;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      }
+      )
     }
-     
+
   }
 
   onInvoiceCalculation(item: any) {
@@ -240,17 +240,29 @@ export class PricingcalculationComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.post<any>(environment.apiURL + 'Invoice/GetCalculatedInvoice', item).subscribe((results: any) => {
       this.spinnerService.requestEnded();
-      Swal.fire(
-        'Done!',
-        results.stringList,
-        'success'
-      ).then((result) => {
-        if (result.isConfirmed) {
-          this.getEmployeeList();
-        }
-      })
-    }, error => {
-      this.spinnerService.resetSpinner();
+      if (results.stringList == "Price has been Updated") {
+
+        Swal.fire(
+          'Done!',
+          results.stringList,
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        })
+      }
+      else {
+        Swal.fire(
+          'info!',
+          results.stringList,
+          'info'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        })
+      }
     }
     )
   }

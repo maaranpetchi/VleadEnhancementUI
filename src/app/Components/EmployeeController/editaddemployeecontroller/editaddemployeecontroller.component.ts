@@ -556,7 +556,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
         "processCode": this.employeeProcess ? this.employeeProcess : 0,
         "result": this.outsource ? this.outsource : false,
         "roleDescription": "",
-        "isOutsource": true,
+        "isOutsource": this.outsource ? this.outsource : false,
         "empRolesList": empRoleList ? empRoleList : '',
         "empHierarchyList": empHierarchyList ? empHierarchyList : 0,
         "isInternetConnection": this.internetAvailable ? this.internetAvailable : '',

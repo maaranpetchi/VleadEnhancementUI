@@ -11,6 +11,7 @@ import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { SelectionModel } from '@angular/cdk/collections';
+import { LoginComponent } from 'src/app/Components/Navigation/TopNavbar/login/login.component';
 //MARTIAL INTERFACE
 interface Department {
   value: string;
@@ -67,32 +68,19 @@ export class ScopechangeComponent implements OnInit {
 
 
   selectedJobs: any[] = [];
+  selectedQuery: any[] = [];
 
   onSubmit() {
-    this.selection.selected.forEach(x => this.setAll(x));
-    if (this.selectedQuery.length > 0) {
-      this.selectedJobs = this.selectedQuery;
-    }
-    else if (this.selectedScopeOption == "") {
 
-      Swal.fire('Info', 'Choose the scope', 'info')
+    if (this.selectedScopeOption == "") {
+      Swal.fire('Info', 'Please select the list item and scope', 'info');
       return;
     }
     else {
-      let tempInvoices: any[] = []
-      tempInvoices = this.selectedInvoices.map(x => {
-        return {
-          // "fromDate": this.empForm?.value.fromdate,
-          // "toDate": this.empForm?.value.todate,
-          // "departmentId": this.empForm?.value.department,
-          // "clientId": this.empForm?.value.client,
-          // "scopeId": this.selectedScopeOption,
-          // "jobId": "string",
-          // "jId": x.jId,
-          ...x,
-          "changeScope": []
-        }
-      })
+      this.selection.selected.forEach(x => this.setAll(x));
+      if (this.selectedQuery.length > 0) {
+        this.selectedJobs = this.selectedQuery;
+      }
       this.spinnerService.requestStarted();
       this.http.post<any>(environment.apiURL + 'CustomerMapping/ChangeScopeAPI', {
         "fromDate": this.empForm?.value.fromdate,
@@ -102,32 +90,39 @@ export class ScopechangeComponent implements OnInit {
         "scopeId": this.selectedScopeOption,
         "jobId": "string",
         "jId": 0,
-        "changeScope": tempInvoices
+        "changeScope": this.selectedJobs
       }).subscribe({
         next: (results: any) => {
           this.spinnerService.requestEnded();
+          if (results.stringList == "Scope has been updated successfully") {
 
-          Swal.fire(
-            'Done',
-            results.stringList,
-            'success'
-          ).then((result) => {
+            Swal.fire(
+              'Done',
+              results.stringList,
+              'success'
+            ).then((result) => {
 
-            if (result.isConfirmed) {
-              this.getJobOrderList();
-            }
+              if (result.isConfirmed) {
+                window.location.reload();
 
-          })
-          // Show success message popup
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner(); // Reset spinner on error
-          console.error(err);
-          Swal.fire(
-            'Error!',
-            'An error occurred !',
-            'error'
-          );
+              }
+
+            })
+            // Show success message popup
+          }
+          else {
+            Swal.fire(
+              'info',
+              results.stringList,
+              'info'
+            ).then((result) => {
+
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+
+            })
+          }
         }
       })
     }
@@ -297,12 +292,11 @@ export class ScopechangeComponent implements OnInit {
     }
 
   }
-  selectedQuery: any[] = [];
 
   setAll(item: any) {
     this.selectedQuery.push({
       ...item,
-
+      ChangeScope: []
     });
   }
 

@@ -71,8 +71,6 @@ export class PricingComponent implements OnInit {
     private http: HttpClient,
     private spinner: SpinnerService,
     private loginservice: LoginService,
-    private _coreService: CoreService,
-    private router:Router
   ) {}
   departmentFormControl = new FormControl('', Validators.required);
   pricingFormControl = new FormControl('', Validators.required);
@@ -98,8 +96,8 @@ export class PricingComponent implements OnInit {
     this.loadCustomer();
     this.userRegistrationForm = this.builder.group({
       departmentFormControl: this.departmentFormControl,
-      pricingFormControl: this.pricingFormControl,
-      customersFormControl: this.customersFormControl,
+      // pricingFormControl: this.pricingFormControl,
+      // customersFormControl: this.customersFormControl,
       // scopeFormControl:this.scopeFormControl,
       // additionalRateFormControl: this.additionalRateFormControl,
       // estimatedTimeFormControl: this.estimatedTimeFormControl,
@@ -145,6 +143,8 @@ export class PricingComponent implements OnInit {
     if (pricingType != undefined) {
       //  this.pricingtype = pricingType.Id;
       if (pricingType == 1 || pricingType == 9) {
+        this.userRegistrationForm.get('departmentFormControl')?.setValidators(null);
+        // i have worked on this try it
         this.type2 = false;
         this.type22 = false;
         this.type6 = false;

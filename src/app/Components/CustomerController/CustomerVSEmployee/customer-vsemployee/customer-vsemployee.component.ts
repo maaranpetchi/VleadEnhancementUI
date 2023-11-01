@@ -13,6 +13,7 @@ import { AddEditCustomerVSEmployeeComponent } from '../add-edit-customer-vsemplo
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
+import FileSaver from 'file-saver';
 @Component({
   selector: 'app-customer-vsemployee',
   templateUrl: './customer-vsemployee.component.html',
@@ -34,7 +35,6 @@ export class CustomerVSEmployeeComponent implements OnInit {
   isDeletedInclude = false;
   isResignInclude = false;
 
-
   constructor(private _dialog: MatDialog,
     private spinnerService: SpinnerService,
     private _empService: CustomerVSEmployeeService,
@@ -42,16 +42,13 @@ export class CustomerVSEmployeeComponent implements OnInit {
     private router: Router,
     private http: HttpClient) { }
 
-
   ngOnInit(): void {
     this.getEmployeeList();
   }
-
   openAddEditEmpForm() {
-    // this.state=1;
     const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
        height: '60vh',
-      width: '50vw'
+      width: '150vw'
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -60,8 +57,6 @@ export class CustomerVSEmployeeComponent implements OnInit {
         }
       },
     });
-    // this.router.navigate(['/edit']);
-
   }
 
   getEmployeeList() {
@@ -92,7 +87,6 @@ export class CustomerVSEmployeeComponent implements OnInit {
       }
     });
   }
-
 
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -135,7 +129,6 @@ export class CustomerVSEmployeeComponent implements OnInit {
     });
   }
 
-
   openEditForm(data: any) {
 
     const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
@@ -160,6 +153,30 @@ export class CustomerVSEmployeeComponent implements OnInit {
         );
       }
     });
+  }
+  exportToCsv() {
+    // Check if there is no data in the table
+    if (this.dataSource.data.length === 0) {
+      Swal.fire('Alert', 'No Records in the table', 'info');
+      return;
+    }
+
+    const header = ['customerClassification', 'employeeNameCode','name','shortName' ];
+
+    // Access the data array from the MatTableDataSource
+    const csvData = this.dataSource.data.map(row => {
+      return [
+        row.customerClassification,
+        row.employeeName,
+        row.name,
+        row.shortName
+      ].join(',');
+    });
+
+    const csv = [header.join(','), ...csvData].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    FileSaver.saveAs(blob, 'customerVsEmployee.csv');
   }
 
 }

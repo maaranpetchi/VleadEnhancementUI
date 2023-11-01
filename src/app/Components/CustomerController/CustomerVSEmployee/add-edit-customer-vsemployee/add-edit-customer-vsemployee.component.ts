@@ -8,9 +8,9 @@ import { CustomerVSEmployeeService } from 'src/app/Services/CustomerVSEmployee/c
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
-import { catchError } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { LoginService } from 'src/app/Services/Login/login.service';
-//customerClassification INTERFACE
+
 interface customerClassification {
   value: string;
   viewValue: string;
@@ -26,7 +26,8 @@ interface customerClassification {
 export class AddEditCustomerVSEmployeeComponent implements OnInit {
   state: number = 0;
   customervalue: any[] = [];
-
+  selectedCustomer:any
+  filterValue:string=''
 
   myForm = new FormGroup({
     id: new FormControl(this.data1?.id),
@@ -38,13 +39,14 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
   });
   values: any[] = [];
 
-  selectControl = new FormControl();
+  selectControl = new FormControl('');
 
   data: any = {
     classificationList: [],
     employeeList: [],
     customerList: [],
   };
+  customerList: any;
 
   constructor(private http: HttpClient,
     private _dialogRef: MatDialogRef<AddEditCustomerVSEmployeeComponent>,
@@ -62,7 +64,13 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
   }
-
+  applyFilters(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.data.customerList.filter = this.filterValue.trim().toLowerCase();
+    if (this.data.customerList.paginator) {
+      this.data.customerList.paginator.firstPage();
+    }
+  }
   getData() {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + 'CustomerVsEmployee/GetAllddlList').pipe(catchError((error) => {
@@ -73,6 +81,22 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
       this.data = data;
 
     });
+  }
+  customerChange(){
+    this.http
+      .get(
+        environment.apiURL +
+          `CustomerVsEmployee/GetcustomerByClassId?CustomerClassificationId=${this.selectedCustomer}`
+      )
+      .subscribe({
+        next: (response: any) => {
+          console.log(response);
+          
+        },
+        error: (err) => {
+          console.log(err, 'Error');
+        },
+      });
   }
 
   onSubmit(num: number) {
@@ -173,5 +197,6 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
 
   }
 
-
+    
+  
 }

@@ -20,10 +20,7 @@ import { PricingApprovalprocessComponent } from './Components/Sales/pricing-appr
 import { EmployeePopupComponent } from './Components/TopToolbarComponents/ProofReadingAllocation/employee-popup/employee-popup.component';
 import { JobCategorypopupComponent } from './Components/TopToolbarComponents/ProofReadingAllocation/job-categorypopup/job-categorypopup.component';
 import { VendorService } from './Services/Vendor/vendor.service';
-
-import { ProductionQuotationComponent } from './Components/TopToolbarComponents/ProductionAllocation/production-quotation/production-quotation.component';
-import { QuotationPopupComponent } from './Components/TopToolbarComponents/ProductionAllocation/quotation-popup/quotation-popup.component';
-import { AttendanceIndexComponent } from './Components/Attendance/attendance-index/attendance-index.component';
+import { FilterPipe } from './pipe/filter.pipe';
 
 
 @NgModule({
@@ -38,7 +35,7 @@ import { AttendanceIndexComponent } from './Components/Attendance/attendance-ind
     PricingApprovalprocessComponent,
     EmployeePopupComponent,
     JobCategorypopupComponent,
-  
+    FilterPipe
 
    
    ],
@@ -51,6 +48,9 @@ import { AttendanceIndexComponent } from './Components/Attendance/attendance-ind
     MaterialModule,
     NavigationModule,
     MatDialogModule,
+  ],
+  exports:[
+    FilterPipe
   ],
   providers: [
     EditadvanceadjustmentComponent,

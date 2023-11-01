@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ResourceLoader } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,7 +34,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   customertatdatasource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  userRegistrationForm: FormGroup;
   displayedColumns: string[] = ['customername', 'department', 'scope', 'status', 'Action'];
   displayedTATColumns: string[] = ['customernametat', 'customershortnametat', 'jobstatustat', 'tat', 'Actiontat'];
   customertatinput: any;
@@ -44,6 +44,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   selectedJobStatusDescription: any;
   customerTatid: any;
   ShortNamePayload: any;
+  
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -51,6 +52,7 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  departmentFormControl = new FormControl('', Validators.required);
 
   ngOnInit(): void {
     this.apiResponseData = this.sharedDataService.getData();
@@ -62,13 +64,32 @@ export class SalesMultiStepFormComponent implements OnInit {
      this.GetTimeZoneList()
      this.getCountry();
      this.getUserAddress();
+     this.userRegistrationForm = this.builder.group({
+      departmentFormControl: this.departmentFormControl,
+      // pricingFormControl: this.pricingFormControl,
+      // customersFormControl: this.customersFormControl,
+      // scopeFormControl:this.scopeFormControl,
+      // additionalRateFormControl: this.additionalRateFormControl,
+      // estimatedTimeFormControl: this.estimatedTimeFormControl,
+      // maximumPriceFormControl: this.maximumPriceFormControl,
+      // effectFormControl: this.effectFormControl,
+      // jobStatusFormControl: this.jobStatusFormControl,
+      // effectToControl: this.effectToControl,
+      // PriceFormControl: this.PriceFormControl,
+      // scopeCountFormControl: this.scopeCountFormControl,
+      // countFromFormControl:this.countFromFormControl,
+      // countToFormControl: this.countToFormControl,
+      // countPriceFormControl: this.countPriceFormControl,
+      // designationFormControl: this.designationFormControl,
+    });
   }
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router,private builder: FormBuilder) {
     this.getCustomerData();
     this.getDepartments();
     // this.getCountry();
     // this.GetStatesList();
     // this.GetCitiesList();
+    
   }
 
 
@@ -223,6 +244,12 @@ export class SalesMultiStepFormComponent implements OnInit {
   }
 
   AppCustomerupdate() {
+    this.userRegistrationForm.markAllAsTouched();
+    if (this.userRegistrationForm.invalid) {
+      for (const control of Object.keys(this.userRegistrationForm.controls)) {
+        this.userRegistrationForm.controls[control].markAsTouched();
+      }
+    } else{
     let payload = {
       "id": this.apiResponseData.id,
       "companyId": 0,
@@ -296,6 +323,7 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.getTableData();
     this.getCustomervsscopeDepartments();
   }
+}
 
 
 

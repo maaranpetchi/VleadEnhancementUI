@@ -372,7 +372,8 @@ CustomervsdivisionindexComponent,
     MatSortModule,
     MatDialogModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    
   ],
   providers: [
     FileconvertComponent,

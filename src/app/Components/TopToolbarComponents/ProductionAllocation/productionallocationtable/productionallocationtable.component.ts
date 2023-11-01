@@ -187,11 +187,16 @@ export class ProductionallocationtableComponent implements OnInit {
       });
   }
   filterValue: any = null;
-  applyFilter(event: Event): void {
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  applyFilters(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
-    // this.selection.clear();
-    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

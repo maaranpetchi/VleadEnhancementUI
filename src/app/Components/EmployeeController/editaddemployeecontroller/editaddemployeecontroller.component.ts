@@ -61,10 +61,12 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.selectedDestination = this.apiViewResponseData.emp.addressDetail.designationId,
       this.selectedDepartment = this.apiViewResponseData.emp.addressDetail.departmentId,
       this.dor = this.apiViewResponseData.emp.addressDetail.dateOfResignation,
+      this.selectedWorkingStatus = this.apiViewResponseData.emp.workingStatus,
       this.martialStatus = this.apiViewResponseData.emp.addressDetail.maritalStatus,
       this.gender = this.apiViewResponseData.emp.addressDetail.gender,
       this.BloodGroup = this.apiViewResponseData.emp.addressDetail.bloodGroup,
       this.internetAvailable = this.apiViewResponseData.emp.addressDetail.isInternetConnection,
+      this.selectedWorkingStatus = this.apiResponseData.emp.addressDetail.workingStatus,
       this.outsource = this.apiViewResponseData.emp.addressDetail.isOutsource,
       this.internetType = this.apiViewResponseData.emp.addressDetail.netWorkType,
       this.ServiceProvider = this.apiViewResponseData.emp.addressDetail.serviceProvider,
@@ -94,6 +96,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private router: Router, private _empservice: EmployeeService, private spinnerservice: SpinnerService, private ngZone: NgZone) {
 
   }
+
+  //Working status
+  options: string[] = ['WFO', 'WFH'];
+  selectedWorkingStatus: string = "";
+
   updateButton: boolean = false;
   submitButton: boolean = true;
   EmployeeEditName: boolean = false;
@@ -111,6 +118,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.selectedDestination = this.apiResponseData.emp.addressDetail.designationId,
       this.selectedDepartment = this.apiResponseData.emp.addressDetail.departmentId,
       this.dor = this.apiResponseData.emp.addressDetail.dateOfResignation,
+      this.selectedWorkingStatus = this.apiResponseData.emp.addressDetail.workingStatus,
       this.martialStatus = this.apiResponseData.emp.addressDetail.maritalStatus,
       this.gender = this.apiResponseData.emp.addressDetail.gender,
       this.BloodGroup = this.apiResponseData.emp.addressDetail.bloodGroup,
@@ -150,8 +158,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
   homeButton: boolean = false;
 
-
-
   //////////Form Group//////
   personalStepFormGroup: FormGroup;
   productStepFormGroup: FormGroup;
@@ -159,8 +165,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
 
   //Display
   resignShow: boolean = false;
-
-
   copyAddress: boolean = false;
 
   //DropDown assign 
@@ -204,11 +208,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   systemconfiguration: string = "";
 
   //2.PRODUCT
-  reportingManager1: any=0;
-  reportingManager2: any=0;
+  reportingManager1: any = 0;
+  reportingManager2: any = 0;
   reporting: String = ''
-  reportingLeader1: any=0;
-  reportingLeader2: any=0;
+  reportingLeader1: any = 0;
+  reportingLeader2: any = 0;
   employeehierarchy: any[] = [];
   proficiency: number = 0;
   //3.Communication
@@ -341,31 +345,63 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   }
 
   onSubmit() {
-    if (
-      this.employeeCode === "" ||
-      this.employeeName === "" ||
-      this.selectedDepartment === 0 ||
-      this.dob === "" ||
-      this.doj === "" ||
-      this.martialStatus === "" ||
-      this.gender === "" ||
-      this.selectedDestination === 0 ||
-      this.BloodGroup === "" ||
-      this.internetAvailable === "" ||
-      this.systemlaptop === "" ||
-      this.proficiency === 0 ||
-      this.presentAddress1 === "" ||
-      this.mobileNumber === 0 ||
-      this.emergencyContactName === "" ||
-      this.emergencyMobilenumber === 0 ||
-      this.personalEmail === ""
-    ) {
-      // Display alert message if any of the fields is empty
-      Swal.fire('Info', 'Please fill the mandatory fields', 'info')
-
+    const requiredFields: string[] = [];
+    if (!this.employeeCode) {
+        requiredFields.push('Employee Code');
     }
-    else {
-
+    if (!this.employeeName) {
+        requiredFields.push('employeeName');
+    }
+    if (!this.selectedDepartment) {
+        requiredFields.push('Department');
+    }
+    if (!this.dob) {
+        requiredFields.push('D.O.B');
+    }
+    if (!this.doj) {
+        requiredFields.push('D.O.J');
+    }
+    if (!this.martialStatus) {
+        requiredFields.push('Martial Status');
+    }
+    if (!this.gender) {
+        requiredFields.push('Gender');
+    }
+    if (!this.selectedDestination) {
+        requiredFields.push('Destination');
+    }
+    if (!this.BloodGroup) {
+        requiredFields.push('Blood Group');
+    }
+    if (!this.internetAvailable) {
+        requiredFields.push('Internet Available');
+    }
+    if (!this.systemlaptop) {
+        requiredFields.push('System/Laptop');
+    }
+    if (!this.proficiency) {
+        requiredFields.push('Proficiency');
+    }
+    if (!this.presentAddress1) {
+        requiredFields.push('Present Address 1');
+    }
+    if (!this.mobileNumber) {
+        requiredFields.push('Mobile Number');
+    }
+    if (!this.emergencyContactName) {
+        requiredFields.push('Emergency Contact Name');
+    }
+    if (!this.emergencyMobilenumber) {
+        requiredFields.push('Emergency Mobile Number');
+    }
+    if (!this.personalEmail) {
+        requiredFields.push('Personal Email');
+    }
+    if (!this.selectedWorkingStatus) {
+        requiredFields.push('Working Status');
+    }
+    
+    if (requiredFields.length === 0) {
       let empRoleList = this.employeeRoles.map((item) => {
         return {
           "roleId": item.id ? item.id : '',
@@ -381,7 +417,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
         };
       });
-
+    
       let payload = {
         "employeeId": 0,
         "employeeCode": this.employeeCode,
@@ -415,6 +451,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
         "address33": this.permanentaddress3 ? this.permanentaddress3 : '',
         "locationId": 0,
         "locationId1": 0,
+        "workingStatus": this.selectedWorkingStatus ? this.selectedWorkingStatus : "",
         "addressType": "",
         "mobileNo": this.mobileNumber,
         "phoneNo": this.phonenum ? this.phonenum : '',
@@ -472,34 +509,72 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           console.error(err);
         },
       });
+    
+    } else {
+        // Show validation error message with missing field names
+        const missingFields = requiredFields.join(', ');
+        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
   }
 
   onUpdate() {
-    if (
-      this.employeeCode === "" ||
-      this.employeeName === "" ||
-      this.selectedDepartment === 0 ||
-      this.dob === "" ||
-      this.doj === "" ||
-      this.martialStatus === "" ||
-      this.gender === "" ||
-      this.selectedDestination === 0 ||
-      this.BloodGroup === "" ||
-      this.internetAvailable === "" ||
-      this.systemlaptop === "" ||
-      this.proficiency === 0 ||
-      this.presentAddress1 === "" ||
-      this.mobileNumber === 0 ||
-      this.emergencyContactName === "" ||
-      this.emergencyMobilenumber === 0 ||
-      this.personalEmail === ""
-    ) {
-      // Display alert message if any of the fields is empty
-      Swal.fire('Info', 'Please fill the mandatory fields', 'info')
-
+    const requiredFields: string[] = [];
+    if (!this.employeeCode) {
+        requiredFields.push('Employee Code');
     }
-    else {
+    if (!this.employeeName) {
+        requiredFields.push('employeeName');
+    }
+    if (!this.selectedDepartment) {
+        requiredFields.push('Department');
+    }
+    if (!this.dob) {
+        requiredFields.push('D.O.B');
+    }
+    if (!this.doj) {
+        requiredFields.push('D.O.J');
+    }
+    if (!this.martialStatus) {
+        requiredFields.push('Martial Status');
+    }
+    if (!this.gender) {
+        requiredFields.push('Gender');
+    }
+    if (!this.selectedDestination) {
+        requiredFields.push('Destination');
+    }
+    if (!this.BloodGroup) {
+        requiredFields.push('Blood Group');
+    }
+    if (!this.internetAvailable) {
+        requiredFields.push('Internet Available');
+    }
+    if (!this.systemlaptop) {
+        requiredFields.push('System/Laptop');
+    }
+    if (!this.proficiency) {
+        requiredFields.push('Proficiency');
+    }
+    if (!this.presentAddress1) {
+        requiredFields.push('Present Address 1');
+    }
+    if (!this.mobileNumber) {
+        requiredFields.push('Mobile Number');
+    }
+    if (!this.emergencyContactName) {
+        requiredFields.push('Emergency Contact Name');
+    }
+    if (!this.emergencyMobilenumber) {
+        requiredFields.push('Emergency Mobile Number');
+    }
+    if (!this.personalEmail) {
+        requiredFields.push('Personal Email');
+    }
+    if (!this.selectedWorkingStatus) {
+        requiredFields.push('Working Status');
+    }
+
+    if (requiredFields.length === 0) {
       let empRoleList = this.employeeRoles.map((item) => {
         return {
           "roleId": item.id ? item.id : '',
@@ -528,6 +603,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
         "maritalStatus": this.martialStatus ? this.martialStatus : 0,
         "companyId": 0,
         "profiencyId": this.proficiency ? this.proficiency : '',
+        "workingStatus": this.selectedWorkingStatus ? this.selectedWorkingStatus : "",
         "emergencyContactName": this.emergencyContactName ? this.emergencyContactName : '',
         "emergencyContactNo": this.emergencyMobilenumber ? this.emergencyMobilenumber : '',
         "email": this.officialemailaddress ? this.officialemailaddress : '',
@@ -571,7 +647,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           this.spinnerservice.requestEnded();
           return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
         })
-
+    
       ).subscribe({
         next: (val: any) => {
           this.spinnerservice.requestEnded();
@@ -607,6 +683,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           console.error(err);
         },
       });
+    
+    } else {
+        // Show validation error message with missing field names
+        const missingFields = requiredFields.join(', ');
+        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
   }
 

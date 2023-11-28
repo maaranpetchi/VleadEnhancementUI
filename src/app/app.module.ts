@@ -21,6 +21,8 @@ import { EmployeePopupComponent } from './Components/TopToolbarComponents/ProofR
 import { JobCategorypopupComponent } from './Components/TopToolbarComponents/ProofReadingAllocation/job-categorypopup/job-categorypopup.component';
 import { VendorService } from './Services/Vendor/vendor.service';
 import { FilterPipe } from './pipe/filter.pipe';
+import { IndexBillingCycleComponent } from './Components/BillingCycleMonthly/index-billing-cycle/index-billing-cycle.component';
+import { UpdateBillingComponent } from './Components/BillingCycleMonthly/update-billing/update-billing.component';
 
 
 @NgModule({
@@ -35,9 +37,7 @@ import { FilterPipe } from './pipe/filter.pipe';
     PricingApprovalprocessComponent,
     EmployeePopupComponent,
     JobCategorypopupComponent,
-    FilterPipe
-
-   
+    FilterPipe,
    ],
   imports: [
     BrowserModule,

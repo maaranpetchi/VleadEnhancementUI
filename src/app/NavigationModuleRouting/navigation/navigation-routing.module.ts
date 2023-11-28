@@ -122,6 +122,9 @@ import { CustomernormsindexComponent } from 'src/app/Components/CustomerNorms/cu
 import { AddCustomerNormsComponent } from 'src/app/Components/CustomerNorms/add-customer-norms/add-customer-norms.component';
 import { UpdateCustomerNormsComponent } from 'src/app/Components/CustomerNorms/update-customer-norms/update-customer-norms.component';
 import { AttendanceIndexComponent } from 'src/app/Components/Attendance/attendance-index/attendance-index.component';
+import { IndexBillingCycleComponent } from 'src/app/Components/BillingCycleMonthly/index-billing-cycle/index-billing-cycle.component';
+import { AddeditBillingComponent } from 'src/app/Components/BillingCycleMonthly/addedit-billing/addedit-billing.component';
+import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/update-billing/update-billing.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -358,6 +361,13 @@ const routes: Routes = [
 
    //Attendance
    { path: 'attendance', component:  AttendanceIndexComponent, canActivate: [authGuard]},
+
+
+
+//Billing Cycle Monthly
+{ path: 'indexBiling', component:IndexBillingCycleComponent, canActivate: [authGuard]},
+{ path: 'addeditBilling', component:AddeditBillingComponent, canActivate: [authGuard]},
+{ path: 'updateBilling', component:UpdateBillingComponent, canActivate: [authGuard]},
 
     ]
   },

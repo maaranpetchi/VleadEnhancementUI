@@ -140,6 +140,12 @@ import { UpdateCustomerNormsComponent } from 'src/app/Components/CustomerNorms/u
 import { AttendanceIndexComponent } from 'src/app/Components/Attendance/attendance-index/attendance-index.component';
 import { ProductionQuotationComponent } from 'src/app/Components/TopToolbarComponents/ProductionAllocation/production-quotation/production-quotation.component';
 import { QuotationPopupComponent } from 'src/app/Components/TopToolbarComponents/ProductionAllocation/quotation-popup/quotation-popup.component';
+import { IndexBillingCycleComponent } from 'src/app/Components/BillingCycleMonthly/index-billing-cycle/index-billing-cycle.component';
+import { AddeditBillingComponent } from 'src/app/Components/BillingCycleMonthly/addedit-billing/addedit-billing.component';
+import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/update-billing/update-billing.component';
+
+
+
 
 @NgModule({
   declarations: [
@@ -154,7 +160,7 @@ import { QuotationPopupComponent } from 'src/app/Components/TopToolbarComponents
     ClientordinationindexComponent,
     //SUBCATEGOROFCLIENTCORDINATION
     ProductionallocationComponent,
-    
+
     ProductionQuotationComponent,
     QuotationPopupComponent,
     GetJobHistoryPopupComponent,
@@ -271,8 +277,8 @@ import { QuotationPopupComponent } from 'src/app/Components/TopToolbarComponents
     IndexCustomerSalesApprovalComponent,
     TabcustomertableComponent,
     SalesMultiStepFormComponent,
-//CustomerVsDivision
-CustomervsdivisionindexComponent,
+    //CustomerVsDivision
+    CustomervsdivisionindexComponent,
     // Master.
     UserMasterComponent,
     AddEditUsermasterComponent,
@@ -353,11 +359,17 @@ CustomervsdivisionindexComponent,
     CustomernormsindexComponent,
     AddCustomerNormsComponent,
     UpdateCustomerNormsComponent,
-  
+
 
     //Attendance
     AttendanceIndexComponent,
 
+
+
+    //BillingCycle
+    IndexBillingCycleComponent,
+    AddeditBillingComponent,
+    UpdateBillingComponent
   ],
   imports: [
     CommonModule,
@@ -372,8 +384,7 @@ CustomervsdivisionindexComponent,
     MatSortModule,
     MatDialogModule,
     MatIconModule,
-    MatSelectModule,
-    
+    MatSelectModule
   ],
   providers: [
     FileconvertComponent,

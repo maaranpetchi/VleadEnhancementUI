@@ -18,7 +18,7 @@
                             Add Billing Cycle
                         </h2>
                     </div>
-                    <form [formGroup]="form">
+                    <form >
 
                     <div class="container">
                         
@@ -26,8 +26,8 @@
                             <div class="col-6">
                                 <mat-form-field>
                                     <mat-label>Customer</mat-label>
-                                    <mat-select formControlName="customerId">
-                                      <mat-option *ngFor="let customer of customers" [value]="customer.id">
+                                    <mat-select [(ngModel)]="CustomerId" [ngModelOptions]="{standalone: true}">
+                                      <mat-option *ngFor="let customer of customers"  [value]="{ customerId: customer.id, Customername:customer.shortName }">
                                         {{ customer.shortName }}
                                       </mat-option>
                                     </mat-select>
@@ -36,9 +36,9 @@
                             <div class="col-6">
                                 <mat-form-field>
                                     <mat-label>Department</mat-label>
-                                    <mat-select formControlName="departmentId">
-                                      <mat-option value= 1>Artwork</mat-option>
-                                      <mat-option value= 2>Digitizing</mat-option>
+                                    <mat-select [(ngModel)]="DepartmentId" [ngModelOptions]="{standalone: true}">
+                                      <mat-option [value]="{ departmentId: 1, Departmentname: 'Artwork'}">Artwork</mat-option>
+                                      <mat-option [value]="{ departmentId: 2, Departmentname: 'Digitizing'}">Digitizing</mat-option>
                                     </mat-select>
                                   </mat-form-field>
                             </div>
@@ -48,7 +48,7 @@
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
-                                    <input matInput [matDatepicker]="picker" formControlName="billingDate" placeholder="Billing Date">
+                                    <input matInput [matDatepicker]="picker" [(ngModel)]="billingDate" [ngModelOptions]="{standalone: true}" placeholder="Billing Date">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                   </mat-form-field>

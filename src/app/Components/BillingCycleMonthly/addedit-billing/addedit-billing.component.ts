@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import { EmployeevsskillsetService } from 'src/app/Services/EmployeeVsSkillset/employeevsskillset.service';
@@ -9,6 +9,8 @@ import { environment } from 'src/Environments/environment';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BillingCycleMonthlyService } from 'src/app/Services/BillingCycleMonthly/billing-cycle-monthly.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-addedit-billing',
@@ -20,26 +22,20 @@ export class AddeditBillingComponent implements OnInit {
   form: FormGroup;
   customers: any[];
   departments: any[];
-
+  CustomerId: any;
+  DepartmentId: any;
+  billingDate: any;
   ngOnInit() {
-    this.initForm();
     this.loadCustomers();
-    this.loadDepartments();
   }
-  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empservice: EmployeevsskillsetService, private fb: FormBuilder, private loginservice: LoginService) { }
+  constructor(private http: HttpClient, private router: Router,private spinnerService: SpinnerService, private _empservice: EmployeevsskillsetService, private fb: FormBuilder, private loginservice: LoginService, private billingService: BillingCycleMonthlyService) { 
 
 
-
-  initForm() {
-    this.form = this.fb.group({
-      customerId: ["", Validators.required],
-      departmentId: ["", Validators.required],
-      billingDate: ['', Validators.required],
-      createdBy: [this.loginservice.getUsername()],
-      updateBy: 0
-
-    });
   }
+
+
+
+
 
   loadCustomers() {
     this.spinnerService.requestStarted();
@@ -54,29 +50,43 @@ export class AddeditBillingComponent implements OnInit {
 
   }
 
-  loadDepartments() {
-
-  }
 
   submit() {
-    if (this.form.valid) {
-      console.log(this.form.value, "FormValues");
-      this.spinnerService.requestStarted();
-      this.http.post<any>(environment.apiURL + `BillingCycleMonthly/Creation`, this.form.value).pipe(catchError((error) => {
-        this.spinnerService.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-      })).subscribe((response) => {
-        this.spinnerService.requestEnded();
-        Swal.fire('Done', 'Billing Added Sucessfully', 'success').then((result) => {
-          if (result.isConfirmed) {
-            this.form.reset();
-          }
-        })
-      })
+    this.spinnerService.requestStarted();
 
-    } else {
-      // Handle invalid form
-      console.log('Form is invalid. Please check the fields.');
+    let payload = {
+      customerId: this.CustomerId.customerId,
+      departmentId: this.DepartmentId.departmentId,
+      billingDate: this.billingDate,
+      createdBy: this.loginservice.getUsername(),
+      updateBy: 0,
+      customername: this.CustomerId.Customername,
+      departmentname: this.DepartmentId.Departmentname,
     }
+
+    this.billingService.FormSubmit(payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response) => {
+      this.spinnerService.requestEnded();
+      const statusCode = response.status;
+      console.log('Status Code:', statusCode);
+
+      if(statusCode === 200){
+      Swal.fire('Done', 'Billing Added Sucessfully', 'success').then((result) => {
+        if (result.isConfirmed) {
+          this.form.reset();
+        }
+      })
+    }
+    else{
+      Swal.fire('Info', 'Billing Not Added', 'info').then((result) => {
+        if (result.isConfirmed) {
+          this.form.reset();
+        }
+      })
+    }
+    })
+
   }
 }

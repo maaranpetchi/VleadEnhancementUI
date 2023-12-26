@@ -9,6 +9,8 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { EmployeevsskillsetService } from 'src/app/Services/EmployeeVsSkillset/employeevsskillset.service';
 import { catchError } from 'rxjs';
+import { UpdateBillingComponent } from '../update-billing/update-billing.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-index-billing-cycle',
   templateUrl: './index-billing-cycle.component.html',
@@ -21,17 +23,17 @@ export class IndexBillingCycleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empService: EmployeevsskillsetService) { }
+  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _dialog: MatDialog,private _empService: EmployeevsskillsetService) { }
 
   ngOnInit(): void {
     this.getFetchTables();
   }
   getFetchTables() {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/ShowEmployeeVsSkillset`).subscribe({
+    this.http.get<any>(environment.apiURL + `BillingCycleMonthly/getdata`).subscribe({
       next: (employees) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(employees.gEvSlist);
+        this.dataSource = new MatTableDataSource(employees);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -55,64 +57,68 @@ export class IndexBillingCycleComponent implements OnInit {
     }
   }
 
-  //aCTIONS
-  openEditForm(id: number) {
-    // this.spinnerService.requestStarted();
-    // this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
-    //   this.spinnerService.requestEnded();
-    //   return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    // })).subscribe({
-    //   next: (results) => {
-    //     this.spinnerService.requestEnded();
-    //     this._empService.setData({ type: 'EDIT', data: results });
-    //     this._empService.shouldFetchData = true;
-        this.router.navigate(['/topnavbar/updateBilling']);
-    //   },
-    //   error: (err) => {
-    //     this.spinnerService.resetSpinner(); // Reset spinner on error
-    //     console.error(err);
-    //     Swal.fire(
-    //       'Error!',
-    //       'An error occurred !.',
-    //       'error'
-    //     );
-    //   }
-    // });
-
-  }
-  viewEmployee(id: number) {
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (results) => {
-        this.spinnerService.requestEnded();
-
-        this._empService.setData({ type: 'EDIT', data: results });
-        this._empService.shouldFetchData = true;
-        this.router.navigate(['/topnavbar/viewskillset']);
+  openEditForm(data: any) {
+    const dialogRef = this._dialog.open(UpdateBillingComponent, {
+      height: '50vh',
+      width: '50vw',
+      data: {
+        type: "edit",
+        data: data,
       },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        console.log(val,"AfterClose");
+        
+        if (val == undefined) {
+          this.getFetchTables();
+        }
+      },
     });
   }
+
+  // openEditForm(id: number) {
+  //   this.spinnerService.requestStarted();
+  //   this.http.get<any>(environment.apiURL + `BillingCycleMonthly/getdata?clientId=${id}`).pipe(catchError((error) => {
+  //     this.spinnerService.requestEnded();
+  //     return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+  //   })).subscribe({
+  //     next: (results) => {
+  //       this.spinnerService.requestEnded();
+  //       this._empService.setData({ type: 'EDIT', data: results });
+  //       this._empService.shouldFetchData = true;
+  //       this.router.navigate(['/topnavbar/updateskillset']);
+  //     },
+  //     error: (err) => {
+  //       this.spinnerService.resetSpinner(); // Reset spinner on error
+  //       console.error(err);
+  //       Swal.fire(
+  //         'Error!',
+  //         'An error occurred !.',
+  //         'error'
+  //       );
+  //     }
+  //   });
+
+  // }
+
+
+
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/Delete-Skill?id=${id}`).pipe(catchError((error) => {
+    let payload={
+      "customerId": 0,
+      "departmentId": 0,
+      "billingDate": "2023-12-26T09:08:42.047Z",
+      "createdBy": 0,
+      "updateBy": 0
+    }
+    this.http.put(environment.apiURL + `BillingCycleMonthly/Delete?id=${id}`,payload).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
       return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
-
         Swal.fire(
           'Deleted!',
           'Data deleted successfully!',

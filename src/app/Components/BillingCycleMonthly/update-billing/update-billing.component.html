@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body style="height:123vh">
     <div class="container">
         <div class="advance">
             <div class="customerProfile">
@@ -26,7 +17,7 @@
                             <div class="col-6">
                                 <mat-form-field>
                                     <mat-label>Customer</mat-label>
-                                    <mat-select formControlName="customerId">
+                                    <mat-select  [(ngModel)]="CustomerId" [ngModelOptions]="{standalone: true}">
                                       <mat-option *ngFor="let customer of customers" [value]="customer.id">
                                         {{ customer.shortName }}
                                       </mat-option>
@@ -36,11 +27,12 @@
                             <div class="col-6">
                                 <mat-form-field>
                                     <mat-label>Department</mat-label>
-                                    <mat-select formControlName="departmentId">
-                                      <mat-option value= 1>Artwork</mat-option>
-                                      <mat-option value= 2>Digitizing</mat-option>
+                                    <mat-select [(ngModel)]="DepartmentId" [ngModelOptions]="{standalone: true}">
+                                      <mat-option [value]=1>Artwork</mat-option>
+                                      <mat-option [value]=2>Digitizing</mat-option>
                                     </mat-select>
                                   </mat-form-field>
+                                  
                             </div>
                         </div>
 
@@ -48,7 +40,7 @@
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
-                                    <input matInput [matDatepicker]="picker" formControlName="billingDate" placeholder="Billing Date">
+                                    <input matInput [matDatepicker]="picker" formControlName="billingDate" [(ngModel)]="billingDate"  placeholder="Billing Date">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                   </mat-form-field>
@@ -67,6 +59,4 @@
             </div>
         </div>
     </div>
-</body>
 
-</html>

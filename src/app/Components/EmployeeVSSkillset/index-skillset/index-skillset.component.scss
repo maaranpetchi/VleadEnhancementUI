@@ -61,9 +61,25 @@
   table {
     width: 100%;
     border-collapse: collapse;
+    position: relative;
+
+  }
+
+
+
+  
+  .resize-handle {
+    width: 8px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #eee;
+    cursor: col-resize;
   }
   
   th, td {
+    position: relative;
     padding: 8px;
     border: 1px solid #ddd;
     text-align: left;

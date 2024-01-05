@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,7 +21,12 @@ export class IndexSkillsetComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empService: EmployeevsskillsetService) { }
+
+  private isResizing = false;
+  private startX: number;
+  private startWidth: number;
+  
+  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empService: EmployeevsskillsetService,private el: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit(): void {
     this.getFetchTables();
@@ -47,6 +52,33 @@ export class IndexSkillsetComponent implements OnInit {
     });
   }
 
+
+  onResizeStart(event: MouseEvent, column: string): void {
+    this.isResizing = true;
+    this.startX = event.pageX;
+    const columnElement = this.el.nativeElement.querySelector(`th[mat-sort-header][matColumnDef="${column}"]`);
+    this.startWidth = columnElement.clientWidth;
+    document.addEventListener('mousemove', this.onMouseMove);
+    document.addEventListener('mouseup', this.onMouseUp);
+  }
+
+  onMouseMove = (event: MouseEvent): void => {
+    if (this.isResizing) {
+      const offset = event.pageX - this.startX;
+      const newWidth = Math.max(this.startWidth + offset, 50); // Set a minimum width if needed
+
+      // Update the width of the column
+      const columnElement = this.el.nativeElement.querySelector(`th[mat-sort-header]`);
+      this.renderer.setStyle(columnElement, 'width', `${newWidth}px`);
+    }
+  }
+
+  onMouseUp = (): void => {
+    this.isResizing = false;
+    document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mouseup', this.onMouseUp);
+  }
+  
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { ResourceLoader } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/Environments/environment';
@@ -34,7 +35,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   customertatdatasource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  userRegistrationForm: FormGroup;
+
   displayedColumns: string[] = ['customername', 'department', 'scope', 'status', 'Action'];
   displayedTATColumns: string[] = ['customernametat', 'customershortnametat', 'jobstatustat', 'tat', 'Actiontat'];
   customertatinput: any;
@@ -44,7 +45,6 @@ export class SalesMultiStepFormComponent implements OnInit {
   selectedJobStatusDescription: any;
   customerTatid: any;
   ShortNamePayload: any;
-  
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -52,44 +52,24 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  departmentFormControl = new FormControl('', Validators.required);
 
   ngOnInit(): void {
     this.apiResponseData = this.sharedDataService.getData();
-    console.log(this.apiResponseData,"APIResponseData");
-    
+    console.log(this.apiResponseData, "APIResponseData");
+
     this.fetchUpdateData();
     this.getCustomervsscopeDepartments();
     this.getCustomerDatainForm();
-     this.GetTimeZoneList()
-     this.getCountry();
-     this.getUserAddress();
-     this.userRegistrationForm = this.builder.group({
-      departmentFormControl: this.departmentFormControl,
-      // pricingFormControl: this.pricingFormControl,
-      // customersFormControl: this.customersFormControl,
-      // scopeFormControl:this.scopeFormControl,
-      // additionalRateFormControl: this.additionalRateFormControl,
-      // estimatedTimeFormControl: this.estimatedTimeFormControl,
-      // maximumPriceFormControl: this.maximumPriceFormControl,
-      // effectFormControl: this.effectFormControl,
-      // jobStatusFormControl: this.jobStatusFormControl,
-      // effectToControl: this.effectToControl,
-      // PriceFormControl: this.PriceFormControl,
-      // scopeCountFormControl: this.scopeCountFormControl,
-      // countFromFormControl:this.countFromFormControl,
-      // countToFormControl: this.countToFormControl,
-      // countPriceFormControl: this.countPriceFormControl,
-      // designationFormControl: this.designationFormControl,
-    });
+    this.GetTimeZoneList()
+    this.getCountry();
+    this.getUserAddress();
   }
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router,private builder: FormBuilder) {
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
     this.getCustomerData();
     this.getDepartments();
     // this.getCountry();
     // this.GetStatesList();
     // this.GetCitiesList();
-    
   }
 
 
@@ -119,6 +99,7 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.Checklist = this.apiResponseData.checklist;
     this.ModeofSales = this.apiResponseData.modeofSales;
     this.CurrencyMode = this.apiResponseData.currencyMode;
+    this.isEstimatedTime = this.apiResponseData.isEstimatedTime
   }
 
 
@@ -159,13 +140,13 @@ export class SalesMultiStepFormComponent implements OnInit {
     );
   }
 
-  getUserAddress(){
-      this.http.get<any>(environment.apiURL + `Customer/GetAllStateListbyCountryId?CountryId=${this.Country}`).subscribe(results => {
-        this.placeList = results;
-        this.http.get<any>(environment.apiURL + `Customer/GetAllCityListbyStateId?StateId=${this.State}`).subscribe(results => {
-          this.citiesList = results;
-        });
+  getUserAddress() {
+    this.http.get<any>(environment.apiURL + `Customer/GetAllStateListbyCountryId?CountryId=${this.Country}`).subscribe(results => {
+      this.placeList = results;
+      this.http.get<any>(environment.apiURL + `Customer/GetAllCityListbyStateId?StateId=${this.State}`).subscribe(results => {
+        this.citiesList = results;
       });
+    });
   }
 
   //Countrydropdown
@@ -191,7 +172,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   ShortName: '';
   CustomerClassificationId: '';
   selectedDepartments: any[] = [];
-  CreditDays: '';
+  CreditDays: any;
   CreditLimit: '';
   CustomerJobType: '';
   Country: '';
@@ -204,9 +185,15 @@ export class SalesMultiStepFormComponent implements OnInit {
   OutputType: '';
   isBulk: boolean = false;
   isRushed: boolean = false;
+  isEstimatedTime: boolean = false;
   manualupload: boolean = false;
   ScheduledMail: boolean = false;
+  estimatedTime: number = 0;
   Checklist: boolean = false;
+  IsApproved: boolean = false;
+  effectiveFromDate: Date;
+  effectiveToDate: Date;
+
   ModeofSales: any;
   CurrencyMode: any;
   SelectedScope: any;
@@ -215,7 +202,8 @@ export class SalesMultiStepFormComponent implements OnInit {
   SelectedJobStatus: any;
   tatValue: any;
 
-
+  ///from api gettingIsEstimatedTime 
+  gettingIsEstimatedTime: boolean = false;
   //change method to display state and places realted to country dropdown
   GetStatesList() {
     this.http.get<any>(environment.apiURL + `Customer/GetAllStateListbyCountryId?CountryId=${this.Country}`).subscribe(results => {
@@ -243,87 +231,178 @@ export class SalesMultiStepFormComponent implements OnInit {
     });
   }
 
-  AppCustomerupdate() {
-    this.userRegistrationForm.markAllAsTouched();
-    if (this.userRegistrationForm.invalid) {
-      for (const control of Object.keys(this.userRegistrationForm.controls)) {
-        this.userRegistrationForm.controls[control].markAsTouched();
-      }
-    } else{
-    let payload = {
-      "id": this.apiResponseData.id,
-      "companyId": 0,
-      "name": "",
-      "shortName": this.ShortName,
-      "customerClassificationId": this.CustomerClassificationId,
-      "creditDays": this.CreditDays,
-      "isBlacklisted": false,
-      "isApproved": true,
-      "blacklistedReasons": "",
-      "department": [],
-      "creditLimit": this.CreditLimit,
-      "creditLimitAvailed": 0,
-      "timeZone": this.timezone ? this.timezone : '',
-      "reportTimeZone": "",
-      "dropdownTimeZone": "",
-      "departmentId": 0,
-      "establishmentType": "",
-      "billingCycleType": "",
-      "employeeId": 0,
-      "address1": "",
-      "address2": "",
-      "address3": "",
-      "locationId": 0,
-      "emailAddress": "",
-      "phone1": "",
-      "phone2": "",
-      "webAddress": "",
-      "contactName": "",
-      "contactPhone": "",
-      "contactEmail": "",
-      "customerDepartmentName": "",
-      "createdUTC": "2023-07-24T12:37:19.961Z",
-      "createdBy": 0,
-      "updatedUTC": "2023-07-24T12:37:19.961Z",
-      "updatedBy": 0,
-      "selectedDepartments": this.getDepartmentObjects(),
-      "userName": "",
-      "emailID": "",
-      "phoneNo": "",
-      "active": true,
-      "verifyCode": "",
-      "country": this.Country,
-      "state": this.State,
-      "city": this.City,
-      "customerJobType": this.CustomerJobType,
-      "inputType": this.InputType ? this.InputType : '',
-      "outputType": this.OutputType ? this.OutputType : '',
-      "privilegedClient": this.PrivilegedClient ? this.PrivilegedClient : '',
-      "paymentMode": "",
-      "isBulk": this.isBulk,
-      "checklist": this.Checklist,
-      "isRush": this.isRushed,
-      "bunchMail": this.ScheduledMail,
-      "isManualUpload": this.manualupload,
-      "rptTimeZoneDifference": 0,
-      "trialStartDate": new Date().toISOString,
-      "liveStartDate": new Date().toISOString,
-      "modeofSales": this.ModeofSales ? this.ModeofSales : '',
-      "currencyMode": this.CurrencyMode
-    }
-    this.http.post<any>(environment.apiURL + `Customer/EditCustomerDetails`, payload).subscribe(results => {
-      localStorage.setItem("CustomerId123", results.id);
-      localStorage.setItem("ShortName", results.shortName);
-      localStorage.setItem("CustomerName", results.name);
-      localStorage.setItem("CusRegId123", this.apiResponseData.id);
-      this.editCustomerName = results.name;
-      this.ShortNamePayload = results.shortName
+  areRequiredFieldsEmpty(): boolean {
 
-    })
-    this.getTableData();
-    this.getCustomervsscopeDepartments();
+    const requiredFields: string[] = [];
+    if (!this.ShortName) {
+      requiredFields.push('Customer Short Name');
+    }
+    if (!this.CustomerClassificationId) {
+      requiredFields.push('CustomerClassification');
+    }
+    if (!this.selectedDepartments || this.selectedDepartments.length === 0) {
+      requiredFields.push('Department');
+    }
+    if (!this.CustomerJobType) {
+      requiredFields.push('CustomerJobType');
+    }
+    if (!this.CreditDays) {
+      requiredFields.push('CreditDays');
+    }
+    if (!this.CreditLimit) {
+      requiredFields.push('CreditLimit');
+    }
+    if (!this.Country) {
+      requiredFields.push('Country');
+    }
+    if (!this.State) {
+      requiredFields.push('State');
+    }
+    if (!this.City) {
+      requiredFields.push('City');
+    }
+    if (!this.CurrencyMode) {
+      requiredFields.push('CurrencyMode');
+    }
+    return requiredFields.length > 0;
   }
-}
+
+  @ViewChild('stepper') matStepper: MatStepper;
+
+
+  AppCustomerupdate() {
+
+    const requiredFields: string[] = [];
+    if (!this.ShortName) {
+      requiredFields.push('Customer Short Name');
+    }
+    if (!this.CustomerClassificationId) {
+      requiredFields.push('CustomerClassification');
+    }
+    if (!this.selectedDepartments || this.selectedDepartments.length === 0) {
+      requiredFields.push('Department');
+    }
+    if (!this.CustomerJobType) {
+      requiredFields.push('CustomerJobType');
+    }
+    if (!this.CreditDays) {
+      requiredFields.push('CreditDays');
+    }
+    if (!this.CreditLimit) {
+      requiredFields.push('CreditLimit');
+    }
+    if (!this.Country) {
+      requiredFields.push('Country');
+    }
+    if (!this.State) {
+      requiredFields.push('State');
+    }
+    if (!this.City) {
+      requiredFields.push('City');
+    }
+    if (!this.CurrencyMode) {
+      requiredFields.push('CurrencyMode');
+    }
+
+
+
+    if (requiredFields.length === 0) {
+
+      console.log(this.IsApproved, "IsApproved");
+      console.log(this.isEstimatedTime, "isEstimatedTime");
+
+      let payload = {
+        "id": this.apiResponseData.id,
+        "companyId": 0,
+        "name": "",
+        "shortName": this.ShortName,
+        "customerClassificationId": this.CustomerClassificationId,
+        "creditDays": this.CreditDays,
+        "isBlacklisted": false,
+        "isApproved": this.IsApproved,
+        "blacklistedReasons": "",
+        "department": [],
+        "creditLimit": this.CreditLimit,
+        "creditLimitAvailed": 0,
+        "timeZone": this.timezone ? this.timezone : '',
+        "reportTimeZone": "",
+        "dropdownTimeZone": "",
+        "departmentId": 0,
+        "establishmentType": "",
+        "billingCycleType": "",
+        "employeeId": 0,
+        "address1": "",
+        "address2": "",
+        "address3": "",
+        "locationId": 0,
+        "emailAddress": "",
+        "phone1": "",
+        "phone2": "",
+        "webAddress": "",
+        "contactName": "",
+        "contactPhone": "",
+        "contactEmail": "",
+        "customerDepartmentName": "",
+        "createdUTC": "2023-07-24T12:37:19.961Z",
+        "createdBy": 0,
+        "updatedUTC": "2023-07-24T12:37:19.961Z",
+        "updatedBy": 0,
+        "selectedDepartments": this.getDepartmentObjects(),
+        "userName": "",
+        "emailID": "",
+        "phoneNo": "",
+        "active": true,
+        "verifyCode": "",
+        "country": this.Country,
+        "state": this.State,
+        "city": this.City,
+        "customerJobType": this.CustomerJobType,
+        "inputType": this.InputType ? this.InputType : '',
+        "outputType": this.OutputType ? this.OutputType : '',
+        "privilegedClient": this.PrivilegedClient ? this.PrivilegedClient : '',
+        "paymentMode": "",
+        "isBulk": this.isBulk,
+        "checklist": this.Checklist,
+        "isRush": this.isRushed,
+        "isEstimatedTime": this.isEstimatedTime,
+        "bunchMail": this.ScheduledMail,
+        "isManualUpload": this.manualupload,
+        "rptTimeZoneDifference": 0,
+        "trialStartDate": new Date().toISOString,
+        "liveStartDate": new Date().toISOString,
+        "modeofSales": this.ModeofSales ? this.ModeofSales : '',
+        "currencyMode": this.CurrencyMode ? this.CurrencyMode : ''
+      }
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `Customer/EditCustomerDetails`, payload).subscribe(results => {
+        localStorage.setItem("CustomerId123", results.id);
+        localStorage.setItem("ShortName", results.shortName);
+        localStorage.setItem("CustomerName", results.name);
+        localStorage.setItem("CusRegId123", this.apiResponseData.id);
+        console.log(results, "EditCustomerDetails");
+        this.gettingIsEstimatedTime = results.isEstimatedTime
+        this.editCustomerName = results.name;
+        this.ShortNamePayload = results.shortName
+        this.spinnerService.requestEnded();
+
+      })
+      if (this.matStepper) {
+        this.matStepper.next();
+      }
+      this.getTableData();
+      this.getCustomervsscopeDepartments();
+
+
+    } else {
+      // Show validation error message with missing field names
+      const missingFields = requiredFields.join(', ');
+      Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+      return; // Stop execution if there are missing fields
+
+    }
+
+
+  }
 
 
 
@@ -361,10 +440,9 @@ export class SalesMultiStepFormComponent implements OnInit {
   }
 
   deleteEmployee(id: number) {
-
     this.http.get<any>(environment.apiURL + `CustomerMapping/RemoveCustomerScope?custScopeId=${id}`).subscribe({
       next: (res) => {
-        
+
 
         this._coreService.openSnackBar('Employee deleted!', 'done');
         this.getTableData();
@@ -378,53 +456,76 @@ export class SalesMultiStepFormComponent implements OnInit {
 
 
   getTableData() {
-
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `CustomerMapping/CustomerScopeByCusId?cusId=${this.apiResponseData.id}`).subscribe(results => {
-      
       this.dataSource = results;
+      this.spinnerService.requestEnded();
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
   addDataToTable() {
-    
-    let payload = [{
-      "id": 0,
-      "shortName": this.ShortNamePayload,
-      "name": this.editCustomerName,
-      "custId": this.apiResponseData.id,
-      "scopeId": this.SelectedScope.scopeId,
-      "deptId": this.selectedDept.id,
-      "custName": "",
-      "description": "",
-      "scopeName": this.SelectedScope.ScopeName,
-      "scopeGroupDescription": "",
-      "scopeGroupId": 0,
-      "deptName": this.selectedDept.description,
-      "custJobType": this.SelectedCustType,
-      "isDeleted": 0,
-      "isActive": 1,
-      "createdBy": this.loginservice.getUsername(),
-      "createdUTC": new Date().toISOString,
-      "updatedBy": 0,
-      "updatedUTC": new Date().toISOString,
-    }]
-    this.spinnerService.requestStarted();
 
-    this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerVsScope`, payload).subscribe(results => {
-      this.dataSource = results
-      this.spinnerService.requestEnded();
+    const requiredFields: string[] = [];
+    if (!this.SelectedCustType) {
+      requiredFields.push('Status');
+    }
+    if (this.gettingIsEstimatedTime && !this.estimatedTime) {
+      requiredFields.push('estimatedTime');
+    }
 
-      Swal.fire('Done', results.message, 'success').then((respone) => {
-        if (respone.isConfirmed) {
-          this.selectedDept="";
-          this.SelectedScope=[];
-          this.SelectedCustType="";
-          this.getTableData();
+    if (requiredFields.length === 0) {
 
-        }
-      })
-    });
+      let payload = [{
+        "id": 0,
+        "shortName": this.ShortNamePayload,
+        "name": this.editCustomerName,
+        "custId": this.apiResponseData.id,
+        "scopeId": this.SelectedScope.scopeId,
+        "deptId": this.selectedDept.id,
+        "custName": "",
+        "description": "",
+        "isEstimatedTime": true,
+        "estimatedTime": this.estimatedTime,
+        "scopeName": this.SelectedScope.ScopeName,
+        "scopeGroupDescription": "",
+        "scopeGroupId": 0,
+        "deptName": this.selectedDept.description,
+        "custJobType": this.SelectedCustType,
+        "isDeleted": 0,
+        "isActive": 1,
+        "createdBy": this.loginservice.getUsername(),
+        "createdUTC": new Date().toISOString,
+        "updatedBy": 0,
+        "updatedUTC": new Date().toISOString,
+      }]
+      this.spinnerService.requestStarted();
+
+      this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerVsScope`, payload).subscribe(results => {
+        this.dataSource = results
+        this.spinnerService.requestEnded();
+
+        Swal.fire('Done', results.message, 'success').then((respone) => {
+          if (respone.isConfirmed) {
+            this.selectedDept = "";
+            this.ScopeBillings = [];
+            this.SelectedCustType = "";
+            this.estimatedTime = 0;
+            this.getTableData();
+
+          }
+        })
+      });
+
+    } else {
+      // Show validation error message with missing field names
+      const missingFields = requiredFields.join(', ');
+      Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+      return; // Stop execution if there are missing fields
+
+    }
+
+
   }
   onScopeChange() {
     // Access the ID and Description of the selected department
@@ -454,7 +555,7 @@ export class SalesMultiStepFormComponent implements OnInit {
 
     this.http.get<any>(environment.apiURL + `CustomerMapping/JobStatusByCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
       this.jobstatus = results;
-      
+
     });
   }
 
@@ -464,7 +565,7 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.customertatdatasource = results;
       this.customerTatid = results[0].id;
       this.jobStatusDescription = results[0].jobStatusDescription;
-      
+
 
     });
   }
@@ -494,7 +595,7 @@ export class SalesMultiStepFormComponent implements OnInit {
           this.SelectedJobStatus = '';
           this.tatValue = ''
           this.getCustomerTatTable();
-        
+
         }
       })
     });
@@ -525,7 +626,7 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.addcustat = false;
       this.uptcustat = true;
       this.tatValue = results[0].tat;
-      
+
 
     });
 
@@ -537,11 +638,11 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.uptcustat = false;
   }
 
-//2nd cancel
-  Cancel(){
-    this.selectedDept="";
-    this.SelectedScope=[];
-    this.SelectedCustType="";
+  //2nd cancel
+  Cancel() {
+    this.selectedDept = "";
+    this.SelectedScope = [];
+    this.SelectedCustType = "";
   }
   updatecustattable() {
     let payload = {
@@ -570,7 +671,7 @@ export class SalesMultiStepFormComponent implements OnInit {
           this.returnForm();
         }
       })
-    
+
     });
   }
 
@@ -588,11 +689,11 @@ export class SalesMultiStepFormComponent implements OnInit {
 
   OnSubmit() {
     Swal.fire(
-    'Done!',
+      'Done!',
       'Data Submitted Successfully!',
       'success'
-    ).then((response)=>{
-      if(response.isConfirmed){
+    ).then((response) => {
+      if (response.isConfirmed) {
         this.router.navigate(['/topnavbar/customerSalesApproval']);
       }
     })

@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100% }
+/* styles.css */
+body {
+    min-height: 123vh !important; /* Set a minimum height to fill the viewport initially */
+    height: auto !important; /* Allow the body to expand based on its content */
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    overflow-y: auto; /* Add vertical scroll bar if the content overflows */
+  }
+  
+
+
+
